@@ -1,0 +1,90 @@
+{
+  "brand": "JuriCam AI",
+  "nav": {
+    "agent": "Consulter l'agent",
+    "library": "Bibliothèque des lois",
+    "about": "À propos",
+    "login": "Connexion",
+    "logout": "Déconnexion"
+  },
+  "home": {
+    "heroTitle": "Vos droits, en clair.",
+    "heroSubtitle": "JuriCam AI est votre assistant juridique intelligent, spécialisé dans le droit camerounais. Posez vos questions, comprenez vos droits.",
+    "ctaConsult": "Consulter l'agent",
+    "ctaLibrary": "Bibliothèque des lois",
+    "domainsTitle": "Domaines juridiques",
+    "domainsSubtitle": "Explorez les principaux domaines du droit camerounais",
+    "howTitle": "Comment ça marche",
+    "step1Title": "Choisissez un domaine",
+    "step1Desc": "Sélectionnez le domaine juridique correspondant à votre question.",
+    "step2Title": "Posez votre question",
+    "step2Desc": "Décrivez votre situation en langage simple, sans jargon.",
+    "step3Title": "Recevez une analyse claire",
+    "step3Desc": "Obtenez une réponse structurée avec textes de loi, analyse et actions recommandées."
+  },
+  "domains": {
+    "labour": "Droit du Travail",
+    "criminal": "Droit Pénal",
+    "civil": "Droit Civil",
+    "family": "Droit de la Famille",
+    "land": "Droit Foncier",
+    "procedures": "Procédures",
+    "labourDesc": "Contrats, licenciement, salaire, congés et relations employeur-employé.",
+    "criminalDesc": "Infractions, peines, procédure pénale et droits de la défense.",
+    "civilDesc": "Contrats, obligations, responsabilités et litiges entre particuliers.",
+    "familyDesc": "Mariage, divorce, filiation, succession et autorité parentale.",
+    "landDesc": "Propriété, titre foncier, location et conflits fonciers.",
+    "proceduresDesc": "Démarches administratives et judiciaires, formulaires et délais."
+  },
+  "agent": {
+    "title": "Agent juridique",
+    "domainLabel": "Domaine juridique",
+    "selectDomain": "Sélectionnez un domaine",
+    "placeholder": "Décrivez votre situation juridique...",
+    "send": "Envoyer",
+    "newConsult": "Nouvelle consultation",
+    "loading": "Chargement...",
+    "disclaimer": "Cet outil fournit une information juridique générale. Il ne remplace pas la consultation d'un avocat.",
+    "reformulation": "Reformulation",
+    "applicableTexts": "Textes applicables",
+    "analysis": "Analyse",
+    "recommendedActions": "Actions recommandées",
+    "institutions": "Institutions compétentes",
+    "errorGeneric": "Une erreur est survenue. Veuillez réessayer.",
+    "errorMissingKey": "Le service IA n'est pas configuré. Ajoutez votre clé GEMINI_API_KEY.",
+    "emptyState": "Posez votre première question pour commencer."
+  },
+  "library": {
+    "title": "Bibliothèque des lois",
+    "subtitle": "Consultez les principaux textes du droit camerounais.",
+    "search": "Rechercher une loi...",
+    "all": "Tous",
+    "read": "Lire",
+    "noResults": "Aucun résultat trouvé."
+  },
+  "about": {
+    "title": "À propos de JuriCam AI",
+    "mission": "Notre mission",
+    "missionText": "JuriCam AI rend le droit camerounais accessible à tous les citoyens grâce à l'intelligence artificielle. Notre objectif : démocratiser l'information juridique en langage clair.",
+    "disclaimerTitle": "Avertissement légal",
+    "disclaimerText": "Les informations fournies par JuriCam AI sont à titre informatif uniquement. Elles ne constituent pas un avis juridique professionnel et ne remplacent en aucun cas la consultation d'un avocat agréé au Cameroun. Pour toute affaire personnelle, consultez un professionnel du droit.",
+    "contactTitle": "Contact",
+    "contactText": "Pour toute question : contact@juricam.ai"
+  },
+  "auth": {
+    "loginTitle": "Connexion",
+    "signupTitle": "Inscription",
+    "email": "Adresse e-mail",
+    "password": "Mot de passe",
+    "submitLogin": "Se connecter",
+    "submitSignup": "S'inscrire",
+    "switchToSignup": "Pas de compte ? S'inscrire",
+    "switchToLogin": "Déjà inscrit ? Se connecter",
+    "notConfigured": "Firebase Auth n'est pas configuré.",
+    "loggedInAs": "Connecté : {{email}}"
+  },
+  "footer": {
+    "disclaimer": "JuriCam AI fournit une information juridique générale à titre éducatif. Ce service ne remplace pas l'avis d'un avocat agréé.",
+    "rights": "© 2025 JuriCam AI. Tous droits réservés."
+  }
+}
