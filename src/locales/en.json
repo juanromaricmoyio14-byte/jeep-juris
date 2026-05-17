@@ -1,0 +1,90 @@
+{
+  "brand": "JuriCam AI",
+  "nav": {
+    "agent": "Consult the agent",
+    "library": "Law Library",
+    "about": "About",
+    "login": "Sign in",
+    "logout": "Sign out"
+  },
+  "home": {
+    "heroTitle": "Your rights, clearly.",
+    "heroSubtitle": "JuriCam AI is your intelligent legal assistant, specialized in Cameroonian law. Ask your questions, understand your rights.",
+    "ctaConsult": "Consult the agent",
+    "ctaLibrary": "Law Library",
+    "domainsTitle": "Legal domains",
+    "domainsSubtitle": "Explore the main areas of Cameroonian law",
+    "howTitle": "How it works",
+    "step1Title": "Pick a domain",
+    "step1Desc": "Select the legal domain that matches your question.",
+    "step2Title": "Ask your question",
+    "step2Desc": "Describe your situation in plain language, no jargon needed.",
+    "step3Title": "Get a clear analysis",
+    "step3Desc": "Receive a structured response with relevant laws, analysis and recommended actions."
+  },
+  "domains": {
+    "labour": "Labour Law",
+    "criminal": "Criminal Law",
+    "civil": "Civil Law",
+    "family": "Family Law",
+    "land": "Land Law",
+    "procedures": "Procedures",
+    "labourDesc": "Contracts, dismissal, wages, leave and employer-employee relations.",
+    "criminalDesc": "Offences, penalties, criminal procedure and defence rights.",
+    "civilDesc": "Contracts, obligations, liability and disputes between individuals.",
+    "familyDesc": "Marriage, divorce, parentage, inheritance and parental authority.",
+    "landDesc": "Property, land title, leases and land disputes.",
+    "proceduresDesc": "Administrative and judicial procedures, forms and deadlines."
+  },
+  "agent": {
+    "title": "Legal agent",
+    "domainLabel": "Legal domain",
+    "selectDomain": "Select a domain",
+    "placeholder": "Describe your legal situation...",
+    "send": "Send",
+    "newConsult": "New consultation",
+    "loading": "Loading...",
+    "disclaimer": "This tool provides general legal information. It does not replace consulting a lawyer.",
+    "reformulation": "Reformulation",
+    "applicableTexts": "Applicable texts",
+    "analysis": "Analysis",
+    "recommendedActions": "Recommended actions",
+    "institutions": "Relevant institutions",
+    "errorGeneric": "Something went wrong. Please try again.",
+    "errorMissingKey": "The AI service is not configured. Please add your GEMINI_API_KEY.",
+    "emptyState": "Ask your first question to get started."
+  },
+  "library": {
+    "title": "Law Library",
+    "subtitle": "Browse the main texts of Cameroonian law.",
+    "search": "Search for a law...",
+    "all": "All",
+    "read": "Read",
+    "noResults": "No results found."
+  },
+  "about": {
+    "title": "About JuriCam AI",
+    "mission": "Our mission",
+    "missionText": "JuriCam AI makes Cameroonian law accessible to all citizens through artificial intelligence. Our goal: democratize legal information in plain language.",
+    "disclaimerTitle": "Legal disclaimer",
+    "disclaimerText": "Information provided by JuriCam AI is for informational purposes only. It does not constitute professional legal advice and is in no way a substitute for consulting a licensed lawyer in Cameroon. For any personal matter, consult a legal professional.",
+    "contactTitle": "Contact",
+    "contactText": "For any question: contact@juricam.ai"
+  },
+  "auth": {
+    "loginTitle": "Sign in",
+    "signupTitle": "Sign up",
+    "email": "Email address",
+    "password": "Password",
+    "submitLogin": "Sign in",
+    "submitSignup": "Sign up",
+    "switchToSignup": "No account? Sign up",
+    "switchToLogin": "Already have an account? Sign in",
+    "notConfigured": "Firebase Auth is not configured.",
+    "loggedInAs": "Signed in: {{email}}"
+  },
+  "footer": {
+    "disclaimer": "JuriCam AI provides general legal information for educational purposes. This service is not a substitute for advice from a licensed lawyer.",
+    "rights": "© 2025 JuriCam AI. All rights reserved."
+  }
+}

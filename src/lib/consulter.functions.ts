@@ -1,0 +1,122 @@
+import { createServerFn } from "@tanstack/react-start";
+import { z } from "zod";
+
+const InputSchema = z.object({
+  question: z.string().min(1).max(2000),
+  domaine: z.string().min(1).max(50),
+  langue: z.enum(["fr", "en"]),
+});
+
+// Map each domain to relevant Drive title IDs (env var names)
+const DOMAIN_DRIVE_KEYS: Record<string, string[]> = {
+  labour: ["DRIVE_ID_TITRE_III", "DRIVE_ID_TITRE_IV"],
+  criminal: ["DRIVE_ID_TITRE_V", "DRIVE_ID_TITRE_VI"],
+  civil: ["DRIVE_ID_TITRE_I", "DRIVE_ID_TITRE_II"],
+  family: ["DRIVE_ID_TITRE_II", "DRIVE_ID_TITRE_VII"],
+  land: ["DRIVE_ID_TITRE_VIII"],
+  procedures: ["DRIVE_ID_TITRE_IX", "DRIVE_ID_TITRE_X_XI"],
+};
+
+async function fetchDriveText(id: string): Promise<string> {
+  try {
+    const res = await fetch(`https://drive.google.com/uc?export=download&id=${id}`, {
+      headers: { "User-Agent": "JuriCam-AI/1.0" },
+    });
+    if (!res.ok) return "";
+    const text = await res.text();
+    // Truncate to keep prompt size reasonable
+    return text.slice(0, 40000);
+  } catch {
+    return "";
+  }
+}
+
+const SYSTEM_PROMPT = (langue: string) =>
+  `Tu es JuriCam, un assistant juridique intelligent spécialisé dans le droit camerounais. La langue de réponse est : ${langue}. Si langue=fr, réponds entièrement en français. Si langue=en, réponds entièrement en English. Tu réponds UNIQUEMENT en JSON valide selon ce format exact : { "reformulation": string, "textes_applicables": [{"loi": string, "article": string, "contenu": string}], "analyse": string, "actions_recommandees": [string], "institutions": [string], "disclaimer": string }. Tu bases tes réponses UNIQUEMENT sur les documents fournis quand ils sont disponibles. Si aucun document n'est fourni, indique-le clairement dans l'analyse mais réponds quand même avec ta meilleure connaissance générale du droit camerounais. Tu cites toujours les articles précis. Tu t'exprimes en langage simple et accessible. Tu termines TOUJOURS par le disclaimer.`;
+
+export interface AgentResponse {
+  reformulation: string;
+  textes_applicables: { loi: string; article: string; contenu: string }[];
+  analyse: string;
+  actions_recommandees: string[];
+  institutions: string[];
+  disclaimer: string;
+}
+
+export interface AgentResult {
+  ok: boolean;
+  data?: AgentResponse;
+  error?: string;
+}
+
+export const consulterAgent = createServerFn({ method: "POST" })
+  .inputValidator((input: unknown) => InputSchema.parse(input))
+  .handler(async ({ data }): Promise<AgentResult> => {
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) {
+      return { ok: false, error: "MISSING_KEY" };
+    }
+
+    // Gather relevant drive documents
+    const driveKeys = DOMAIN_DRIVE_KEYS[data.domaine] ?? [];
+    const driveIds = driveKeys
+      .map((k) => process.env[k])
+      .filter((v): v is string => Boolean(v));
+
+    const docs = await Promise.all(driveIds.map(fetchDriveText));
+    const corpus = docs.filter(Boolean).join("\n\n---\n\n");
+
+    const userContent = corpus
+      ? `Documents juridiques disponibles :\n\n${corpus}\n\n---\n\nQuestion de l'utilisateur (domaine : ${data.domaine}) :\n${data.question}`
+      : `Aucun document spécifique fourni. Domaine : ${data.domaine}.\n\nQuestion de l'utilisateur :\n${data.question}`;
+
+    try {
+      const res = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro-latest:generateContent?key=${apiKey}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            systemInstruction: { parts: [{ text: SYSTEM_PROMPT(data.langue) }] },
+            contents: [{ role: "user", parts: [{ text: userContent }] }],
+            generationConfig: {
+              temperature: 0.3,
+              responseMimeType: "application/json",
+            },
+          }),
+        }
+      );
+
+      if (!res.ok) {
+        const errText = await res.text();
+        console.error("Gemini error", res.status, errText);
+        return { ok: false, error: `API_ERROR_${res.status}` };
+      }
+
+      const json = (await res.json()) as {
+        candidates?: { content?: { parts?: { text?: string }[] } }[];
+      };
+      const raw = json.candidates?.[0]?.content?.parts?.[0]?.text ?? "";
+      if (!raw) return { ok: false, error: "EMPTY_RESPONSE" };
+
+      let parsed: AgentResponse;
+      try {
+        parsed = JSON.parse(raw);
+      } catch {
+        // Try to extract JSON block
+        const match = raw.match(/\{[\s\S]*\}/);
+        if (!match) return { ok: false, error: "PARSE_ERROR" };
+        parsed = JSON.parse(match[0]);
+      }
+
+      // Normalize: ensure arrays exist
+      parsed.textes_applicables = parsed.textes_applicables ?? [];
+      parsed.actions_recommandees = parsed.actions_recommandees ?? [];
+      parsed.institutions = parsed.institutions ?? [];
+
+      return { ok: true, data: parsed };
+    } catch (e) {
+      console.error("consulterAgent failed", e);
+      return { ok: false, error: "GENERIC" };
+    }
+  });
