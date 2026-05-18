@@ -1,18 +1,34 @@
 import { useTranslation } from "react-i18next";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+
+const STORAGE_KEY = "juricam-lang";
 
 export function LanguageSwitcher() {
   const { i18n } = useTranslation();
-  const current = i18n.language?.startsWith("en") ? "en" : "fr";
+  const [mounted, setMounted] = useState(false);
+
+  // After mount, sync to saved language without breaking SSR hydration
+  useEffect(() => {
+    setMounted(true);
+    const saved = typeof window !== "undefined" ? localStorage.getItem(STORAGE_KEY) : null;
+    if (saved === "en" || saved === "fr") {
+      if (i18n.language !== saved) i18n.changeLanguage(saved);
+    }
+  }, [i18n]);
 
   useEffect(() => {
     if (typeof document !== "undefined") {
-      document.documentElement.lang = current;
+      document.documentElement.lang = i18n.language?.startsWith("en") ? "en" : "fr";
     }
-  }, [current]);
+  }, [i18n.language]);
+
+  const current = mounted ? (i18n.language?.startsWith("en") ? "en" : "fr") : "fr";
 
   const change = (lng: "fr" | "en") => {
-    if (lng !== current) i18n.changeLanguage(lng);
+    if (lng !== current) {
+      i18n.changeLanguage(lng);
+      if (typeof window !== "undefined") localStorage.setItem(STORAGE_KEY, lng);
+    }
   };
 
   return (
@@ -20,6 +36,7 @@ export function LanguageSwitcher() {
       {(["fr", "en"] as const).map((lng) => (
         <button
           key={lng}
+          type="button"
           onClick={() => change(lng)}
           className={`px-3 py-1 rounded-full transition-colors ${
             current === lng
