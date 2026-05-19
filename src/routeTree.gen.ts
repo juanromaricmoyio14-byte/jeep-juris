@@ -10,14 +10,21 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as FeedbackRouteImport } from './routes/feedback'
 import { Route as BibliothequeRouteImport } from './routes/bibliotheque'
 import { Route as AproposRouteImport } from './routes/apropos'
 import { Route as AgentRouteImport } from './routes/agent'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AdminFeedbacksRouteImport } from './routes/admin.feedbacks'
 
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FeedbackRoute = FeedbackRouteImport.update({
+  id: '/feedback',
+  path: '/feedback',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BibliothequeRoute = BibliothequeRouteImport.update({
@@ -40,20 +47,29 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminFeedbacksRoute = AdminFeedbacksRouteImport.update({
+  id: '/admin/feedbacks',
+  path: '/admin/feedbacks',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/agent': typeof AgentRoute
   '/apropos': typeof AproposRoute
   '/bibliotheque': typeof BibliothequeRoute
+  '/feedback': typeof FeedbackRoute
   '/login': typeof LoginRoute
+  '/admin/feedbacks': typeof AdminFeedbacksRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/agent': typeof AgentRoute
   '/apropos': typeof AproposRoute
   '/bibliotheque': typeof BibliothequeRoute
+  '/feedback': typeof FeedbackRoute
   '/login': typeof LoginRoute
+  '/admin/feedbacks': typeof AdminFeedbacksRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -61,14 +77,38 @@ export interface FileRoutesById {
   '/agent': typeof AgentRoute
   '/apropos': typeof AproposRoute
   '/bibliotheque': typeof BibliothequeRoute
+  '/feedback': typeof FeedbackRoute
   '/login': typeof LoginRoute
+  '/admin/feedbacks': typeof AdminFeedbacksRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/agent' | '/apropos' | '/bibliotheque' | '/login'
+  fullPaths:
+    | '/'
+    | '/agent'
+    | '/apropos'
+    | '/bibliotheque'
+    | '/feedback'
+    | '/login'
+    | '/admin/feedbacks'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/agent' | '/apropos' | '/bibliotheque' | '/login'
-  id: '__root__' | '/' | '/agent' | '/apropos' | '/bibliotheque' | '/login'
+  to:
+    | '/'
+    | '/agent'
+    | '/apropos'
+    | '/bibliotheque'
+    | '/feedback'
+    | '/login'
+    | '/admin/feedbacks'
+  id:
+    | '__root__'
+    | '/'
+    | '/agent'
+    | '/apropos'
+    | '/bibliotheque'
+    | '/feedback'
+    | '/login'
+    | '/admin/feedbacks'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -76,7 +116,9 @@ export interface RootRouteChildren {
   AgentRoute: typeof AgentRoute
   AproposRoute: typeof AproposRoute
   BibliothequeRoute: typeof BibliothequeRoute
+  FeedbackRoute: typeof FeedbackRoute
   LoginRoute: typeof LoginRoute
+  AdminFeedbacksRoute: typeof AdminFeedbacksRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -86,6 +128,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/feedback': {
+      id: '/feedback'
+      path: '/feedback'
+      fullPath: '/feedback'
+      preLoaderRoute: typeof FeedbackRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/bibliotheque': {
@@ -116,6 +165,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/feedbacks': {
+      id: '/admin/feedbacks'
+      path: '/admin/feedbacks'
+      fullPath: '/admin/feedbacks'
+      preLoaderRoute: typeof AdminFeedbacksRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -124,7 +180,9 @@ const rootRouteChildren: RootRouteChildren = {
   AgentRoute: AgentRoute,
   AproposRoute: AproposRoute,
   BibliothequeRoute: BibliothequeRoute,
+  FeedbackRoute: FeedbackRoute,
   LoginRoute: LoginRoute,
+  AdminFeedbacksRoute: AdminFeedbacksRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
