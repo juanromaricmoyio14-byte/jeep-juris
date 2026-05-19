@@ -52,7 +52,19 @@
     "institutions": "Institutions compétentes",
     "errorGeneric": "Une erreur est survenue. Veuillez réessayer.",
     "errorMissingKey": "Le service IA n'est pas configuré. Ajoutez votre clé GEMINI_API_KEY.",
-    "emptyState": "Posez votre première question pour commencer."
+    "emptyState": "Posez votre première question pour commencer.",
+    "levelLabel": "Niveau de langage",
+    "levelSimple": "Simple",
+    "levelStandard": "Standard",
+    "levelTechnical": "Technique",
+    "historyTitle": "Historique",
+    "historyEmpty": "Aucune consultation",
+    "historyLoginRequired": "Connectez-vous pour sauvegarder",
+    "voiceListening": "Écoute en cours...",
+    "voiceUnsupported": "Reconnaissance vocale non supportée",
+    "speak": "Lire à voix haute",
+    "stopSpeak": "Arrêter la lecture",
+    "mic": "Dictée vocale (Ctrl+D)"
   },
   "library": {
     "title": "Bibliothèque des lois",
@@ -85,6 +97,33 @@
   },
   "footer": {
     "disclaimer": "JEEP JURIS fournit une information juridique générale à titre éducatif. Ce service ne remplace pas l'avis d'un avocat agréé.",
-    "rights": "© 2025 JEEP JURIS. Tous droits réservés."
+    "rights": "© 2025 JEEP JURIS. Tous droits réservés.",
+    "feedback": "Donner un avis"
+  },
+  "feedback": {
+    "title": "Votre avis nous intéresse",
+    "subtitle": "Aidez-nous à améliorer JEEP JURIS.",
+    "name": "Nom (optionnel)",
+    "email": "Email (optionnel)",
+    "type": "Type",
+    "typeBug": "Bug",
+    "typeSuggestion": "Suggestion",
+    "typeCompliment": "Compliment",
+    "message": "Message",
+    "submit": "Envoyer",
+    "success": "Merci ! Votre avis a bien été envoyé.",
+    "error": "Échec de l'envoi. Réessayez.",
+    "notConfigured": "Le stockage des avis n'est pas configuré."
+  },
+  "admin": {
+    "feedbacksTitle": "Avis utilisateurs",
+    "filterAll": "Tous",
+    "date": "Date",
+    "type": "Type",
+    "name": "Nom",
+    "email": "Email",
+    "message": "Message",
+    "noAccess": "Accès refusé. Vous devez être administrateur.",
+    "noFeedbacks": "Aucun avis pour le moment."
   }
 }

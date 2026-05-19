@@ -52,7 +52,19 @@
     "institutions": "Relevant institutions",
     "errorGeneric": "Something went wrong. Please try again.",
     "errorMissingKey": "The AI service is not configured. Please add your GEMINI_API_KEY.",
-    "emptyState": "Ask your first question to get started."
+    "emptyState": "Ask your first question to get started.",
+    "levelLabel": "Language level",
+    "levelSimple": "Simple",
+    "levelStandard": "Standard",
+    "levelTechnical": "Technical",
+    "historyTitle": "History",
+    "historyEmpty": "No consultations yet",
+    "historyLoginRequired": "Sign in to save",
+    "voiceListening": "Listening...",
+    "voiceUnsupported": "Voice recognition not supported",
+    "speak": "Read aloud",
+    "stopSpeak": "Stop reading",
+    "mic": "Voice input (Ctrl+D)"
   },
   "library": {
     "title": "Law Library",
@@ -85,6 +97,33 @@
   },
   "footer": {
     "disclaimer": "JEEP JURIS provides general legal information for educational purposes. This service is not a substitute for advice from a licensed lawyer.",
-    "rights": "© 2025 JEEP JURIS. All rights reserved."
+    "rights": "© 2025 JEEP JURIS. All rights reserved.",
+    "feedback": "Give feedback"
+  },
+  "feedback": {
+    "title": "We'd love your feedback",
+    "subtitle": "Help us improve JEEP JURIS.",
+    "name": "Name (optional)",
+    "email": "Email (optional)",
+    "type": "Type",
+    "typeBug": "Bug",
+    "typeSuggestion": "Suggestion",
+    "typeCompliment": "Compliment",
+    "message": "Message",
+    "submit": "Send",
+    "success": "Thanks! Your feedback has been sent.",
+    "error": "Failed to send. Please retry.",
+    "notConfigured": "Feedback storage is not configured."
+  },
+  "admin": {
+    "feedbacksTitle": "User feedback",
+    "filterAll": "All",
+    "date": "Date",
+    "type": "Type",
+    "name": "Name",
+    "email": "Email",
+    "message": "Message",
+    "noAccess": "Access denied. Admin only.",
+    "noFeedbacks": "No feedback yet."
   }
 }

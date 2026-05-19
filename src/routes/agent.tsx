@@ -1,11 +1,24 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { Header } from "@/components/Header";
 import { consulterAgent, type AgentResponse } from "@/lib/consulter.functions";
-import { Send, RefreshCcw, ShieldAlert, Sparkles } from "lucide-react";
+import { Send, RefreshCcw, ShieldAlert, Sparkles, Mic, MicOff, Volume2, Square, History } from "lucide-react";
 import { z } from "zod";
+import { useAuth } from "@/components/AuthProvider";
+import { getDb } from "@/lib/firebase";
+import {
+  collection,
+  addDoc,
+  query,
+  orderBy,
+  limit,
+  onSnapshot,
+  serverTimestamp,
+  type Timestamp,
+} from "firebase/firestore";
+import { getSpeechRecognition, speak, stopSpeaking } from "@/lib/speech";
 
 const searchSchema = z.object({
   domaine: z.string().optional(),
@@ -23,6 +36,8 @@ export const Route = createFileRoute("/agent")({
 });
 
 const DOMAINS = ["labour", "criminal", "civil", "family", "land", "procedures"] as const;
+const LEVELS = ["simple", "standard", "technical"] as const;
+type Level = (typeof LEVELS)[number];
 
 interface ChatMessage {
   role: "user" | "agent";
@@ -30,54 +45,169 @@ interface ChatMessage {
   response?: AgentResponse;
 }
 
+interface HistoryItem {
+  id: string;
+  question: string;
+  createdAt?: Timestamp;
+}
+
 function AgentPage() {
   const { t, i18n } = useTranslation();
   const search = Route.useSearch();
+  const { user } = useAuth();
   const [domaine, setDomaine] = useState<string>(search.domaine ?? "labour");
+  const [niveau, setNiveau] = useState<Level>("standard");
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [listening, setListening] = useState(false);
+  const [voiceError, setVoiceError] = useState<string | null>(null);
+  const [history, setHistory] = useState<HistoryItem[]>([]);
   const consult = useServerFn(consulterAgent);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const recognitionRef = useRef<any>(null);
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
   }, [messages, loading]);
 
-  const submit = async () => {
-    const question = input.trim();
-    if (!question || loading) return;
-    setInput("");
-    setError(null);
-    setMessages((m) => [...m, { role: "user", text: question }]);
-    setLoading(true);
-    try {
-      const langue = (i18n.language?.startsWith("en") ? "en" : "fr") as "fr" | "en";
-      const result = await consult({ data: { question, domaine, langue } });
-      if (result.ok && result.data) {
-        setMessages((m) => [...m, { role: "agent", response: result.data }]);
-      } else {
-        setError(result.error === "MISSING_KEY" ? t("agent.errorMissingKey") : t("agent.errorGeneric"));
-      }
-    } catch (e) {
-      console.error(e);
-      setError(t("agent.errorGeneric"));
-    } finally {
-      setLoading(false);
+  // History subscription
+  useEffect(() => {
+    if (!user) {
+      setHistory([]);
+      return;
     }
-  };
+    const db = getDb();
+    if (!db) return;
+    const q = query(
+      collection(db, "users", user.uid, "consultations"),
+      orderBy("createdAt", "desc"),
+      limit(50)
+    );
+    const unsub = onSnapshot(q, (snap) => {
+      setHistory(
+        snap.docs.map((d) => ({
+          id: d.id,
+          question: (d.data().question as string) ?? "",
+          createdAt: d.data().createdAt as Timestamp | undefined,
+        }))
+      );
+    });
+    return () => unsub();
+  }, [user]);
+
+  const submit = useCallback(
+    async (questionArg?: string) => {
+      const question = (questionArg ?? input).trim();
+      if (!question || loading) return;
+      setInput("");
+      setError(null);
+      setMessages((m) => [...m, { role: "user", text: question }]);
+      setLoading(true);
+      try {
+        const langue = (i18n.language?.startsWith("en") ? "en" : "fr") as "fr" | "en";
+        const result = await consult({ data: { question, domaine, langue, niveau } });
+        if (result.ok && result.data) {
+          setMessages((m) => [...m, { role: "agent", response: result.data }]);
+          // Save to Firestore
+          if (user) {
+            const db = getDb();
+            if (db) {
+              try {
+                await addDoc(collection(db, "users", user.uid, "consultations"), {
+                  question,
+                  domaine,
+                  niveau,
+                  langue,
+                  response: result.data,
+                  createdAt: serverTimestamp(),
+                });
+              } catch (e) {
+                console.error("Save consult failed", e);
+              }
+            }
+          }
+        } else {
+          setError(result.error === "MISSING_KEY" ? t("agent.errorMissingKey") : t("agent.errorGeneric"));
+        }
+      } catch (e) {
+        console.error(e);
+        setError(t("agent.errorGeneric"));
+      } finally {
+        setLoading(false);
+      }
+    },
+    [input, loading, i18n.language, consult, domaine, niveau, user, t]
+  );
 
   const reset = () => {
     setMessages([]);
     setError(null);
     setInput("");
+    stopSpeaking();
   };
+
+  // Voice input
+  const toggleListening = useCallback(() => {
+    const SR = getSpeechRecognition();
+    if (!SR) {
+      setVoiceError(t("agent.voiceUnsupported"));
+      return;
+    }
+    if (listening && recognitionRef.current) {
+      recognitionRef.current.stop();
+      return;
+    }
+    const rec = new SR();
+    rec.lang = i18n.language?.startsWith("en") ? "en-US" : "fr-FR";
+    rec.interimResults = false;
+    rec.continuous = false;
+    rec.onresult = (e: any) => {
+      const transcript = Array.from(e.results)
+        .map((r: any) => r[0].transcript)
+        .join(" ");
+      setInput((prev) => (prev ? prev + " " : "") + transcript);
+    };
+    rec.onerror = (e: any) => {
+      console.error("Speech error", e);
+      setVoiceError(t("agent.voiceUnsupported"));
+    };
+    rec.onend = () => {
+      setListening(false);
+      recognitionRef.current = null;
+    };
+    recognitionRef.current = rec;
+    setVoiceError(null);
+    setListening(true);
+    try {
+      rec.start();
+    } catch (e) {
+      console.error(e);
+      setListening(false);
+    }
+  }, [listening, i18n.language, t]);
+
+  // Ctrl+D shortcut
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (e.ctrlKey && (e.key === "d" || e.key === "D")) {
+        e.preventDefault();
+        toggleListening();
+      }
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [toggleListening]);
+
+  useEffect(() => () => stopSpeaking(), []);
+
+  const lang = (i18n.language?.startsWith("en") ? "en" : "fr") as "fr" | "en";
 
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
-      <div className="mx-auto w-full max-w-6xl flex-1 px-4 py-6">
+      <div className="mx-auto w-full max-w-7xl flex-1 px-4 py-6">
         <div className="grid gap-6 md:grid-cols-[280px_1fr]">
           {/* Sidebar */}
           <aside className="space-y-4">
@@ -95,12 +225,65 @@ function AgentPage() {
                 ))}
               </select>
 
+              <label className="mt-4 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                {t("agent.levelLabel")}
+              </label>
+              <div className="mt-2 grid grid-cols-3 gap-1 rounded-lg border border-border bg-background p-1">
+                {LEVELS.map((lvl) => (
+                  <button
+                    key={lvl}
+                    onClick={() => setNiveau(lvl)}
+                    className={`rounded-md px-2 py-1.5 text-xs font-medium transition-colors ${
+                      niveau === lvl
+                        ? "bg-primary text-primary-foreground"
+                        : "text-muted-foreground hover:bg-muted"
+                    }`}
+                  >
+                    {t(`agent.level${lvl[0].toUpperCase() + lvl.slice(1)}`)}
+                  </button>
+                ))}
+              </div>
+
               <button
                 onClick={reset}
                 className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-lg border border-border bg-background px-3 py-2 text-sm font-medium hover:bg-muted"
               >
                 <RefreshCcw className="h-3.5 w-3.5" /> {t("agent.newConsult")}
               </button>
+            </div>
+
+            {/* History */}
+            <div className="rounded-2xl border border-border bg-card p-5">
+              <div className="mb-3 flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                <History className="h-3.5 w-3.5" /> {t("agent.historyTitle")}
+              </div>
+              {!user && (
+                <p className="text-xs text-muted-foreground">{t("agent.historyLoginRequired")}</p>
+              )}
+              {user && history.length === 0 && (
+                <p className="text-xs text-muted-foreground">{t("agent.historyEmpty")}</p>
+              )}
+              <ul className="max-h-72 space-y-1 overflow-y-auto">
+                {history.map((h) => {
+                  const preview = h.question.split(/\s+/).slice(0, 5).join(" ");
+                  const date = h.createdAt?.toDate?.();
+                  return (
+                    <li key={h.id}>
+                      <button
+                        onClick={() => submit(h.question)}
+                        className="w-full rounded-md px-2 py-1.5 text-left text-xs hover:bg-muted"
+                      >
+                        <div className="font-medium text-foreground">{preview}{h.question.split(/\s+/).length > 5 ? "…" : ""}</div>
+                        {date && (
+                          <div className="text-[10px] text-muted-foreground">
+                            {date.toLocaleDateString(lang, { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" })}
+                          </div>
+                        )}
+                      </button>
+                    </li>
+                  );
+                })}
+              </ul>
             </div>
 
             <div className="flex gap-3 rounded-2xl border border-secondary/40 bg-secondary/10 p-4 text-xs text-secondary-foreground">
@@ -128,7 +311,7 @@ function AgentPage() {
                   </div>
                 ) : (
                   <div key={i} className="flex justify-start">
-                    <AgentBubble response={m.response!} />
+                    <AgentBubble response={m.response!} lang={lang} />
                   </div>
                 )
               )}
@@ -155,6 +338,20 @@ function AgentPage() {
               onSubmit={(e) => { e.preventDefault(); submit(); }}
               className="border-t border-border p-4"
             >
+              {listening && (
+                <div className="mb-2 flex items-center gap-2 rounded-lg bg-destructive/10 px-3 py-1.5 text-xs font-medium text-destructive">
+                  <span className="relative flex h-2 w-2">
+                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-destructive opacity-75" />
+                    <span className="relative inline-flex h-2 w-2 rounded-full bg-destructive" />
+                  </span>
+                  {t("agent.voiceListening")}
+                </div>
+              )}
+              {voiceError && (
+                <div className="mb-2 rounded-lg bg-secondary/10 px-3 py-1.5 text-xs text-secondary-foreground">
+                  {voiceError}
+                </div>
+              )}
               <div className="flex gap-2">
                 <textarea
                   value={input}
@@ -169,6 +366,18 @@ function AgentPage() {
                   rows={2}
                   className="flex-1 resize-none rounded-lg border border-border bg-background px-3 py-2 text-sm focus:border-primary focus:outline-none"
                 />
+                <button
+                  type="button"
+                  onClick={toggleListening}
+                  title={t("agent.mic")}
+                  className={`inline-flex items-center justify-center rounded-lg border px-3 py-2 text-sm font-semibold transition-colors ${
+                    listening
+                      ? "border-destructive bg-destructive text-destructive-foreground"
+                      : "border-border bg-background hover:bg-muted"
+                  }`}
+                >
+                  {listening ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
+                </button>
                 <button
                   type="submit"
                   disabled={loading || !input.trim()}
@@ -185,10 +394,56 @@ function AgentPage() {
   );
 }
 
-function AgentBubble({ response }: { response: AgentResponse }) {
+function buildSpokenText(r: AgentResponse): string {
+  const parts: string[] = [];
+  if (r.reformulation) parts.push(r.reformulation);
+  if (r.analyse) parts.push(r.analyse);
+  if (r.actions_recommandees?.length) parts.push(r.actions_recommandees.join(". "));
+  return parts.join(". ");
+}
+
+function AgentBubble({ response, lang }: { response: AgentResponse; lang: "fr" | "en" }) {
   const { t } = useTranslation();
+  const [speaking, setSpeaking] = useState(false);
+
+  const handleSpeak = () => {
+    setSpeaking(true);
+    speak(buildSpokenText(response), lang);
+    // poll for end
+    const id = setInterval(() => {
+      if (typeof window !== "undefined" && !window.speechSynthesis.speaking) {
+        setSpeaking(false);
+        clearInterval(id);
+      }
+    }, 400);
+  };
+  const handleStop = () => {
+    stopSpeaking();
+    setSpeaking(false);
+  };
+
   return (
     <div className="max-w-[90%] space-y-4 rounded-2xl rounded-tl-sm border border-border bg-background p-5 text-sm shadow-sm">
+      <div className="flex justify-end gap-2">
+        {speaking ? (
+          <button
+            onClick={handleStop}
+            title={t("agent.stopSpeak")}
+            className="inline-flex items-center gap-1 rounded-full border border-destructive/40 bg-destructive/10 px-2.5 py-1 text-xs font-medium text-destructive hover:bg-destructive/20"
+          >
+            <Square className="h-3 w-3" /> {t("agent.stopSpeak")}
+          </button>
+        ) : (
+          <button
+            onClick={handleSpeak}
+            title={t("agent.speak")}
+            className="inline-flex items-center gap-1 rounded-full border border-border bg-card px-2.5 py-1 text-xs font-medium text-muted-foreground hover:text-primary"
+          >
+            <Volume2 className="h-3 w-3" /> {t("agent.speak")}
+          </button>
+        )}
+      </div>
+
       <Block title={t("agent.reformulation")}>
         <p className="italic text-muted-foreground">{response.reformulation}</p>
       </Block>
