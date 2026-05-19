@@ -2,6 +2,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
 import { Header } from "@/components/Header";
+import { PasswordInput } from "@/components/PasswordInput";
 import { getFirebaseAuth, firebaseConfigured } from "@/lib/firebase";
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 import { useAuth } from "@/components/AuthProvider";
@@ -82,14 +83,14 @@ function LoginPage() {
               <label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                 {t("auth.password")}
               </label>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                minLength={6}
-                className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm focus:border-primary focus:outline-none"
-              />
+              <div className="mt-1">
+                <PasswordInput
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  minLength={6}
+                />
+              </div>
             </div>
 
             {error && <p className="text-sm text-destructive">{error}</p>}

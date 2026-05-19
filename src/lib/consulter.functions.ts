@@ -5,6 +5,7 @@ const InputSchema = z.object({
   question: z.string().min(1).max(2000),
   domaine: z.string().min(1).max(50),
   langue: z.enum(["fr", "en"]),
+  niveau: z.enum(["simple", "standard", "technical"]).optional().default("standard"),
 });
 
 // Map each domain to relevant Drive title IDs (env var names)
@@ -31,8 +32,17 @@ async function fetchDriveText(id: string): Promise<string> {
   }
 }
 
-const SYSTEM_PROMPT = (langue: string) =>
-  `Tu es JEEP JURIS, un assistant juridique intelligent spécialisé dans le droit camerounais. La langue de réponse est : ${langue}. Si langue=fr, réponds entièrement en français. Si langue=en, réponds entièrement en English. Tu réponds UNIQUEMENT en JSON valide selon ce format exact : { "reformulation": string, "textes_applicables": [{"loi": string, "article": string, "contenu": string}], "analyse": string, "actions_recommandees": [string], "institutions": [string], "disclaimer": string }. Tu bases tes réponses UNIQUEMENT sur les documents fournis quand ils sont disponibles. Si aucun document n'est fourni, indique-le clairement dans l'analyse mais réponds quand même avec ta meilleure connaissance générale du droit camerounais. Tu cites toujours les articles précis. Tu t'exprimes en langage simple et accessible. Tu termines TOUJOURS par le disclaimer.`;
+const LEVEL_INSTRUCTIONS: Record<string, string> = {
+  simple:
+    "Niveau de langage : TRÈS SIMPLE. Utilise des phrases courtes (max 12 mots), des mots du quotidien, aucun jargon juridique. Explique chaque terme technique. Adresse-toi à une personne peu alphabétisée. Donne des exemples concrets.",
+  standard:
+    "Niveau de langage : STANDARD (niveau lycée). Phrases claires, vocabulaire accessible. Tu peux utiliser quelques termes juridiques mais en les expliquant brièvement.",
+  technical:
+    "Niveau de langage : TECHNIQUE (professionnel du droit). Utilise la terminologie juridique précise, cite les articles, références doctrinales, et raisonnement juridique structuré.",
+};
+
+const SYSTEM_PROMPT = (langue: string, niveau: string) =>
+  `Tu es JEEP JURIS, un assistant juridique intelligent spécialisé dans le droit camerounais. La langue de réponse est : ${langue}. Si langue=fr, réponds entièrement en français. Si langue=en, réponds entièrement en English. ${LEVEL_INSTRUCTIONS[niveau] ?? LEVEL_INSTRUCTIONS.standard} Tu réponds UNIQUEMENT en JSON valide selon ce format exact : { "reformulation": string, "textes_applicables": [{"loi": string, "article": string, "contenu": string}], "analyse": string, "actions_recommandees": [string], "institutions": [string], "disclaimer": string }. Tu bases tes réponses UNIQUEMENT sur les documents fournis quand ils sont disponibles. Si aucun document n'est fourni, indique-le clairement dans l'analyse mais réponds quand même avec ta meilleure connaissance générale du droit camerounais. Tu cites toujours les articles précis. Tu termines TOUJOURS par le disclaimer.`;
 
 export interface AgentResponse {
   reformulation: string;
@@ -72,12 +82,12 @@ export const consulterAgent = createServerFn({ method: "POST" })
 
     try {
       const res = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro-latest:generateContent?key=${apiKey}`,
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            systemInstruction: { parts: [{ text: SYSTEM_PROMPT(data.langue) }] },
+            systemInstruction: { parts: [{ text: SYSTEM_PROMPT(data.langue, data.niveau) }] },
             contents: [{ role: "user", parts: [{ text: userContent }] }],
             generationConfig: {
               temperature: 0.3,
