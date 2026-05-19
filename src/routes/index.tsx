@@ -9,7 +9,7 @@ import {
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "JuriCam AI — Vos droits, en clair." },
+      { title: "JEEP JURIS — Vos droits, en clair." },
       { name: "description", content: "Assistant juridique intelligent spécialisé en droit camerounais." },
     ],
   }),

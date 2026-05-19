@@ -8,7 +8,7 @@ import { Search, BookOpen } from "lucide-react";
 export const Route = createFileRoute("/bibliotheque")({
   head: () => ({
     meta: [
-      { title: "Bibliothèque des lois — JuriCam AI" },
+      { title: "Bibliothèque des lois — JEEP JURIS" },
       { name: "description", content: "Bibliothèque des principaux textes du droit camerounais." },
     ],
   }),

@@ -1,5 +1,5 @@
 {
-  "brand": "JuriCam AI",
+  "brand": "JEEP JURIS",
   "nav": {
     "agent": "Consulter l'agent",
     "library": "Bibliothèque des lois",
@@ -9,7 +9,7 @@
   },
   "home": {
     "heroTitle": "Vos droits, en clair.",
-    "heroSubtitle": "JuriCam AI est votre assistant juridique intelligent, spécialisé dans le droit camerounais. Posez vos questions, comprenez vos droits.",
+    "heroSubtitle": "JEEP JURIS est votre assistant juridique intelligent, spécialisé dans le droit camerounais. Posez vos questions, comprenez vos droits.",
     "ctaConsult": "Consulter l'agent",
     "ctaLibrary": "Bibliothèque des lois",
     "domainsTitle": "Domaines juridiques",
@@ -63,11 +63,11 @@
     "noResults": "Aucun résultat trouvé."
   },
   "about": {
-    "title": "À propos de JuriCam AI",
+    "title": "À propos de JEEP JURIS",
     "mission": "Notre mission",
-    "missionText": "JuriCam AI rend le droit camerounais accessible à tous les citoyens grâce à l'intelligence artificielle. Notre objectif : démocratiser l'information juridique en langage clair.",
+    "missionText": "JEEP JURIS rend le droit camerounais accessible à tous les citoyens grâce à l'intelligence artificielle. Notre objectif : démocratiser l'information juridique en langage clair.",
     "disclaimerTitle": "Avertissement légal",
-    "disclaimerText": "Les informations fournies par JuriCam AI sont à titre informatif uniquement. Elles ne constituent pas un avis juridique professionnel et ne remplacent en aucun cas la consultation d'un avocat agréé au Cameroun. Pour toute affaire personnelle, consultez un professionnel du droit.",
+    "disclaimerText": "Les informations fournies par JEEP JURIS sont à titre informatif uniquement. Elles ne constituent pas un avis juridique professionnel et ne remplacent en aucun cas la consultation d'un avocat agréé au Cameroun. Pour toute affaire personnelle, consultez un professionnel du droit.",
     "contactTitle": "Contact",
     "contactText": "Pour toute question : contact@juricam.ai"
   },
@@ -84,7 +84,7 @@
     "loggedInAs": "Connecté : {{email}}"
   },
   "footer": {
-    "disclaimer": "JuriCam AI fournit une information juridique générale à titre éducatif. Ce service ne remplace pas l'avis d'un avocat agréé.",
-    "rights": "© 2025 JuriCam AI. Tous droits réservés."
+    "disclaimer": "JEEP JURIS fournit une information juridique générale à titre éducatif. Ce service ne remplace pas l'avis d'un avocat agréé.",
+    "rights": "© 2025 JEEP JURIS. Tous droits réservés."
   }
 }

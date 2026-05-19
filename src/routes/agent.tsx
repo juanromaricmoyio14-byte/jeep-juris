@@ -15,7 +15,7 @@ export const Route = createFileRoute("/agent")({
   validateSearch: searchSchema,
   head: () => ({
     meta: [
-      { title: "Agent juridique — JuriCam AI" },
+      { title: "Agent juridique — JEEP JURIS" },
       { name: "description", content: "Consultez l'assistant juridique IA spécialisé en droit camerounais." },
     ],
   }),

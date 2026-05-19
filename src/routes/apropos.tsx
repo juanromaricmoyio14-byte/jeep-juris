@@ -7,7 +7,7 @@ import { Mail } from "lucide-react";
 export const Route = createFileRoute("/apropos")({
   head: () => ({
     meta: [
-      { title: "À propos — JuriCam AI" },
+      { title: "À propos — JEEP JURIS" },
       { name: "description", content: "Notre mission : démocratiser l'accès au droit camerounais." },
     ],
   }),
