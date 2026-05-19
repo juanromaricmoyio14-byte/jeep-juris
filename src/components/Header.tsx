@@ -15,7 +15,7 @@ export function Header() {
         <Link to="/" className="flex items-center gap-2 text-primary">
           <Logo className="h-8 w-8" />
           <span className="font-serif text-xl font-bold tracking-tight">
-            JuriCam <span className="text-secondary">AI</span>
+            JEEP <span className="text-secondary">JURIS</span>
           </span>
         </Link>
 

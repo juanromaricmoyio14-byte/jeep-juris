@@ -7,7 +7,7 @@ import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "fire
 import { useAuth } from "@/components/AuthProvider";
 
 export const Route = createFileRoute("/login")({
-  head: () => ({ meta: [{ title: "Connexion — JuriCam AI" }] }),
+  head: () => ({ meta: [{ title: "Connexion — JEEP JURIS" }] }),
   component: LoginPage,
 });
 

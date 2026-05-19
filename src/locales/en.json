@@ -1,5 +1,5 @@
 {
-  "brand": "JuriCam AI",
+  "brand": "JEEP JURIS",
   "nav": {
     "agent": "Consult the agent",
     "library": "Law Library",
@@ -9,7 +9,7 @@
   },
   "home": {
     "heroTitle": "Your rights, clearly.",
-    "heroSubtitle": "JuriCam AI is your intelligent legal assistant, specialized in Cameroonian law. Ask your questions, understand your rights.",
+    "heroSubtitle": "JEEP JURIS is your intelligent legal assistant, specialized in Cameroonian law. Ask your questions, understand your rights.",
     "ctaConsult": "Consult the agent",
     "ctaLibrary": "Law Library",
     "domainsTitle": "Legal domains",
@@ -63,11 +63,11 @@
     "noResults": "No results found."
   },
   "about": {
-    "title": "About JuriCam AI",
+    "title": "About JEEP JURIS",
     "mission": "Our mission",
-    "missionText": "JuriCam AI makes Cameroonian law accessible to all citizens through artificial intelligence. Our goal: democratize legal information in plain language.",
+    "missionText": "JEEP JURIS makes Cameroonian law accessible to all citizens through artificial intelligence. Our goal: democratize legal information in plain language.",
     "disclaimerTitle": "Legal disclaimer",
-    "disclaimerText": "Information provided by JuriCam AI is for informational purposes only. It does not constitute professional legal advice and is in no way a substitute for consulting a licensed lawyer in Cameroon. For any personal matter, consult a legal professional.",
+    "disclaimerText": "Information provided by JEEP JURIS is for informational purposes only. It does not constitute professional legal advice and is in no way a substitute for consulting a licensed lawyer in Cameroon. For any personal matter, consult a legal professional.",
     "contactTitle": "Contact",
     "contactText": "For any question: contact@juricam.ai"
   },
@@ -84,7 +84,7 @@
     "loggedInAs": "Signed in: {{email}}"
   },
   "footer": {
-    "disclaimer": "JuriCam AI provides general legal information for educational purposes. This service is not a substitute for advice from a licensed lawyer.",
-    "rights": "© 2025 JuriCam AI. All rights reserved."
+    "disclaimer": "JEEP JURIS provides general legal information for educational purposes. This service is not a substitute for advice from a licensed lawyer.",
+    "rights": "© 2025 JEEP JURIS. All rights reserved."
   }
 }

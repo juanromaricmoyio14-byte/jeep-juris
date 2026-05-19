@@ -50,7 +50,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "JuriCam AI — Vos droits, en clair." },
+      { title: "JEEP JURIS — Vos droits, en clair." },
       { name: "description", content: "Assistant juridique intelligent pour le droit camerounais. Intelligent legal assistant for Cameroonian law." },
     ],
     links: [
