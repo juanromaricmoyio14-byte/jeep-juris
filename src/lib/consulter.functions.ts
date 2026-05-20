@@ -63,6 +63,7 @@ export const consulterAgent = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) => InputSchema.parse(input))
   .handler(async ({ data }): Promise<AgentResult> => {
     const apiKey = process.env.GEMINI_API_KEY;
+    console.log("API KEY exists:", !!process.env.GEMINI_API_KEY);
     if (!apiKey) {
       return { ok: false, error: "MISSING_KEY" };
     }
