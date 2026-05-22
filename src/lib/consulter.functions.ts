@@ -1,6 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
-import Groq from "groq-sdk";
 
 const InputSchema = z.object({
   question: z.string().min(1).max(2000),
@@ -61,8 +60,8 @@ export interface AgentResult {
 export const consulterAgent = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) => InputSchema.parse(input))
   .handler(async ({ data }): Promise<AgentResult> => {
-    const apiKey = process.env.GROQ_API_KEY;
-    console.log("GROQ_API_KEY exists:", !!apiKey);
+    const apiKey = process.env.GEMINI_API_KEY;
+    console.log("GEMINI_API_KEY exists:", !!apiKey);
     if (!apiKey) {
       return { ok: false, error: "MISSING_KEY" };
     }
@@ -80,19 +79,37 @@ export const consulterAgent = createServerFn({ method: "POST" })
       : `Aucun document spécifique fourni. Domaine : ${data.domaine}.\n\nQuestion de l'utilisateur :\n${data.question}`;
 
     try {
-      const groq = new Groq({ apiKey });
+      const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
 
-      const completion = await groq.chat.completions.create({
-        model: "llama3-70b-8192",
-        messages: [
-          { role: "system", content: SYSTEM_PROMPT(data.langue, data.niveau) },
-          { role: "user", content: userContent },
-        ],
-        temperature: 0.3,
-        response_format: { type: "json_object" },
+      const res = await fetch(endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          systemInstruction: {
+            parts: [{ text: SYSTEM_PROMPT(data.langue, data.niveau) }],
+          },
+          contents: [
+            {
+              role: "user",
+              parts: [{ text: userContent }],
+            },
+          ],
+          generationConfig: {
+            temperature: 0.3,
+            responseMimeType: "application/json",
+          },
+        }),
       });
 
-      const raw = completion.choices[0]?.message?.content ?? "";
+      if (!res.ok) {
+        const errText = await res.text();
+        console.error("Gemini error", res.status, errText);
+        return { ok: false, error: `GEMINI_${res.status}` };
+      }
+
+      const json = await res.json();
+      const raw: string =
+        json?.candidates?.[0]?.content?.parts?.[0]?.text ?? "";
       if (!raw) return { ok: false, error: "EMPTY_RESPONSE" };
 
       let parsed: AgentResponse;
