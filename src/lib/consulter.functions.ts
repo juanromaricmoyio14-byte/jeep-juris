@@ -61,7 +61,8 @@ export const consulterAgent = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) => InputSchema.parse(input))
   .handler(async ({ data }): Promise<AgentResult> => {
     const apiKey = process.env.GEMINI_API_KEY;
-    console.log("GEMINI_API_KEY exists:", !!apiKey);
+    console.log("API KEY exists:", !!apiKey);
+    console.log("API KEY first 10 chars:", apiKey?.slice(0, 10));
     if (!apiKey) {
       return { ok: false, error: "MISSING_KEY" };
     }
@@ -79,7 +80,7 @@ export const consulterAgent = createServerFn({ method: "POST" })
       : `Aucun document spécifique fourni. Domaine : ${data.domaine}.\n\nQuestion de l'utilisateur :\n${data.question}`;
 
     try {
-      const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+      const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
 
       const res = await fetch(endpoint, {
         method: "POST",
