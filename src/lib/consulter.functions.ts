@@ -1,5 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
+import Groq from "groq-sdk";
 
 const InputSchema = z.object({
   question: z.string().min(1).max(2000),
@@ -8,7 +9,6 @@ const InputSchema = z.object({
   niveau: z.enum(["simple", "standard", "technical"]).optional().default("standard"),
 });
 
-// Map each domain to relevant Drive title IDs (env var names)
 const DOMAIN_DRIVE_KEYS: Record<string, string[]> = {
   labour: ["DRIVE_ID_TITRE_III", "DRIVE_ID_TITRE_IV"],
   criminal: ["DRIVE_ID_TITRE_V", "DRIVE_ID_TITRE_VI"],
@@ -25,7 +25,6 @@ async function fetchDriveText(id: string): Promise<string> {
     });
     if (!res.ok) return "";
     const text = await res.text();
-    // Truncate to keep prompt size reasonable
     return text.slice(0, 40000);
   } catch {
     return "";
@@ -62,13 +61,12 @@ export interface AgentResult {
 export const consulterAgent = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) => InputSchema.parse(input))
   .handler(async ({ data }): Promise<AgentResult> => {
-    const apiKey = process.env.GEMINI_API_KEY;
-    console.log("API KEY exists:", !!process.env.GEMINI_API_KEY);
+    const apiKey = process.env.GROQ_API_KEY;
+    console.log("GROQ_API_KEY exists:", !!apiKey);
     if (!apiKey) {
       return { ok: false, error: "MISSING_KEY" };
     }
 
-    // Gather relevant drive documents
     const driveKeys = DOMAIN_DRIVE_KEYS[data.domaine] ?? [];
     const driveIds = driveKeys
       .map((k) => process.env[k])
@@ -82,45 +80,30 @@ export const consulterAgent = createServerFn({ method: "POST" })
       : `Aucun document spécifique fourni. Domaine : ${data.domaine}.\n\nQuestion de l'utilisateur :\n${data.question}`;
 
     try {
-      const res = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            systemInstruction: { parts: [{ text: SYSTEM_PROMPT(data.langue, data.niveau) }] },
-            contents: [{ role: "user", parts: [{ text: userContent }] }],
-            generationConfig: {
-              temperature: 0.3,
-              responseMimeType: "application/json",
-            },
-          }),
-        }
-      );
+      const groq = new Groq({ apiKey });
 
-      if (!res.ok) {
-        const errText = await res.text();
-        console.error("Gemini error", res.status, errText);
-        return { ok: false, error: `API_ERROR_${res.status}` };
-      }
+      const completion = await groq.chat.completions.create({
+        model: "llama3-70b-8192",
+        messages: [
+          { role: "system", content: SYSTEM_PROMPT(data.langue, data.niveau) },
+          { role: "user", content: userContent },
+        ],
+        temperature: 0.3,
+        response_format: { type: "json_object" },
+      });
 
-      const json = (await res.json()) as {
-        candidates?: { content?: { parts?: { text?: string }[] } }[];
-      };
-      const raw = json.candidates?.[0]?.content?.parts?.[0]?.text ?? "";
+      const raw = completion.choices[0]?.message?.content ?? "";
       if (!raw) return { ok: false, error: "EMPTY_RESPONSE" };
 
       let parsed: AgentResponse;
       try {
         parsed = JSON.parse(raw);
       } catch {
-        // Try to extract JSON block
         const match = raw.match(/\{[\s\S]*\}/);
         if (!match) return { ok: false, error: "PARSE_ERROR" };
         parsed = JSON.parse(match[0]);
       }
 
-      // Normalize: ensure arrays exist
       parsed.textes_applicables = parsed.textes_applicables ?? [];
       parsed.actions_recommandees = parsed.actions_recommandees ?? [];
       parsed.institutions = parsed.institutions ?? [];
