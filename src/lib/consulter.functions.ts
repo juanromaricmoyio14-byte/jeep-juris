@@ -80,7 +80,7 @@ export const consulterAgent = createServerFn({ method: "POST" })
       : `Aucun document spécifique fourni. Domaine : ${data.domaine}.\n\nQuestion de l'utilisateur :\n${data.question}`;
 
     try {
-      const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+      const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
 
       const res = await fetch(endpoint, {
         method: "POST",
