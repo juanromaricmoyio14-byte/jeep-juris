@@ -107,7 +107,13 @@ function AgentPage() {
       setLoading(true);
       try {
         const langue = (i18n.language?.startsWith("en") ? "en" : "fr") as "fr" | "en";
-        const result = await consult({ data: { question, domaine, langue, niveau } });
+        if (!user) {
+          setError(t("agent.errorGeneric"));
+          setLoading(false);
+          return;
+        }
+        const idToken = await user.getIdToken();
+        const result = await consult({ data: { question, domaine, langue, niveau, idToken } });
         if (result.ok && result.data) {
           setMessages((m) => [...m, { role: "agent", response: result.data }]);
           // Save to Firestore
