@@ -57,12 +57,37 @@ export interface AgentResult {
   error?: string;
 }
 
+async function verifyFirebaseIdToken(idToken: string): Promise<boolean> {
+  const apiKey = process.env.FIREBASE_WEB_API_KEY;
+  if (!apiKey || !idToken) return false;
+  try {
+    const res = await fetch(
+      `https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=${apiKey}`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ idToken }),
+      }
+    );
+    if (!res.ok) return false;
+    const json = (await res.json()) as { users?: Array<{ localId?: string }> };
+    return Boolean(json?.users?.[0]?.localId);
+  } catch {
+    return false;
+  }
+}
+
 export const consulterAgent = createServerFn({ method: "POST" })
-  .inputValidator((input: unknown) => InputSchema.parse(input))
+  .inputValidator((input: unknown) =>
+    InputSchema.extend({ idToken: z.string().min(10).max(4096) }).parse(input)
+  )
   .handler(async ({ data }): Promise<AgentResult> => {
+    const authorized = await verifyFirebaseIdToken(data.idToken);
+    if (!authorized) {
+      return { ok: false, error: "UNAUTHORIZED" };
+    }
+
     const apiKey = process.env.GEMINI_API_KEY;
-    console.log("API KEY exists:", !!apiKey);
-    console.log("API KEY first 10 chars:", apiKey?.slice(0, 10));
     if (!apiKey) {
       return { ok: false, error: "MISSING_KEY" };
     }
