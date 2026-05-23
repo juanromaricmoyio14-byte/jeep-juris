@@ -52,6 +52,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "JEEP JURIS — Vos droits, en clair." },
       { name: "description", content: "Assistant juridique intelligent pour le droit camerounais. Intelligent legal assistant for Cameroonian law." },
+      { property: "og:site_name", content: "JEEP JURIS" },
+      { property: "og:type", content: "website" },
+      { property: "og:title", content: "JEEP JURIS — Vos droits, en clair." },
+      { property: "og:description", content: "Assistant juridique intelligent pour le droit camerounais." },
+      { property: "og:url", content: "https://jeep-juris.lovable.app/" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
@@ -60,6 +66,28 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       {
         rel: "stylesheet",
         href: "https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap",
+      },
+    ],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          name: "JEEP JURIS",
+          url: "https://jeep-juris.lovable.app",
+          description: "Assistant juridique intelligent spécialisé en droit camerounais.",
+        }),
+      },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          name: "JEEP JURIS",
+          url: "https://jeep-juris.lovable.app",
+          inLanguage: ["fr", "en"],
+        }),
       },
     ],
   }),

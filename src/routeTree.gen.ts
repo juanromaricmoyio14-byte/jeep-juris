@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as FeedbackRouteImport } from './routes/feedback'
 import { Route as BibliothequeRouteImport } from './routes/bibliotheque'
@@ -17,6 +18,11 @@ import { Route as AgentRouteImport } from './routes/agent'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminFeedbacksRouteImport } from './routes/admin.feedbacks'
 
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
@@ -60,6 +66,7 @@ export interface FileRoutesByFullPath {
   '/bibliotheque': typeof BibliothequeRoute
   '/feedback': typeof FeedbackRoute
   '/login': typeof LoginRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/feedbacks': typeof AdminFeedbacksRoute
 }
 export interface FileRoutesByTo {
@@ -69,6 +76,7 @@ export interface FileRoutesByTo {
   '/bibliotheque': typeof BibliothequeRoute
   '/feedback': typeof FeedbackRoute
   '/login': typeof LoginRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/feedbacks': typeof AdminFeedbacksRoute
 }
 export interface FileRoutesById {
@@ -79,6 +87,7 @@ export interface FileRoutesById {
   '/bibliotheque': typeof BibliothequeRoute
   '/feedback': typeof FeedbackRoute
   '/login': typeof LoginRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/feedbacks': typeof AdminFeedbacksRoute
 }
 export interface FileRouteTypes {
@@ -90,6 +99,7 @@ export interface FileRouteTypes {
     | '/bibliotheque'
     | '/feedback'
     | '/login'
+    | '/sitemap.xml'
     | '/admin/feedbacks'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -99,6 +109,7 @@ export interface FileRouteTypes {
     | '/bibliotheque'
     | '/feedback'
     | '/login'
+    | '/sitemap.xml'
     | '/admin/feedbacks'
   id:
     | '__root__'
@@ -108,6 +119,7 @@ export interface FileRouteTypes {
     | '/bibliotheque'
     | '/feedback'
     | '/login'
+    | '/sitemap.xml'
     | '/admin/feedbacks'
   fileRoutesById: FileRoutesById
 }
@@ -118,11 +130,19 @@ export interface RootRouteChildren {
   BibliothequeRoute: typeof BibliothequeRoute
   FeedbackRoute: typeof FeedbackRoute
   LoginRoute: typeof LoginRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   AdminFeedbacksRoute: typeof AdminFeedbacksRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/login': {
       id: '/login'
       path: '/login'
@@ -182,6 +202,7 @@ const rootRouteChildren: RootRouteChildren = {
   BibliothequeRoute: BibliothequeRoute,
   FeedbackRoute: FeedbackRoute,
   LoginRoute: LoginRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
   AdminFeedbacksRoute: AdminFeedbacksRoute,
 }
 export const routeTree = rootRouteImport

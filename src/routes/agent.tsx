@@ -29,8 +29,13 @@ export const Route = createFileRoute("/agent")({
   head: () => ({
     meta: [
       { title: "Agent juridique — JEEP JURIS" },
-      { name: "description", content: "Consultez l'assistant juridique IA spécialisé en droit camerounais." },
+      { name: "description", content: "Consultez l'assistant juridique IA spécialisé en droit camerounais. Posez votre question et recevez une analyse structurée." },
+      { property: "og:title", content: "Agent juridique — JEEP JURIS" },
+      { property: "og:description", content: "Posez votre question juridique et recevez une analyse structurée en droit camerounais." },
+      { property: "og:url", content: "https://jeep-juris.lovable.app/agent" },
+      { property: "og:type", content: "website" },
     ],
+    links: [{ rel: "canonical", href: "https://jeep-juris.lovable.app/agent" }],
   }),
   component: AgentPage,
 });
@@ -217,11 +222,13 @@ function AgentPage() {
         <div className="grid gap-6 md:grid-cols-[280px_1fr]">
           {/* Sidebar */}
           <aside className="space-y-4">
+            <h1 className="sr-only">{t("agent.title")}</h1>
             <div className="rounded-2xl border border-border bg-card p-5">
-              <label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+              <label htmlFor="agent-domain-select" className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                 {t("agent.domainLabel")}
               </label>
               <select
+                id="agent-domain-select"
                 value={domaine}
                 onChange={(e) => setDomaine(e.target.value)}
                 className="mt-2 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm focus:border-primary focus:outline-none"
@@ -376,6 +383,7 @@ function AgentPage() {
                   type="button"
                   onClick={toggleListening}
                   title={t("agent.mic")}
+                  aria-label={t("agent.mic")}
                   className={`inline-flex items-center justify-center rounded-lg border px-3 py-2 text-sm font-semibold transition-colors ${
                     listening
                       ? "border-destructive bg-destructive text-destructive-foreground"

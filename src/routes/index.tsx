@@ -10,8 +10,13 @@ export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       { title: "JEEP JURIS — Vos droits, en clair." },
-      { name: "description", content: "Assistant juridique intelligent spécialisé en droit camerounais." },
+      { name: "description", content: "Assistant juridique intelligent spécialisé en droit camerounais. Posez vos questions et comprenez vos droits." },
+      { property: "og:title", content: "JEEP JURIS — Vos droits, en clair." },
+      { property: "og:description", content: "Assistant juridique intelligent spécialisé en droit camerounais." },
+      { property: "og:url", content: "https://jeep-juris.lovable.app/" },
+      { property: "og:type", content: "website" },
     ],
+    links: [{ rel: "canonical", href: "https://jeep-juris.lovable.app/" }],
   }),
   component: HomePage,
 });
