@@ -1,0 +1,13 @@
+# JEEP JURIS
+
+> Assistant juridique intelligent spécialisé dans le droit camerounais. Intelligent legal assistant for Cameroonian law.
+
+JEEP JURIS aide les citoyens à comprendre le droit camerounais grâce à un agent IA. Les utilisateurs posent une question dans un domaine (travail, pénal, civil, famille, foncier, procédures) et reçoivent une analyse structurée avec textes applicables et actions recommandées.
+
+## Pages
+
+- [Accueil / Home](/): Présentation et accès rapide aux domaines juridiques.
+- [Agent juridique](/agent): Posez une question juridique et obtenez une analyse.
+- [Bibliothèque des lois](/bibliotheque): Principaux textes du droit camerounais.
+- [À propos](/apropos): Mission, avertissement légal et contact.
+- [Feedback](/feedback): Envoyer un avis sur le service.
