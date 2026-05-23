@@ -9,7 +9,25 @@ export const Route = createFileRoute("/bibliotheque")({
   head: () => ({
     meta: [
       { title: "Bibliothèque des lois — JEEP JURIS" },
-      { name: "description", content: "Bibliothèque des principaux textes du droit camerounais." },
+      { name: "description", content: "Bibliothèque des principaux textes du droit camerounais : Code du Travail, Code Pénal, Code Civil et plus." },
+      { property: "og:title", content: "Bibliothèque des lois — JEEP JURIS" },
+      { property: "og:description", content: "Principaux textes du droit camerounais." },
+      { property: "og:url", content: "https://jeep-juris.lovable.app/bibliotheque" },
+      { property: "og:type", content: "website" },
+    ],
+    links: [{ rel: "canonical", href: "https://jeep-juris.lovable.app/bibliotheque" }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "CollectionPage",
+          name: "Bibliothèque des lois — JEEP JURIS",
+          description: "Bibliothèque des principaux textes du droit camerounais.",
+          url: "https://jeep-juris.lovable.app/bibliotheque",
+          inLanguage: ["fr", "en"],
+        }),
+      },
     ],
   }),
   component: LibraryPage,
@@ -79,13 +97,14 @@ function LibraryPage() {
           ))}
         </div>
 
+        <h2 className="sr-only">{t("library.subtitle")}</h2>
         <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {filtered.map((l) => (
             <article key={l.id} className="rounded-2xl border border-border bg-card p-5 transition-shadow hover:shadow-md">
               <BookOpen className="h-6 w-6 text-secondary" />
-              <h3 className="mt-3 font-serif text-lg font-semibold">
+              <h2 className="mt-3 font-serif text-lg font-semibold">
                 {isEn ? l.titleEn : l.titleFr}
-              </h3>
+              </h2>
               <p className="mt-1 text-xs uppercase tracking-wide text-primary/70">
                 {t(`domains.${l.domain}`)}
               </p>
