@@ -8,8 +8,13 @@ export const Route = createFileRoute("/apropos")({
   head: () => ({
     meta: [
       { title: "À propos — JEEP JURIS" },
-      { name: "description", content: "Notre mission : démocratiser l'accès au droit camerounais." },
+      { name: "description", content: "Notre mission : démocratiser l'accès au droit camerounais grâce à un assistant juridique IA accessible à tous." },
+      { property: "og:title", content: "À propos — JEEP JURIS" },
+      { property: "og:description", content: "Notre mission : démocratiser l'accès au droit camerounais." },
+      { property: "og:url", content: "https://jeep-juris.lovable.app/apropos" },
+      { property: "og:type", content: "website" },
     ],
+    links: [{ rel: "canonical", href: "https://jeep-juris.lovable.app/apropos" }],
   }),
   component: AboutPage,
 });

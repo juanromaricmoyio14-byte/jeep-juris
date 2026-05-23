@@ -8,7 +8,18 @@ import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "fire
 import { useAuth } from "@/components/AuthProvider";
 
 export const Route = createFileRoute("/login")({
-  head: () => ({ meta: [{ title: "Connexion — JEEP JURIS" }] }),
+  head: () => ({
+    meta: [
+      { title: "Connexion — JEEP JURIS" },
+      { name: "description", content: "Connectez-vous à JEEP JURIS pour sauvegarder vos consultations juridiques et accéder à votre historique." },
+      { property: "og:title", content: "Connexion — JEEP JURIS" },
+      { property: "og:description", content: "Accédez à votre espace JEEP JURIS." },
+      { property: "og:url", content: "https://jeep-juris.lovable.app/login" },
+      { property: "og:type", content: "website" },
+      { name: "robots", content: "noindex" },
+    ],
+    links: [{ rel: "canonical", href: "https://jeep-juris.lovable.app/login" }],
+  }),
   component: LoginPage,
 });
 

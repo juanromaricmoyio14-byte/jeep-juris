@@ -29,8 +29,13 @@ export const Route = createFileRoute("/agent")({
   head: () => ({
     meta: [
       { title: "Agent juridique — JEEP JURIS" },
-      { name: "description", content: "Consultez l'assistant juridique IA spécialisé en droit camerounais." },
+      { name: "description", content: "Consultez l'assistant juridique IA spécialisé en droit camerounais. Posez votre question et recevez une analyse structurée." },
+      { property: "og:title", content: "Agent juridique — JEEP JURIS" },
+      { property: "og:description", content: "Posez votre question juridique et recevez une analyse structurée en droit camerounais." },
+      { property: "og:url", content: "https://jeep-juris.lovable.app/agent" },
+      { property: "og:type", content: "website" },
     ],
+    links: [{ rel: "canonical", href: "https://jeep-juris.lovable.app/agent" }],
   }),
   component: AgentPage,
 });
