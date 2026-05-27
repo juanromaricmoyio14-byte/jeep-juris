@@ -1,6 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
+import { BackButton } from "@/components/BackButton";
 import { Header } from "@/components/Header";
 import { PasswordInput } from "@/components/PasswordInput";
 import { getFirebaseAuth, firebaseConfigured } from "@/lib/firebase";
@@ -11,7 +12,11 @@ export const Route = createFileRoute("/login")({
   head: () => ({
     meta: [
       { title: "Connexion — JEEP JURIS" },
-      { name: "description", content: "Connectez-vous à JEEP JURIS pour sauvegarder vos consultations juridiques et accéder à votre historique." },
+      {
+        name: "description",
+        content:
+          "Connectez-vous à JEEP JURIS pour sauvegarder vos consultations juridiques et accéder à votre historique.",
+      },
       { property: "og:title", content: "Connexion — JEEP JURIS" },
       { property: "og:description", content: "Accédez à votre espace JEEP JURIS." },
       { property: "og:url", content: "https://jeep-juris.lovable.app/login" },
@@ -60,6 +65,7 @@ function LoginPage() {
     <div className="min-h-screen flex flex-col">
       <Header />
       <main className="mx-auto w-full max-w-md flex-1 px-4 py-16">
+        <BackButton />
         <div className="rounded-2xl border border-border bg-card p-8 shadow-sm">
           <h1 className="font-serif text-2xl font-bold text-primary">
             {mode === "login" ? t("auth.loginTitle") : t("auth.signupTitle")}

@@ -3,16 +3,29 @@ import { useTranslation } from "react-i18next";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import {
-  Briefcase, Gavel, ScrollText, Users, MapPinned, FileCheck2, ArrowRight,
+  Briefcase,
+  Gavel,
+  ScrollText,
+  Users,
+  MapPinned,
+  FileCheck2,
+  ArrowRight,
 } from "lucide-react";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       { title: "JEEP JURIS — Vos droits, en clair." },
-      { name: "description", content: "Assistant juridique intelligent spécialisé en droit camerounais. Posez vos questions et comprenez vos droits." },
+      {
+        name: "description",
+        content:
+          "Assistant juridique intelligent spécialisé en droit camerounais. Posez vos questions et comprenez vos droits.",
+      },
       { property: "og:title", content: "JEEP JURIS — Vos droits, en clair." },
-      { property: "og:description", content: "Assistant juridique intelligent spécialisé en droit camerounais." },
+      {
+        property: "og:description",
+        content: "Assistant juridique intelligent spécialisé en droit camerounais.",
+      },
       { property: "og:url", content: "https://jeep-juris.lovable.app/" },
       { property: "og:type", content: "website" },
     ],
@@ -67,16 +80,19 @@ function HomePage() {
       {/* Domains */}
       <section className="mx-auto w-full max-w-6xl px-4 py-16">
         <div className="text-center">
-          <h2 className="font-serif text-3xl md:text-4xl font-bold text-foreground">{t("home.domainsTitle")}</h2>
+          <h2 className="font-serif text-3xl md:text-4xl font-bold text-foreground">
+            {t("home.domainsTitle")}
+          </h2>
           <p className="mt-2 text-muted-foreground">{t("home.domainsSubtitle")}</p>
         </div>
         <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {DOMAINS.map(({ key, icon: Icon }) => (
+          {DOMAINS.map(({ key, icon: Icon }, index) => (
             <Link
               key={key}
               to="/agent"
               search={{ domaine: key }}
-              className="group rounded-2xl border border-border bg-card p-6 transition-all hover:border-primary hover:shadow-lg"
+              className="group rounded-2xl border border-border bg-card p-6 transition-all hover:border-primary hover:shadow-lg animate-in slide-in-from-bottom-4 duration-500"
+              style={{ animationDelay: `${index * 50}ms`, animationFillMode: "both" }}
             >
               <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
                 <Icon className="h-6 w-6" />
@@ -91,7 +107,9 @@ function HomePage() {
       {/* How it works */}
       <section className="bg-primary/5 border-y border-border">
         <div className="mx-auto max-w-6xl px-4 py-16">
-          <h2 className="text-center font-serif text-3xl md:text-4xl font-bold">{t("home.howTitle")}</h2>
+          <h2 className="text-center font-serif text-3xl md:text-4xl font-bold">
+            {t("home.howTitle")}
+          </h2>
           <div className="mt-10 grid gap-6 md:grid-cols-3">
             {[1, 2, 3].map((n) => (
               <div key={n} className="rounded-2xl bg-card p-6 border border-border">
