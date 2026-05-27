@@ -11,7 +11,11 @@ export const Route = createFileRoute("/login")({
   head: () => ({
     meta: [
       { title: "Connexion — JEEP JURIS" },
-      { name: "description", content: "Connectez-vous à JEEP JURIS pour sauvegarder vos consultations juridiques et accéder à votre historique." },
+      {
+        name: "description",
+        content:
+          "Connectez-vous à JEEP JURIS pour sauvegarder vos consultations juridiques et accéder à votre historique.",
+      },
       { property: "og:title", content: "Connexion — JEEP JURIS" },
       { property: "og:description", content: "Accédez à votre espace JEEP JURIS." },
       { property: "og:url", content: "https://jeep-juris.lovable.app/login" },

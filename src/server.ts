@@ -12,7 +12,7 @@ let serverEntryPromise: Promise<ServerEntry> | undefined;
 async function getServerEntry(): Promise<ServerEntry> {
   if (!serverEntryPromise) {
     serverEntryPromise = import("@tanstack/react-start/server-entry").then(
-      (m) => ((m as { default?: ServerEntry }).default ?? (m as unknown as ServerEntry)),
+      (m) => (m as { default?: ServerEntry }).default ?? (m as unknown as ServerEntry),
     );
   }
   return serverEntryPromise;
@@ -66,15 +66,26 @@ async function normalizeCatastrophicSsrResponse(response: Response): Promise<Res
   return brandedErrorResponse();
 }
 
+function applySecurityHeaders(response: Response): Response {
+  const secureResponse = new Response(response.body, response);
+  secureResponse.headers.set("X-Content-Type-Options", "nosniff");
+  secureResponse.headers.set("X-Frame-Options", "DENY");
+  secureResponse.headers.set("X-XSS-Protection", "1; mode=block");
+  secureResponse.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
+  secureResponse.headers.set("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
+  return secureResponse;
+}
+
 export default {
   async fetch(request: Request, env: unknown, ctx: unknown) {
     try {
       const handler = await getServerEntry();
       const response = await handler.fetch(request, env, ctx);
-      return await normalizeCatastrophicSsrResponse(response);
+      const normalized = await normalizeCatastrophicSsrResponse(response);
+      return applySecurityHeaders(normalized);
     } catch (error) {
       console.error(error);
-      return brandedErrorResponse();
+      return applySecurityHeaders(brandedErrorResponse());
     }
   },
 };

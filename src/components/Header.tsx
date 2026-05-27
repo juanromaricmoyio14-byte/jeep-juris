@@ -20,21 +20,33 @@ export function Header() {
         </Link>
 
         <nav className="hidden items-center gap-6 text-sm font-medium md:flex">
-          <Link to="/agent" className="text-foreground/80 hover:text-primary" activeProps={{ className: "text-primary" }}>
+          <Link
+            to="/agent"
+            className="text-foreground/80 hover:text-primary"
+            activeProps={{ className: "text-primary" }}
+          >
             {t("nav.agent")}
           </Link>
-          <Link to="/bibliotheque" className="text-foreground/80 hover:text-primary" activeProps={{ className: "text-primary" }}>
+          <Link
+            to="/bibliotheque"
+            className="text-foreground/80 hover:text-primary"
+            activeProps={{ className: "text-primary" }}
+          >
             {t("nav.library")}
           </Link>
-          <Link to="/apropos" className="text-foreground/80 hover:text-primary" activeProps={{ className: "text-primary" }}>
+          <Link
+            to="/apropos"
+            className="text-foreground/80 hover:text-primary"
+            activeProps={{ className: "text-primary" }}
+          >
             {t("nav.about")}
           </Link>
         </nav>
 
         <div className="flex items-center gap-2">
           <LanguageSwitcher />
-          {configured && (
-            user ? (
+          {configured &&
+            (user ? (
               <button
                 onClick={() => logout()}
                 className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-3 py-1.5 text-xs font-semibold hover:bg-muted"
@@ -50,8 +62,7 @@ export function Header() {
                 <LogIn className="h-3.5 w-3.5" />
                 {t("nav.login")}
               </Link>
-            )
-          )}
+            ))}
         </div>
       </div>
     </header>

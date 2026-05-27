@@ -1,0 +1,4 @@
+## 2025-03-09 - [Prototype Pollution / DoS Prevention & Security Headers]
+**Vulnerability:** The `data.domaine` user input was used directly as an object key in `DOMAIN_DRIVE_KEYS[data.domaine]` in `src/lib/consulter.functions.ts`. An attacker could pass a prototype property like `"constructor"` or `"__proto__"`, which would result in a function instead of an array, causing a `.map()` error and a Denial of Service (server crash). Also, the application lacked basic HTTP security headers.
+**Learning:** Even simple object lookups with unsanitized string input can lead to application crashes if prototype properties are targeted.
+**Prevention:** Always use `Object.hasOwn(obj, key)` or a `Map` when looking up values based on arbitrary user input. Added global security headers (`X-Content-Type-Options`, `X-Frame-Options`, `X-XSS-Protection`, `Referrer-Policy`, `Strict-Transport-Security`) to all server responses to improve defense in depth.

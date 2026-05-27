@@ -4,7 +4,17 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { Header } from "@/components/Header";
 import { consulterAgent, type AgentResponse } from "@/lib/consulter.functions";
-import { Send, RefreshCcw, ShieldAlert, Sparkles, Mic, MicOff, Volume2, Square, History } from "lucide-react";
+import {
+  Send,
+  RefreshCcw,
+  ShieldAlert,
+  Sparkles,
+  Mic,
+  MicOff,
+  Volume2,
+  Square,
+  History,
+} from "lucide-react";
 import { z } from "zod";
 import { useAuth } from "@/components/AuthProvider";
 import { getDb } from "@/lib/firebase";
@@ -29,9 +39,17 @@ export const Route = createFileRoute("/agent")({
   head: () => ({
     meta: [
       { title: "Agent juridique — JEEP JURIS" },
-      { name: "description", content: "Consultez l'assistant juridique IA spécialisé en droit camerounais. Posez votre question et recevez une analyse structurée." },
+      {
+        name: "description",
+        content:
+          "Consultez l'assistant juridique IA spécialisé en droit camerounais. Posez votre question et recevez une analyse structurée.",
+      },
       { property: "og:title", content: "Agent juridique — JEEP JURIS" },
-      { property: "og:description", content: "Posez votre question juridique et recevez une analyse structurée en droit camerounais." },
+      {
+        property: "og:description",
+        content:
+          "Posez votre question juridique et recevez une analyse structurée en droit camerounais.",
+      },
       { property: "og:url", content: "https://jeep-juris.lovable.app/agent" },
       { property: "og:type", content: "website" },
     ],
@@ -88,7 +106,7 @@ function AgentPage() {
     const q = query(
       collection(db, "users", user.uid, "consultations"),
       orderBy("createdAt", "desc"),
-      limit(50)
+      limit(50),
     );
     const unsub = onSnapshot(q, (snap) => {
       setHistory(
@@ -96,7 +114,7 @@ function AgentPage() {
           id: d.id,
           question: (d.data().question as string) ?? "",
           createdAt: d.data().createdAt as Timestamp | undefined,
-        }))
+        })),
       );
     });
     return () => unsub();
@@ -140,7 +158,9 @@ function AgentPage() {
             }
           }
         } else {
-          setError(result.error === "MISSING_KEY" ? t("agent.errorMissingKey") : t("agent.errorGeneric"));
+          setError(
+            result.error === "MISSING_KEY" ? t("agent.errorMissingKey") : t("agent.errorGeneric"),
+          );
         }
       } catch (e) {
         console.error(e);
@@ -149,7 +169,7 @@ function AgentPage() {
         setLoading(false);
       }
     },
-    [input, loading, i18n.language, consult, domaine, niveau, user, t]
+    [input, loading, i18n.language, consult, domaine, niveau, user, t],
   );
 
   const reset = () => {
@@ -224,7 +244,10 @@ function AgentPage() {
           <aside className="space-y-4">
             <h1 className="sr-only">{t("agent.title")}</h1>
             <div className="rounded-2xl border border-border bg-card p-5">
-              <label htmlFor="agent-domain-select" className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+              <label
+                htmlFor="agent-domain-select"
+                className="text-xs font-semibold uppercase tracking-wide text-muted-foreground"
+              >
                 {t("agent.domainLabel")}
               </label>
               <select
@@ -234,7 +257,9 @@ function AgentPage() {
                 className="mt-2 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm focus:border-primary focus:outline-none"
               >
                 {DOMAINS.map((d) => (
-                  <option key={d} value={d}>{t(`domains.${d}`)}</option>
+                  <option key={d} value={d}>
+                    {t(`domains.${d}`)}
+                  </option>
                 ))}
               </select>
 
@@ -286,10 +311,18 @@ function AgentPage() {
                         onClick={() => submit(h.question)}
                         className="w-full rounded-md px-2 py-1.5 text-left text-xs hover:bg-muted"
                       >
-                        <div className="font-medium text-foreground">{preview}{h.question.split(/\s+/).length > 5 ? "…" : ""}</div>
+                        <div className="font-medium text-foreground">
+                          {preview}
+                          {h.question.split(/\s+/).length > 5 ? "…" : ""}
+                        </div>
                         {date && (
                           <div className="text-[10px] text-muted-foreground">
-                            {date.toLocaleDateString(lang, { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" })}
+                            {date.toLocaleDateString(lang, {
+                              day: "2-digit",
+                              month: "short",
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            })}
                           </div>
                         )}
                       </button>
@@ -326,15 +359,24 @@ function AgentPage() {
                   <div key={i} className="flex justify-start">
                     <AgentBubble response={m.response!} lang={lang} />
                   </div>
-                )
+                ),
               )}
 
               {loading && (
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <div className="flex gap-1">
-                    <span className="h-2 w-2 animate-bounce rounded-full bg-primary" style={{ animationDelay: "0ms" }} />
-                    <span className="h-2 w-2 animate-bounce rounded-full bg-primary" style={{ animationDelay: "150ms" }} />
-                    <span className="h-2 w-2 animate-bounce rounded-full bg-primary" style={{ animationDelay: "300ms" }} />
+                    <span
+                      className="h-2 w-2 animate-bounce rounded-full bg-primary"
+                      style={{ animationDelay: "0ms" }}
+                    />
+                    <span
+                      className="h-2 w-2 animate-bounce rounded-full bg-primary"
+                      style={{ animationDelay: "150ms" }}
+                    />
+                    <span
+                      className="h-2 w-2 animate-bounce rounded-full bg-primary"
+                      style={{ animationDelay: "300ms" }}
+                    />
                   </div>
                   {t("agent.loading")}
                 </div>
@@ -348,7 +390,10 @@ function AgentPage() {
             </div>
 
             <form
-              onSubmit={(e) => { e.preventDefault(); submit(); }}
+              onSubmit={(e) => {
+                e.preventDefault();
+                submit();
+              }}
               className="border-t border-border p-4"
             >
               {listening && (
@@ -466,8 +511,13 @@ function AgentBubble({ response, lang }: { response: AgentResponse; lang: "fr" |
         <Block title={t("agent.applicableTexts")}>
           <ul className="space-y-2">
             {response.textes_applicables.map((tx, i) => (
-              <li key={i} className="rounded-lg border-l-4 border-secondary bg-secondary/5 px-3 py-2">
-                <p className="font-semibold">{tx.loi} — {tx.article}</p>
+              <li
+                key={i}
+                className="rounded-lg border-l-4 border-secondary bg-secondary/5 px-3 py-2"
+              >
+                <p className="font-semibold">
+                  {tx.loi} — {tx.article}
+                </p>
                 <p className="mt-1 text-muted-foreground">{tx.contenu}</p>
               </li>
             ))}
@@ -482,7 +532,9 @@ function AgentBubble({ response, lang }: { response: AgentResponse; lang: "fr" |
       {response.actions_recommandees?.length > 0 && (
         <Block title={t("agent.recommendedActions")}>
           <ul className="list-disc space-y-1 pl-5">
-            {response.actions_recommandees.map((a, i) => <li key={i}>{a}</li>)}
+            {response.actions_recommandees.map((a, i) => (
+              <li key={i}>{a}</li>
+            ))}
           </ul>
         </Block>
       )}
@@ -491,7 +543,10 @@ function AgentBubble({ response, lang }: { response: AgentResponse; lang: "fr" |
         <Block title={t("agent.institutions")}>
           <div className="flex flex-wrap gap-2">
             {response.institutions.map((inst, i) => (
-              <span key={i} className="rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
+              <span
+                key={i}
+                className="rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary"
+              >
                 {inst}
               </span>
             ))}
