@@ -9,7 +9,11 @@ export const Route = createFileRoute("/bibliotheque")({
   head: () => ({
     meta: [
       { title: "Bibliothèque des lois — JEEP JURIS" },
-      { name: "description", content: "Bibliothèque des principaux textes du droit camerounais : Code du Travail, Code Pénal, Code Civil et plus." },
+      {
+        name: "description",
+        content:
+          "Bibliothèque des principaux textes du droit camerounais : Code du Travail, Code Pénal, Code Civil et plus.",
+      },
       { property: "og:title", content: "Bibliothèque des lois — JEEP JURIS" },
       { property: "og:description", content: "Principaux textes du droit camerounais." },
       { property: "og:url", content: "https://jeep-juris.lovable.app/bibliotheque" },
@@ -34,13 +38,62 @@ export const Route = createFileRoute("/bibliotheque")({
 });
 
 const LAWS = [
-  { id: "code-travail", domain: "labour", titleFr: "Code du Travail", titleEn: "Labour Code", descFr: "Loi n° 92/007 régissant les relations de travail au Cameroun.", descEn: "Law no. 92/007 governing labour relations in Cameroon." },
-  { id: "code-penal", domain: "criminal", titleFr: "Code Pénal", titleEn: "Penal Code", descFr: "Loi n° 2016/007 portant Code pénal camerounais.", descEn: "Law no. 2016/007 — Cameroonian Penal Code." },
-  { id: "code-procedure-penale", domain: "criminal", titleFr: "Code de Procédure Pénale", titleEn: "Criminal Procedure Code", descFr: "Loi n° 2005/007 régissant la procédure pénale.", descEn: "Law no. 2005/007 governing criminal procedure." },
-  { id: "code-civil", domain: "civil", titleFr: "Code Civil", titleEn: "Civil Code", descFr: "Dispositions générales sur les contrats et obligations.", descEn: "General provisions on contracts and obligations." },
-  { id: "code-famille", domain: "family", titleFr: "Ordonnance sur l'état civil", titleEn: "Civil Status Ordinance", descFr: "Mariage, divorce, filiation et succession.", descEn: "Marriage, divorce, parentage and inheritance." },
-  { id: "code-foncier", domain: "land", titleFr: "Ordonnance foncière n° 74-1", titleEn: "Land Ordinance no. 74-1", descFr: "Régime de la propriété foncière au Cameroun.", descEn: "Land property regime in Cameroon." },
-  { id: "procedures-admin", domain: "procedures", titleFr: "Procédures administratives", titleEn: "Administrative procedures", descFr: "Démarches courantes auprès des administrations.", descEn: "Common procedures with administrations." },
+  {
+    id: "code-travail",
+    domain: "labour",
+    titleFr: "Code du Travail",
+    titleEn: "Labour Code",
+    descFr: "Loi n° 92/007 régissant les relations de travail au Cameroun.",
+    descEn: "Law no. 92/007 governing labour relations in Cameroon.",
+  },
+  {
+    id: "code-penal",
+    domain: "criminal",
+    titleFr: "Code Pénal",
+    titleEn: "Penal Code",
+    descFr: "Loi n° 2016/007 portant Code pénal camerounais.",
+    descEn: "Law no. 2016/007 — Cameroonian Penal Code.",
+  },
+  {
+    id: "code-procedure-penale",
+    domain: "criminal",
+    titleFr: "Code de Procédure Pénale",
+    titleEn: "Criminal Procedure Code",
+    descFr: "Loi n° 2005/007 régissant la procédure pénale.",
+    descEn: "Law no. 2005/007 governing criminal procedure.",
+  },
+  {
+    id: "code-civil",
+    domain: "civil",
+    titleFr: "Code Civil",
+    titleEn: "Civil Code",
+    descFr: "Dispositions générales sur les contrats et obligations.",
+    descEn: "General provisions on contracts and obligations.",
+  },
+  {
+    id: "code-famille",
+    domain: "family",
+    titleFr: "Ordonnance sur l'état civil",
+    titleEn: "Civil Status Ordinance",
+    descFr: "Mariage, divorce, filiation et succession.",
+    descEn: "Marriage, divorce, parentage and inheritance.",
+  },
+  {
+    id: "code-foncier",
+    domain: "land",
+    titleFr: "Ordonnance foncière n° 74-1",
+    titleEn: "Land Ordinance no. 74-1",
+    descFr: "Régime de la propriété foncière au Cameroun.",
+    descEn: "Land property regime in Cameroon.",
+  },
+  {
+    id: "procedures-admin",
+    domain: "procedures",
+    titleFr: "Procédures administratives",
+    titleEn: "Administrative procedures",
+    descFr: "Démarches courantes auprès des administrations.",
+    descEn: "Common procedures with administrations.",
+  },
 ] as const;
 
 const FILTERS = ["all", "labour", "criminal", "civil", "family", "land", "procedures"] as const;
@@ -100,7 +153,10 @@ function LibraryPage() {
         <h2 className="sr-only">{t("library.subtitle")}</h2>
         <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {filtered.map((l) => (
-            <article key={l.id} className="rounded-2xl border border-border bg-card p-5 transition-shadow hover:shadow-md">
+            <article
+              key={l.id}
+              className="rounded-2xl border border-border bg-card p-5 transition-shadow hover:shadow-md"
+            >
               <BookOpen className="h-6 w-6 text-secondary" />
               <h2 className="mt-3 font-serif text-lg font-semibold">
                 {isEn ? l.titleEn : l.titleFr}
@@ -108,16 +164,16 @@ function LibraryPage() {
               <p className="mt-1 text-xs uppercase tracking-wide text-primary/70">
                 {t(`domains.${l.domain}`)}
               </p>
-              <p className="mt-2 text-sm text-muted-foreground">
-                {isEn ? l.descEn : l.descFr}
-              </p>
+              <p className="mt-2 text-sm text-muted-foreground">{isEn ? l.descEn : l.descFr}</p>
               <button className="mt-4 inline-flex items-center gap-1 text-xs font-semibold text-primary hover:underline">
                 {t("library.read")} →
               </button>
             </article>
           ))}
           {filtered.length === 0 && (
-            <p className="col-span-full text-center text-sm text-muted-foreground">{t("library.noResults")}</p>
+            <p className="col-span-full text-center text-sm text-muted-foreground">
+              {t("library.noResults")}
+            </p>
           )}
         </div>
       </main>

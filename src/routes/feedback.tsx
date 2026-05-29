@@ -12,7 +12,11 @@ export const Route = createFileRoute("/feedback")({
   head: () => ({
     meta: [
       { title: "Feedback — JEEP JURIS" },
-      { name: "description", content: "Partagez votre avis sur JEEP JURIS : signalez un bug, faites une suggestion ou un compliment pour nous aider à améliorer le service." },
+      {
+        name: "description",
+        content:
+          "Partagez votre avis sur JEEP JURIS : signalez un bug, faites une suggestion ou un compliment pour nous aider à améliorer le service.",
+      },
       { property: "og:title", content: "Feedback — JEEP JURIS" },
       { property: "og:description", content: "Aidez-nous à améliorer JEEP JURIS." },
       { property: "og:url", content: "https://jeep-juris.lovable.app/feedback" },
@@ -131,7 +135,9 @@ function FeedbackPage() {
                     type="button"
                     onClick={() => setType(tp)}
                     className={`rounded-md px-2 py-1.5 text-xs font-medium transition-colors ${
-                      type === tp ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-muted"
+                      type === tp
+                        ? "bg-primary text-primary-foreground"
+                        : "text-muted-foreground hover:bg-muted"
                     }`}
                   >
                     {t(`feedback.type${tp[0].toUpperCase() + tp.slice(1)}`)}
