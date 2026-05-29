@@ -34,25 +34,25 @@
 
 :root {
   --radius: 0.625rem;
-  --background: oklch(0.97 0.012 85);          /* #f8f4ed */
-  --foreground: oklch(0.20 0.02 145);
+  --background: oklch(0.97 0.012 85); /* #f8f4ed */
+  --foreground: oklch(0.2 0.02 145);
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.20 0.02 145);
+  --card-foreground: oklch(0.2 0.02 145);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.20 0.02 145);
-  --primary: oklch(0.40 0.085 152);            /* #1a5c38 forest green */
+  --popover-foreground: oklch(0.2 0.02 145);
+  --primary: oklch(0.4 0.085 152); /* #1a5c38 forest green */
   --primary-foreground: oklch(0.98 0.005 85);
-  --secondary: oklch(0.76 0.12 85);            /* #c9a84c gold */
-  --secondary-foreground: oklch(0.20 0.02 145);
+  --secondary: oklch(0.76 0.12 85); /* #c9a84c gold */
+  --secondary-foreground: oklch(0.2 0.02 145);
   --muted: oklch(0.93 0.012 85);
   --muted-foreground: oklch(0.45 0.02 145);
   --accent: oklch(0.76 0.12 85);
-  --accent-foreground: oklch(0.20 0.02 145);
+  --accent-foreground: oklch(0.2 0.02 145);
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(0.98 0.005 85);
   --border: oklch(0.88 0.015 85);
   --input: oklch(0.88 0.015 85);
-  --ring: oklch(0.40 0.085 152);
+  --ring: oklch(0.4 0.085 152);
 }
 
 .dark {
@@ -60,12 +60,12 @@
   --foreground: oklch(0.97 0.012 85);
   --card: oklch(0.22 0.025 145);
   --card-foreground: oklch(0.97 0.012 85);
-  --primary: oklch(0.55 0.10 152);
+  --primary: oklch(0.55 0.1 152);
   --primary-foreground: oklch(0.98 0.005 85);
   --secondary: oklch(0.76 0.12 85);
-  --secondary-foreground: oklch(0.20 0.02 145);
+  --secondary-foreground: oklch(0.2 0.02 145);
   --muted: oklch(0.28 0.025 145);
-  --muted-foreground: oklch(0.70 0.02 85);
+  --muted-foreground: oklch(0.7 0.02 85);
   --border: oklch(1 0 0 / 12%);
   --input: oklch(1 0 0 / 15%);
 }
@@ -79,7 +79,10 @@
     color: var(--color-foreground);
     font-family: var(--font-sans);
   }
-  h1, h2, h3, h4 {
+  h1,
+  h2,
+  h3,
+  h4 {
     font-family: var(--font-serif);
   }
 }

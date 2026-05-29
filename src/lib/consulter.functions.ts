@@ -67,7 +67,7 @@ async function verifyFirebaseIdToken(idToken: string): Promise<boolean> {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ idToken }),
-      }
+      },
     );
     if (!res.ok) return false;
     const json = (await res.json()) as { users?: Array<{ localId?: string }> };
@@ -79,7 +79,7 @@ async function verifyFirebaseIdToken(idToken: string): Promise<boolean> {
 
 export const consulterAgent = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) =>
-    InputSchema.extend({ idToken: z.string().min(10).max(4096) }).parse(input)
+    InputSchema.extend({ idToken: z.string().min(10).max(4096) }).parse(input),
   )
   .handler(async ({ data }): Promise<AgentResult> => {
     const authorized = await verifyFirebaseIdToken(data.idToken);
@@ -93,9 +93,7 @@ export const consulterAgent = createServerFn({ method: "POST" })
     }
 
     const driveKeys = DOMAIN_DRIVE_KEYS[data.domaine] ?? [];
-    const driveIds = driveKeys
-      .map((k) => process.env[k])
-      .filter((v): v is string => Boolean(v));
+    const driveIds = driveKeys.map((k) => process.env[k]).filter((v): v is string => Boolean(v));
 
     const docs = await Promise.all(driveIds.map(fetchDriveText));
     const corpus = docs.filter(Boolean).join("\n\n---\n\n");
@@ -134,8 +132,7 @@ export const consulterAgent = createServerFn({ method: "POST" })
       }
 
       const json = await res.json();
-      const raw: string =
-        json?.candidates?.[0]?.content?.parts?.[0]?.text ?? "";
+      const raw: string = json?.candidates?.[0]?.content?.parts?.[0]?.text ?? "";
       if (!raw) return { ok: false, error: "EMPTY_RESPONSE" };
 
       let parsed: AgentResponse;

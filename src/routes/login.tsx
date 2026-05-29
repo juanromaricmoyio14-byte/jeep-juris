@@ -1,3 +1,4 @@
+import { Loader2 } from "lucide-react";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
@@ -11,7 +12,11 @@ export const Route = createFileRoute("/login")({
   head: () => ({
     meta: [
       { title: "Connexion — JEEP JURIS" },
-      { name: "description", content: "Connectez-vous à JEEP JURIS pour sauvegarder vos consultations juridiques et accéder à votre historique." },
+      {
+        name: "description",
+        content:
+          "Connectez-vous à JEEP JURIS pour sauvegarder vos consultations juridiques et accéder à votre historique.",
+      },
       { property: "og:title", content: "Connexion — JEEP JURIS" },
       { property: "og:description", content: "Accédez à votre espace JEEP JURIS." },
       { property: "og:url", content: "https://jeep-juris.lovable.app/login" },
@@ -109,8 +114,9 @@ function LoginPage() {
             <button
               type="submit"
               disabled={loading || !firebaseConfigured}
-              className="w-full rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground hover:opacity-90 disabled:opacity-40"
+              className="w-full flex items-center justify-center rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground hover:opacity-90 disabled:opacity-40"
             >
+              {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {mode === "login" ? t("auth.submitLogin") : t("auth.submitSignup")}
             </button>
           </form>
