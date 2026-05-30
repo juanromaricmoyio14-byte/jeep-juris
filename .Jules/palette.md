@@ -1,0 +1,3 @@
+## 2026-05-27 - Form Accessibility and UX Polish
+**Learning:** Found recurrent missing `htmlFor` and `id` associations on custom form inputs (like in the login page). Additionally, main action buttons lacked visual loading indicators.
+**Action:** Always verify `htmlFor` is bound to the correct input `id` to ensure screen reader compatibility, and ensure `Loader2` is shown during async form submissions.
