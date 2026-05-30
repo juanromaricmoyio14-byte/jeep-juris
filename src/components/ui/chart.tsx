@@ -1,5 +1,6 @@
 import * as React from "react";
 import * as RechartsPrimitive from "recharts";
+import DOMPurify from "isomorphic-dompurify";
 
 import { cn } from "@/lib/utils";
 
@@ -68,12 +69,9 @@ const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
     return null;
   }
 
-  return (
-    <style
-      dangerouslySetInnerHTML={{
-        __html: Object.entries(THEMES)
-          .map(
-            ([theme, prefix]) => `
+  const rawCSS = Object.entries(THEMES)
+    .map(
+      ([theme, prefix]) => `
 ${prefix} [data-chart=${id}] {
 ${colorConfig
   .map(([key, itemConfig]) => {
@@ -83,8 +81,14 @@ ${colorConfig
   .join("\n")}
 }
 `,
-          )
-          .join("\n"),
+    )
+    .join("\n");
+
+  return (
+    <style
+      dangerouslySetInnerHTML={{
+        // 🛡️ Sentinel: Sanitize inline styles injected to mitigate potential XSS if colors contain unsafe payloads
+        __html: DOMPurify.sanitize(rawCSS),
       }}
     />
   );

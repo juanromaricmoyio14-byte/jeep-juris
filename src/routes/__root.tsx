@@ -18,7 +18,10 @@ function NotFoundComponent() {
       <div className="max-w-md text-center">
         <h1 className="text-7xl font-bold text-primary">404</h1>
         <p className="mt-4 text-muted-foreground">Page not found / Page introuvable</p>
-        <Link to="/" className="mt-6 inline-block rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground">
+        <Link
+          to="/"
+          className="mt-6 inline-block rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground"
+        >
           Home / Accueil
         </Link>
       </div>
@@ -35,7 +38,10 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
         <h1 className="text-xl font-semibold">Something went wrong</h1>
         <p className="mt-2 text-sm text-muted-foreground">{error.message}</p>
         <button
-          onClick={() => { router.invalidate(); reset(); }}
+          onClick={() => {
+            router.invalidate();
+            reset();
+          }}
           className="mt-6 rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground"
         >
           Retry
@@ -50,18 +56,43 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
+      {
+        httpEquiv: "Content-Security-Policy",
+        content:
+          "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://firebasestorage.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://firestore.googleapis.com https://generativelanguage.googleapis.com; img-src 'self' data: https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev;",
+      },
       { title: "JEEP JURIS — Vos droits, en clair." },
-      { name: "description", content: "Assistant juridique intelligent pour le droit camerounais. Intelligent legal assistant for Cameroonian law." },
+      {
+        name: "description",
+        content:
+          "Assistant juridique intelligent pour le droit camerounais. Intelligent legal assistant for Cameroonian law.",
+      },
       { property: "og:site_name", content: "JEEP JURIS" },
       { property: "og:type", content: "website" },
       { property: "og:title", content: "JEEP JURIS — Vos droits, en clair." },
-      { property: "og:description", content: "Assistant juridique intelligent pour le droit camerounais. Intelligent legal assistant for Cameroonian law." },
+      {
+        property: "og:description",
+        content:
+          "Assistant juridique intelligent pour le droit camerounais. Intelligent legal assistant for Cameroonian law.",
+      },
       { property: "og:url", content: "https://jeep-juris.lovable.app/" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: "JEEP JURIS — Vos droits, en clair." },
-      { name: "twitter:description", content: "Assistant juridique intelligent pour le droit camerounais. Intelligent legal assistant for Cameroonian law." },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/c6cce3de-4391-4a7a-9050-53d4c954fa23/id-preview-e992b4ff--ddc66cbd-9305-4bde-a477-97c6e21352d4.lovable.app-1779301692499.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/c6cce3de-4391-4a7a-9050-53d4c954fa23/id-preview-e992b4ff--ddc66cbd-9305-4bde-a477-97c6e21352d4.lovable.app-1779301692499.png" },
+      {
+        name: "twitter:description",
+        content:
+          "Assistant juridique intelligent pour le droit camerounais. Intelligent legal assistant for Cameroonian law.",
+      },
+      {
+        property: "og:image",
+        content:
+          "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/c6cce3de-4391-4a7a-9050-53d4c954fa23/id-preview-e992b4ff--ddc66cbd-9305-4bde-a477-97c6e21352d4.lovable.app-1779301692499.png",
+      },
+      {
+        name: "twitter:image",
+        content:
+          "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/c6cce3de-4391-4a7a-9050-53d4c954fa23/id-preview-e992b4ff--ddc66cbd-9305-4bde-a477-97c6e21352d4.lovable.app-1779301692499.png",
+      },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
@@ -104,8 +135,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 function RootShell({ children }: { children: React.ReactNode }) {
   return (
     <html lang="fr">
-      <head><HeadContent /></head>
-      <body>{children}<Scripts /></body>
+      <head>
+        <HeadContent />
+      </head>
+      <body>
+        {children}
+        <Scripts />
+      </body>
     </html>
   );
 }

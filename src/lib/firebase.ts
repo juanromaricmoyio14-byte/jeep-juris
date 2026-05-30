@@ -8,9 +8,7 @@ const config = {
   projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
 };
 
-export const firebaseConfigured = Boolean(
-  config.apiKey && config.authDomain && config.projectId
-);
+export const firebaseConfigured = Boolean(config.apiKey && config.authDomain && config.projectId);
 
 export const ADMIN_EMAILS = (import.meta.env.VITE_ADMIN_EMAILS ?? "")
   .split(",")
