@@ -3,14 +3,22 @@ import { useTranslation } from "react-i18next";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Mail } from "lucide-react";
+import { BackButton } from "@/components/BackButton";
 
 export const Route = createFileRoute("/apropos")({
   head: () => ({
     meta: [
       { title: "À propos — JEEP JURIS" },
-      { name: "description", content: "Notre mission : démocratiser l'accès au droit camerounais grâce à un assistant juridique IA accessible à tous." },
+      {
+        name: "description",
+        content:
+          "Notre mission : démocratiser l'accès au droit camerounais grâce à un assistant juridique IA accessible à tous.",
+      },
       { property: "og:title", content: "À propos — JEEP JURIS" },
-      { property: "og:description", content: "Notre mission : démocratiser l'accès au droit camerounais." },
+      {
+        property: "og:description",
+        content: "Notre mission : démocratiser l'accès au droit camerounais.",
+      },
       { property: "og:url", content: "https://jeep-juris.lovable.app/apropos" },
       { property: "og:type", content: "website" },
     ],
@@ -24,7 +32,8 @@ function AboutPage() {
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
-      <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-12">
+      <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-12 animate-in fade-in duration-500">
+        <BackButton />
         <h1 className="font-serif text-4xl font-bold text-primary">{t("about.title")}</h1>
 
         <section className="mt-10">

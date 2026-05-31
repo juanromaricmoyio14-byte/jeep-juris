@@ -6,6 +6,15 @@ const InputSchema = z.object({
   domaine: z.string().min(1).max(50),
   langue: z.enum(["fr", "en"]),
   niveau: z.enum(["simple", "standard", "technical"]).optional().default("standard"),
+  history: z
+    .array(
+      z.object({
+        role: z.enum(["user", "model"]),
+        text: z.string(),
+      }),
+    )
+    .optional()
+    .default([]),
 });
 
 const DOMAIN_DRIVE_KEYS: Record<string, string[]> = {
@@ -67,7 +76,7 @@ async function verifyFirebaseIdToken(idToken: string): Promise<boolean> {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ idToken }),
-      }
+      },
     );
     if (!res.ok) return false;
     const json = (await res.json()) as { users?: Array<{ localId?: string }> };
@@ -77,9 +86,32 @@ async function verifyFirebaseIdToken(idToken: string): Promise<boolean> {
   }
 }
 
+export const getLibraryDoc = createServerFn({ method: "GET" })
+  .inputValidator(z.object({ domain: z.string() }))
+  .handler(async ({ data }): Promise<{ ok: boolean; text?: string; error?: string }> => {
+    const driveKeys = DOMAIN_DRIVE_KEYS[data.domain] ?? [];
+    if (driveKeys.length === 0) {
+      return { ok: false, error: "NOT_FOUND" };
+    }
+    const driveIds = driveKeys.map((k) => process.env[k]).filter((v): v is string => Boolean(v));
+
+    if (driveIds.length === 0) {
+      return { ok: false, error: "NO_DRIVE_ID" };
+    }
+
+    try {
+      const docs = await Promise.all(driveIds.map(fetchDriveText));
+      const text = docs.filter(Boolean).join("\n\n---\n\n");
+      return { ok: true, text };
+    } catch (e) {
+      console.error("getLibraryDoc error", e);
+      return { ok: false, error: "FETCH_ERROR" };
+    }
+  });
+
 export const consulterAgent = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) =>
-    InputSchema.extend({ idToken: z.string().min(10).max(4096) }).parse(input)
+    InputSchema.extend({ idToken: z.string().min(10).max(4096) }).parse(input),
   )
   .handler(async ({ data }): Promise<AgentResult> => {
     const authorized = await verifyFirebaseIdToken(data.idToken);
@@ -93,9 +125,7 @@ export const consulterAgent = createServerFn({ method: "POST" })
     }
 
     const driveKeys = DOMAIN_DRIVE_KEYS[data.domaine] ?? [];
-    const driveIds = driveKeys
-      .map((k) => process.env[k])
-      .filter((v): v is string => Boolean(v));
+    const driveIds = driveKeys.map((k) => process.env[k]).filter((v): v is string => Boolean(v));
 
     const docs = await Promise.all(driveIds.map(fetchDriveText));
     const corpus = docs.filter(Boolean).join("\n\n---\n\n");
@@ -115,6 +145,10 @@ export const consulterAgent = createServerFn({ method: "POST" })
             parts: [{ text: SYSTEM_PROMPT(data.langue, data.niveau) }],
           },
           contents: [
+            ...data.history.map((msg) => ({
+              role: msg.role,
+              parts: [{ text: msg.text }],
+            })),
             {
               role: "user",
               parts: [{ text: userContent }],
@@ -134,8 +168,7 @@ export const consulterAgent = createServerFn({ method: "POST" })
       }
 
       const json = await res.json();
-      const raw: string =
-        json?.candidates?.[0]?.content?.parts?.[0]?.text ?? "";
+      const raw: string = json?.candidates?.[0]?.content?.parts?.[0]?.text ?? "";
       if (!raw) return { ok: false, error: "EMPTY_RESPONSE" };
 
       let parsed: AgentResponse;
