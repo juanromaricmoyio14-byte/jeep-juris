@@ -4,8 +4,8 @@ type SpeechRecognitionLike = {
   lang: string;
   interimResults: boolean;
   continuous: boolean;
-  onresult: ((e: any) => void) | null;
-  onerror: ((e: any) => void) | null;
+  onresult: ((e: unknown) => void) | null;
+  onerror: ((e: unknown) => void) | null;
   onend: (() => void) | null;
   start: () => void;
   stop: () => void;
@@ -13,7 +13,10 @@ type SpeechRecognitionLike = {
 
 export function getSpeechRecognition(): (new () => SpeechRecognitionLike) | null {
   if (typeof window === "undefined") return null;
-  const w = window as any;
+  const w = window as {
+    SpeechRecognition?: new () => SpeechRecognitionLike;
+    webkitSpeechRecognition?: new () => SpeechRecognitionLike;
+  };
   return w.SpeechRecognition || w.webkitSpeechRecognition || null;
 }
 

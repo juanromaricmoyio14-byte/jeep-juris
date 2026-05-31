@@ -4,6 +4,7 @@ import { firebaseConfigured, getFirebaseAuth } from "@/lib/firebase";
 
 interface AuthCtx {
   user: User | null;
+  isAdmin: boolean;
   loading: boolean;
   configured: boolean;
   logout: () => Promise<void>;
@@ -11,6 +12,7 @@ interface AuthCtx {
 
 const Ctx = createContext<AuthCtx>({
   user: null,
+  isAdmin: false,
   loading: true,
   configured: false,
   logout: async () => {},
@@ -18,6 +20,7 @@ const Ctx = createContext<AuthCtx>({
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
+  const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -26,7 +29,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setLoading(false);
       return;
     }
-    return onAuthStateChanged(auth, (u) => {
+    return onAuthStateChanged(auth, async (u) => {
+      if (u) {
+        try {
+          const tokenResult = await u.getIdTokenResult();
+          setIsAdmin(!!tokenResult.claims.admin);
+        } catch (e) {
+          console.error("Failed to get ID token result", e);
+          setIsAdmin(false);
+        }
+      } else {
+        setIsAdmin(false);
+      }
       setUser(u);
       setLoading(false);
     });
@@ -36,6 +50,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     <Ctx.Provider
       value={{
         user,
+        isAdmin,
         loading,
         configured: firebaseConfigured,
         logout: async () => {

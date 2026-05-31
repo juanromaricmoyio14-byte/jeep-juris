@@ -4,7 +4,22 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { Header } from "@/components/Header";
 import { consulterAgent, type AgentResponse } from "@/lib/consulter.functions";
-import { Send, RefreshCcw, ShieldAlert, Sparkles, Mic, MicOff, Volume2, Square, History } from "lucide-react";
+import {
+  Send,
+  RefreshCcw,
+  ShieldAlert,
+  Sparkles,
+  Mic,
+  MicOff,
+  Volume2,
+  Square,
+  History,
+  Menu,
+  X,
+  ChevronDown,
+  ChevronUp,
+} from "lucide-react";
+import * as Accordion from "@radix-ui/react-accordion";
 import { z } from "zod";
 import { useAuth } from "@/components/AuthProvider";
 import { getDb } from "@/lib/firebase";
@@ -19,6 +34,7 @@ import {
   type Timestamp,
 } from "firebase/firestore";
 import { getSpeechRecognition, speak, stopSpeaking } from "@/lib/speech";
+import { BackButton } from "@/components/BackButton";
 
 const searchSchema = z.object({
   domaine: z.string().optional(),
@@ -29,9 +45,17 @@ export const Route = createFileRoute("/agent")({
   head: () => ({
     meta: [
       { title: "Agent juridique — JEEP JURIS" },
-      { name: "description", content: "Consultez l'assistant juridique IA spécialisé en droit camerounais. Posez votre question et recevez une analyse structurée." },
+      {
+        name: "description",
+        content:
+          "Consultez l'assistant juridique IA spécialisé en droit camerounais. Posez votre question et recevez une analyse structurée.",
+      },
       { property: "og:title", content: "Agent juridique — JEEP JURIS" },
-      { property: "og:description", content: "Posez votre question juridique et recevez une analyse structurée en droit camerounais." },
+      {
+        property: "og:description",
+        content:
+          "Posez votre question juridique et recevez une analyse structurée en droit camerounais.",
+      },
       { property: "og:url", content: "https://jeep-juris.lovable.app/agent" },
       { property: "og:type", content: "website" },
     ],
@@ -69,9 +93,10 @@ function AgentPage() {
   const [listening, setListening] = useState(false);
   const [voiceError, setVoiceError] = useState<string | null>(null);
   const [history, setHistory] = useState<HistoryItem[]>([]);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const consult = useServerFn(consulterAgent);
   const scrollRef = useRef<HTMLDivElement>(null);
-  const recognitionRef = useRef<any>(null);
+  const recognitionRef = useRef<unknown>(null);
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
@@ -88,7 +113,7 @@ function AgentPage() {
     const q = query(
       collection(db, "users", user.uid, "consultations"),
       orderBy("createdAt", "desc"),
-      limit(50)
+      limit(50),
     );
     const unsub = onSnapshot(q, (snap) => {
       setHistory(
@@ -96,7 +121,7 @@ function AgentPage() {
           id: d.id,
           question: (d.data().question as string) ?? "",
           createdAt: d.data().createdAt as Timestamp | undefined,
-        }))
+        })),
       );
     });
     return () => unsub();
@@ -118,7 +143,17 @@ function AgentPage() {
           return;
         }
         const idToken = await user.getIdToken();
-        const result = await consult({ data: { question, domaine, langue, niveau, idToken } });
+        // Get last 3 exchanges from local messages (ignoring loading states or non-text responses)
+        const recentHistory = messages
+          .slice(-6) // Last 3 exchanges = 6 messages max
+          .map((m) => ({
+            role: m.role === "agent" ? ("model" as const) : ("user" as const),
+            text: m.role === "user" ? m.text! : JSON.stringify(m.response),
+          }));
+
+        const result = await consult({
+          data: { question, domaine, langue, niveau, idToken, history: recentHistory },
+        });
         if (result.ok && result.data) {
           setMessages((m) => [...m, { role: "agent", response: result.data }]);
           // Save to Firestore
@@ -140,7 +175,9 @@ function AgentPage() {
             }
           }
         } else {
-          setError(result.error === "MISSING_KEY" ? t("agent.errorMissingKey") : t("agent.errorGeneric"));
+          setError(
+            result.error === "MISSING_KEY" ? t("agent.errorMissingKey") : t("agent.errorGeneric"),
+          );
         }
       } catch (e) {
         console.error(e);
@@ -149,7 +186,7 @@ function AgentPage() {
         setLoading(false);
       }
     },
-    [input, loading, i18n.language, consult, domaine, niveau, user, t]
+    [input, loading, i18n.language, consult, domaine, niveau, user, t],
   );
 
   const reset = () => {
@@ -174,13 +211,13 @@ function AgentPage() {
     rec.lang = i18n.language?.startsWith("en") ? "en-US" : "fr-FR";
     rec.interimResults = false;
     rec.continuous = false;
-    rec.onresult = (e: any) => {
-      const transcript = Array.from(e.results)
-        .map((r: any) => r[0].transcript)
+    rec.onresult = (e: unknown) => {
+      const transcript = Array.from((e as { results: Iterable<unknown> }).results)
+        .map((r) => (r as { 0: { transcript: string } })[0].transcript)
         .join(" ");
       setInput((prev) => (prev ? prev + " " : "") + transcript);
     };
-    rec.onerror = (e: any) => {
+    rec.onerror = (e: unknown) => {
       console.error("Speech error", e);
       setVoiceError(t("agent.voiceUnsupported"));
     };
@@ -218,13 +255,36 @@ function AgentPage() {
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
-      <div className="mx-auto w-full max-w-7xl flex-1 px-4 py-6">
-        <div className="grid gap-6 md:grid-cols-[280px_1fr]">
+      <div className="mx-auto w-full max-w-7xl flex-1 px-4 py-6 animate-in fade-in duration-500">
+        <BackButton />
+        <div className="grid gap-6 md:grid-cols-[280px_1fr] relative">
+          {/* Mobile Overlay */}
+          {sidebarOpen && (
+            <div
+              className="fixed inset-0 z-40 bg-black/50 md:hidden"
+              onClick={() => setSidebarOpen(false)}
+            />
+          )}
+
           {/* Sidebar */}
-          <aside className="space-y-4">
+          <aside
+            className={`space-y-4 fixed md:static inset-y-0 left-0 z-50 w-[280px] bg-background md:bg-transparent p-4 md:p-0 transition-transform duration-300 md:transform-none ${sidebarOpen ? "translate-x-0" : "-translate-x-full"} overflow-y-auto md:overflow-visible`}
+          >
+            <div className="flex justify-between items-center md:hidden mb-4">
+              <h2 className="font-serif font-bold text-primary">Options</h2>
+              <button
+                onClick={() => setSidebarOpen(false)}
+                className="p-2 rounded-md hover:bg-muted min-h-[44px] min-w-[44px] flex items-center justify-center"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
             <h1 className="sr-only">{t("agent.title")}</h1>
             <div className="rounded-2xl border border-border bg-card p-5">
-              <label htmlFor="agent-domain-select" className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+              <label
+                htmlFor="agent-domain-select"
+                className="text-xs font-semibold uppercase tracking-wide text-muted-foreground"
+              >
                 {t("agent.domainLabel")}
               </label>
               <select
@@ -234,7 +294,9 @@ function AgentPage() {
                 className="mt-2 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm focus:border-primary focus:outline-none"
               >
                 {DOMAINS.map((d) => (
-                  <option key={d} value={d}>{t(`domains.${d}`)}</option>
+                  <option key={d} value={d}>
+                    {t(`domains.${d}`)}
+                  </option>
                 ))}
               </select>
 
@@ -286,10 +348,18 @@ function AgentPage() {
                         onClick={() => submit(h.question)}
                         className="w-full rounded-md px-2 py-1.5 text-left text-xs hover:bg-muted"
                       >
-                        <div className="font-medium text-foreground">{preview}{h.question.split(/\s+/).length > 5 ? "…" : ""}</div>
+                        <div className="font-medium text-foreground">
+                          {preview}
+                          {h.question.split(/\s+/).length > 5 ? "…" : ""}
+                        </div>
                         {date && (
                           <div className="text-[10px] text-muted-foreground">
-                            {date.toLocaleDateString(lang, { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" })}
+                            {date.toLocaleDateString(lang, {
+                              day: "2-digit",
+                              month: "short",
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            })}
                           </div>
                         )}
                       </button>
@@ -307,11 +377,42 @@ function AgentPage() {
 
           {/* Chat */}
           <section className="flex min-h-[70vh] flex-col rounded-2xl border border-border bg-card">
+            <div className="md:hidden flex items-center p-3 border-b border-border bg-muted/30">
+              <button
+                onClick={() => setSidebarOpen(true)}
+                className="p-2 rounded-md hover:bg-muted min-h-[44px] min-w-[44px] flex items-center justify-center"
+              >
+                <Menu className="h-5 w-5" />
+              </button>
+              <span className="ml-2 font-serif font-medium text-sm">Options & Historique</span>
+            </div>
             <div ref={scrollRef} className="flex-1 space-y-5 overflow-y-auto p-6">
               {messages.length === 0 && !loading && (
-                <div className="flex h-full min-h-[400px] flex-col items-center justify-center text-center text-muted-foreground">
-                  <Sparkles className="h-10 w-10 text-secondary" />
-                  <p className="mt-3 font-serif text-lg">{t("agent.emptyState")}</p>
+                <div className="flex flex-col items-center justify-center text-center text-muted-foreground py-10">
+                  <Sparkles className="h-10 w-10 text-secondary mb-4" />
+                  <p className="font-serif text-lg mb-8">{t("agent.emptyState")}</p>
+
+                  <div className="grid gap-3 w-full max-w-2xl sm:grid-cols-2 text-left">
+                    {[
+                      "Mon employeur refuse de me payer depuis 2 mois. Que faire ?",
+                      "J'ai été licencié sans préavis après 5 ans. Est-ce légal ?",
+                      "Je veux divorcer mais mon conjoint refuse. Quels sont mes droits ?",
+                      "Mon propriétaire veut m'expulser sans raison. Comment me défendre ?",
+                      "J'ai été arrêté par la police. Quels sont mes droits ?",
+                      "Mon voisin a construit sur mon terrain. Que faire ?",
+                    ].map((q, i) => (
+                      <button
+                        key={i}
+                        onClick={() => {
+                          setInput(q);
+                          submit(q);
+                        }}
+                        className="p-3 text-sm rounded-xl border border-border bg-card hover:bg-muted transition-colors"
+                      >
+                        {q}
+                      </button>
+                    ))}
+                  </div>
                 </div>
               )}
 
@@ -326,15 +427,24 @@ function AgentPage() {
                   <div key={i} className="flex justify-start">
                     <AgentBubble response={m.response!} lang={lang} />
                   </div>
-                )
+                ),
               )}
 
               {loading && (
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <div className="flex gap-1">
-                    <span className="h-2 w-2 animate-bounce rounded-full bg-primary" style={{ animationDelay: "0ms" }} />
-                    <span className="h-2 w-2 animate-bounce rounded-full bg-primary" style={{ animationDelay: "150ms" }} />
-                    <span className="h-2 w-2 animate-bounce rounded-full bg-primary" style={{ animationDelay: "300ms" }} />
+                    <span
+                      className="h-2 w-2 animate-bounce rounded-full bg-primary"
+                      style={{ animationDelay: "0ms" }}
+                    />
+                    <span
+                      className="h-2 w-2 animate-bounce rounded-full bg-primary"
+                      style={{ animationDelay: "150ms" }}
+                    />
+                    <span
+                      className="h-2 w-2 animate-bounce rounded-full bg-primary"
+                      style={{ animationDelay: "300ms" }}
+                    />
                   </div>
                   {t("agent.loading")}
                 </div>
@@ -348,7 +458,10 @@ function AgentPage() {
             </div>
 
             <form
-              onSubmit={(e) => { e.preventDefault(); submit(); }}
+              onSubmit={(e) => {
+                e.preventDefault();
+                submit();
+              }}
               className="border-t border-border p-4"
             >
               {listening && (
@@ -458,18 +571,15 @@ function AgentBubble({ response, lang }: { response: AgentResponse; lang: "fr" |
         )}
       </div>
 
-      <Block title={t("agent.reformulation")}>
+      <Block title={t("agent.reformulation") || "Résumé"}>
         <p className="italic text-muted-foreground">{response.reformulation}</p>
       </Block>
 
-      {response.textes_applicables?.length > 0 && (
-        <Block title={t("agent.applicableTexts")}>
-          <ul className="space-y-2">
-            {response.textes_applicables.map((tx, i) => (
-              <li key={i} className="rounded-lg border-l-4 border-secondary bg-secondary/5 px-3 py-2">
-                <p className="font-semibold">{tx.loi} — {tx.article}</p>
-                <p className="mt-1 text-muted-foreground">{tx.contenu}</p>
-              </li>
+      {response.actions_recommandees?.length > 0 && (
+        <Block title={t("agent.recommendedActions") || "Que faire ?"}>
+          <ul className="list-disc space-y-1 pl-5">
+            {response.actions_recommandees.map((a, i) => (
+              <li key={i}>{a}</li>
             ))}
           </ul>
         </Block>
@@ -479,19 +589,49 @@ function AgentBubble({ response, lang }: { response: AgentResponse; lang: "fr" |
         <p className="whitespace-pre-wrap leading-relaxed">{response.analyse}</p>
       </Block>
 
-      {response.actions_recommandees?.length > 0 && (
-        <Block title={t("agent.recommendedActions")}>
-          <ul className="list-disc space-y-1 pl-5">
-            {response.actions_recommandees.map((a, i) => <li key={i}>{a}</li>)}
-          </ul>
-        </Block>
+      {response.textes_applicables?.length > 0 && (
+        <Accordion.Root type="single" collapsible className="w-full mt-4">
+          <Accordion.Item
+            value="sources"
+            className="border border-border rounded-lg overflow-hidden"
+          >
+            <Accordion.Header className="flex">
+              <Accordion.Trigger className="flex flex-1 items-center justify-between bg-muted/30 px-4 py-3 text-sm font-semibold hover:bg-muted/50 transition-all [&[data-state=open]>svg]:rotate-180">
+                Voir les sources
+                <ChevronDown className="h-4 w-4 transition-transform duration-200" />
+              </Accordion.Trigger>
+            </Accordion.Header>
+            <Accordion.Content className="overflow-hidden text-sm data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down">
+              <div className="p-4 bg-card/50">
+                <ul className="space-y-3">
+                  {response.textes_applicables.map((tx, i) => (
+                    <li
+                      key={i}
+                      className="rounded-lg border-l-4 border-secondary bg-secondary/5 px-3 py-2"
+                    >
+                      <p className="font-semibold text-foreground">
+                        {tx.loi} — {tx.article}
+                      </p>
+                      <p className="mt-1.5 text-muted-foreground text-xs leading-relaxed">
+                        {tx.contenu}
+                      </p>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </Accordion.Content>
+          </Accordion.Item>
+        </Accordion.Root>
       )}
 
       {response.institutions?.length > 0 && (
         <Block title={t("agent.institutions")}>
           <div className="flex flex-wrap gap-2">
             {response.institutions.map((inst, i) => (
-              <span key={i} className="rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
+              <span
+                key={i}
+                className="rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary"
+              >
                 {inst}
               </span>
             ))}
