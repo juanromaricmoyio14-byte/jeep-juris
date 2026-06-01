@@ -4,7 +4,9 @@ type SpeechRecognitionLike = {
   lang: string;
   interimResults: boolean;
   continuous: boolean;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onresult: ((e: any) => void) | null;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onerror: ((e: any) => void) | null;
   onend: (() => void) | null;
   start: () => void;
@@ -13,6 +15,7 @@ type SpeechRecognitionLike = {
 
 export function getSpeechRecognition(): (new () => SpeechRecognitionLike) | null {
   if (typeof window === "undefined") return null;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const w = window as any;
   return w.SpeechRecognition || w.webkitSpeechRecognition || null;
 }

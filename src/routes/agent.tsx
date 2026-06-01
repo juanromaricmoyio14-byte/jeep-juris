@@ -96,6 +96,7 @@ function AgentPage() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const consult = useServerFn(consulterAgent);
   const scrollRef = useRef<HTMLDivElement>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const recognitionRef = useRef<any>(null);
 
   useEffect(() => {
@@ -186,7 +187,7 @@ function AgentPage() {
         setLoading(false);
       }
     },
-    [input, loading, i18n.language, consult, domaine, niveau, user, t],
+    [input, loading, i18n.language, consult, domaine, niveau, user, t, messages],
   );
 
   const reset = () => {
@@ -211,12 +212,15 @@ function AgentPage() {
     rec.lang = i18n.language?.startsWith("en") ? "en-US" : "fr-FR";
     rec.interimResults = false;
     rec.continuous = false;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     rec.onresult = (e: any) => {
       const transcript = Array.from(e.results)
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         .map((r: any) => r[0].transcript)
         .join(" ");
       setInput((prev) => (prev ? prev + " " : "") + transcript);
     };
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     rec.onerror = (e: any) => {
       console.error("Speech error", e);
       setVoiceError(t("agent.voiceUnsupported"));
