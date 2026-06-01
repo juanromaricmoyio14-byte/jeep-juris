@@ -1,0 +1,5 @@
+## 2024-06-01 - Missing Content Security Policy (CSP) in Vite App
+
+**Vulnerability:** The Vite/TanStack Start application lacked a Content Security Policy (CSP) header, increasing susceptibility to Cross-Site Scripting (XSS) attacks. Without a CSP, the browser has no instructions regarding which origins are allowed to execute scripts, load styles, fetch fonts, or make connections.
+**Learning:** Modern frontend frameworks often do not include restrictive CSP headers by default to allow maximum flexibility during development (e.g., inline styles, eval for HMR). This leaves the application unprotected against common injection attacks in production environments if developers forget to manually define a CSP.
+**Prevention:** Explicitly define a Content Security Policy via the `<meta http-equiv="Content-Security-Policy">` tag in the main application entry point (e.g., `src/routes/__root.tsx` or `index.html`) or through server headers. Restrict `default-src` to `'self'` and selectively allow required domains for scripts, styles, fonts, and connections.
