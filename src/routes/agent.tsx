@@ -253,34 +253,35 @@ function AgentPage() {
   const lang = (i18n.language?.startsWith("en") ? "en" : "fr") as "fr" | "en";
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-gradient-to-b from-background via-background to-muted/20">
       <Header />
-      <div className="mx-auto w-full max-w-7xl flex-1 px-4 py-6 animate-in fade-in duration-500">
+      <div className="mx-auto w-full max-w-7xl flex-1 px-3 py-4 sm:px-6 sm:py-6 animate-in fade-in duration-500">
         <BackButton />
-        <div className="grid gap-6 md:grid-cols-[280px_1fr] relative">
+        <div className="grid gap-4 lg:gap-8 lg:grid-cols-[300px_1fr] relative">
           {/* Mobile Overlay */}
           {sidebarOpen && (
             <div
-              className="fixed inset-0 z-40 bg-black/50 md:hidden"
+              className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm lg:hidden animate-in fade-in duration-200"
               onClick={() => setSidebarOpen(false)}
             />
           )}
 
           {/* Sidebar */}
           <aside
-            className={`space-y-4 fixed md:static inset-y-0 left-0 z-50 w-[280px] bg-background md:bg-transparent p-4 md:p-0 transition-transform duration-300 md:transform-none ${sidebarOpen ? "translate-x-0" : "-translate-x-full"} overflow-y-auto md:overflow-visible`}
+            className={`space-y-4 fixed lg:sticky lg:top-20 inset-y-0 left-0 z-50 w-[300px] max-w-[85vw] bg-background lg:bg-transparent p-4 lg:p-0 shadow-2xl lg:shadow-none transition-transform duration-300 lg:transform-none lg:self-start lg:max-h-[calc(100vh-6rem)] overflow-y-auto ${sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}`}
           >
-            <div className="flex justify-between items-center md:hidden mb-4">
-              <h2 className="font-serif font-bold text-primary">Options</h2>
+            <div className="flex justify-between items-center lg:hidden mb-2">
+              <h2 className="font-serif font-bold text-primary text-lg">Options</h2>
               <button
                 onClick={() => setSidebarOpen(false)}
-                className="p-2 rounded-md hover:bg-muted min-h-[44px] min-w-[44px] flex items-center justify-center"
+                className="p-2 rounded-full hover:bg-muted min-h-[44px] min-w-[44px] flex items-center justify-center"
+                aria-label="Fermer"
               >
                 <X className="h-5 w-5" />
               </button>
             </div>
             <h1 className="sr-only">{t("agent.title")}</h1>
-            <div className="rounded-2xl border border-border bg-card p-5">
+            <div className="rounded-2xl border border-border bg-card p-5 shadow-sm">
               <label
                 htmlFor="agent-domain-select"
                 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground"
@@ -291,7 +292,7 @@ function AgentPage() {
                 id="agent-domain-select"
                 value={domaine}
                 onChange={(e) => setDomaine(e.target.value)}
-                className="mt-2 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm focus:border-primary focus:outline-none"
+                className="mt-2 w-full rounded-lg border border-border bg-background px-3 py-2.5 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition"
               >
                 {DOMAINS.map((d) => (
                   <option key={d} value={d}>
@@ -300,7 +301,7 @@ function AgentPage() {
                 ))}
               </select>
 
-              <label className="mt-4 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+              <label className="mt-5 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                 {t("agent.levelLabel")}
               </label>
               <div className="mt-2 grid grid-cols-3 gap-1 rounded-lg border border-border bg-background p-1">
@@ -310,7 +311,7 @@ function AgentPage() {
                     onClick={() => setNiveau(lvl)}
                     className={`rounded-md px-2 py-1.5 text-xs font-medium transition-colors ${
                       niveau === lvl
-                        ? "bg-primary text-primary-foreground"
+                        ? "bg-primary text-primary-foreground shadow-sm"
                         : "text-muted-foreground hover:bg-muted"
                     }`}
                   >
@@ -321,14 +322,14 @@ function AgentPage() {
 
               <button
                 onClick={reset}
-                className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-lg border border-border bg-background px-3 py-2 text-sm font-medium hover:bg-muted"
+                className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-lg border border-border bg-background px-3 py-2.5 text-sm font-medium hover:bg-muted hover:border-primary/40 transition"
               >
                 <RefreshCcw className="h-3.5 w-3.5" /> {t("agent.newConsult")}
               </button>
             </div>
 
             {/* History */}
-            <div className="rounded-2xl border border-border bg-card p-5">
+            <div className="rounded-2xl border border-border bg-card p-5 shadow-sm">
               <div className="mb-3 flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                 <History className="h-3.5 w-3.5" /> {t("agent.historyTitle")}
               </div>
@@ -338,22 +339,25 @@ function AgentPage() {
               {user && history.length === 0 && (
                 <p className="text-xs text-muted-foreground">{t("agent.historyEmpty")}</p>
               )}
-              <ul className="max-h-72 space-y-1 overflow-y-auto">
+              <ul className="max-h-64 space-y-1 overflow-y-auto -mx-1 px-1">
                 {history.map((h) => {
                   const preview = h.question.split(/\s+/).slice(0, 5).join(" ");
                   const date = h.createdAt?.toDate?.();
                   return (
                     <li key={h.id}>
                       <button
-                        onClick={() => submit(h.question)}
-                        className="w-full rounded-md px-2 py-1.5 text-left text-xs hover:bg-muted"
+                        onClick={() => {
+                          submit(h.question);
+                          setSidebarOpen(false);
+                        }}
+                        className="w-full rounded-md px-2 py-2 text-left text-xs hover:bg-muted transition"
                       >
-                        <div className="font-medium text-foreground">
+                        <div className="font-medium text-foreground line-clamp-1">
                           {preview}
                           {h.question.split(/\s+/).length > 5 ? "…" : ""}
                         </div>
                         {date && (
-                          <div className="text-[10px] text-muted-foreground">
+                          <div className="text-[10px] text-muted-foreground mt-0.5">
                             {date.toLocaleDateString(lang, {
                               day: "2-digit",
                               month: "short",
@@ -371,22 +375,30 @@ function AgentPage() {
 
             <div className="flex gap-3 rounded-2xl border border-secondary/40 bg-secondary/10 p-4 text-xs text-secondary-foreground">
               <ShieldAlert className="h-5 w-5 flex-shrink-0 text-secondary" />
-              <p>{t("agent.disclaimer")}</p>
+              <p className="leading-relaxed">{t("agent.disclaimer")}</p>
             </div>
           </aside>
 
           {/* Chat */}
-          <section className="flex min-h-[70vh] flex-col rounded-2xl border border-border bg-card">
-            <div className="md:hidden flex items-center p-3 border-b border-border bg-muted/30">
+          <section className="flex min-h-[calc(100vh-12rem)] lg:min-h-[calc(100vh-9rem)] flex-col rounded-2xl border border-border bg-card shadow-md overflow-hidden">
+            <div className="lg:hidden flex items-center gap-3 p-3 border-b border-border bg-muted/40">
               <button
                 onClick={() => setSidebarOpen(true)}
-                className="p-2 rounded-md hover:bg-muted min-h-[44px] min-w-[44px] flex items-center justify-center"
+                className="p-2 rounded-lg hover:bg-background min-h-[44px] min-w-[44px] flex items-center justify-center border border-border bg-background"
+                aria-label="Ouvrir les options"
               >
                 <Menu className="h-5 w-5" />
               </button>
-              <span className="ml-2 font-serif font-medium text-sm">Options & Historique</span>
+              <div className="flex-1 min-w-0">
+                <div className="font-serif font-semibold text-sm truncate">
+                  {t(`domains.${domaine}`)}
+                </div>
+                <div className="text-[10px] text-muted-foreground truncate">
+                  {t(`agent.level${niveau[0].toUpperCase() + niveau.slice(1)}`)}
+                </div>
+              </div>
             </div>
-            <div ref={scrollRef} className="flex-1 space-y-5 overflow-y-auto p-6">
+            <div ref={scrollRef} className="flex-1 space-y-5 overflow-y-auto p-4 sm:p-6">
               {messages.length === 0 && !loading && (
                 <div className="flex flex-col items-center justify-center text-center text-muted-foreground py-10">
                   <Sparkles className="h-10 w-10 text-secondary mb-4" />
