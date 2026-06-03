@@ -222,7 +222,10 @@ function LibraryPage() {
                 {selectedLaw ? (isEn ? selectedLaw.titleEn : selectedLaw.titleFr) : ""}
               </Dialog.Title>
               <Dialog.Close asChild>
-                <button className="rounded-full p-2 hover:bg-muted min-h-[44px] min-w-[44px] inline-flex items-center justify-center">
+                <button
+                  className="rounded-full p-2 hover:bg-muted min-h-[44px] min-w-[44px] inline-flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  aria-label={isEn ? "Close" : "Fermer"}
+                >
                   <X className="h-4 w-4" />
                 </button>
               </Dialog.Close>
