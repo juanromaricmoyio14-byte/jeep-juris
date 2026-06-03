@@ -17,14 +17,22 @@ service cloud.firestore {
       allow create: if request.auth != null
                     && request.resource.data.message is string
                     && request.resource.data.message.size() > 0
-                    && request.resource.data.message.size() <= 2000;
+                    && request.resource.data.message.size() <= 2000
+                    && (request.resource.data.name == null || (request.resource.data.name is string && request.resource.data.name.size() <= 100))
+                    && (request.resource.data.email == null || (request.resource.data.email is string && request.resource.data.email.size() <= 255))
+                    && (request.resource.data.type in ['bug', 'suggestion', 'compliment']);
       allow read: if isAdmin();
       allow update, delete: if isAdmin();
     }
 
     // Per-user consultation history: only the owning user can read/write.
     match /users/{uid}/consultations/{doc} {
-      allow read, write: if request.auth != null && request.auth.uid == uid;
+      allow read: if request.auth != null && request.auth.uid == uid;
+      allow create: if request.auth != null && request.auth.uid == uid
+                    && request.resource.data.question is string
+                    && request.resource.data.question.size() > 0
+                    && request.resource.data.question.size() <= 2000;
+      allow update, delete: if false; // Append-only history to prevent tampering
     }
 
     // Default deny.
