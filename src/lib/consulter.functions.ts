@@ -3,7 +3,7 @@ import { z } from "zod";
 
 const InputSchema = z.object({
   question: z.string().min(1).max(2000),
-  domaine: z.string().min(1).max(50),
+  domaine: z.enum(["labour", "criminal", "civil", "family", "land", "procedures"]),
   langue: z.enum(["fr", "en"]),
   niveau: z.enum(["simple", "standard", "technical"]).optional().default("standard"),
   history: z
