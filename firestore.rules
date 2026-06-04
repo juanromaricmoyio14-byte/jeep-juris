@@ -17,7 +17,19 @@ service cloud.firestore {
       allow create: if request.auth != null
                     && request.resource.data.message is string
                     && request.resource.data.message.size() > 0
-                    && request.resource.data.message.size() <= 2000;
+                    && request.resource.data.message.size() <= 2000
+                    && (!('userId' in request.resource.data)
+                        || request.resource.data.userId == request.auth.uid)
+                    && (!('userEmail' in request.resource.data)
+                        || request.resource.data.userEmail == request.auth.token.email)
+                    && (!('name' in request.resource.data)
+                        || (request.resource.data.name is string
+                            && request.resource.data.name.size() <= 100))
+                    && (!('email' in request.resource.data)
+                        || (request.resource.data.email is string
+                            && request.resource.data.email.size() <= 255))
+                    && (!('type' in request.resource.data)
+                        || request.resource.data.type in ['bug', 'suggestion', 'compliment']);
       allow read: if isAdmin();
       allow update, delete: if isAdmin();
     }
