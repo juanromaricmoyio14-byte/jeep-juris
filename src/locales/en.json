@@ -94,7 +94,11 @@
     "switchToSignup": "No account? Sign up",
     "switchToLogin": "Already have an account? Sign in",
     "notConfigured": "Firebase Auth is not configured.",
-    "loggedInAs": "Signed in: {{email}}"
+    "loggedInAs": "Signed in: {{email}}",
+    "invalidCredentials": "Invalid credentials. Check your email and password.",
+    "emailInUse": "An account already exists with this email.",
+    "weakPassword": "Password too weak (minimum 6 characters).",
+    "invalidEmail": "Invalid email address."
   },
   "footer": {
     "disclaimer": "JEEP JURIS provides general legal information for educational purposes. This service is not a substitute for advice from a licensed lawyer.",
