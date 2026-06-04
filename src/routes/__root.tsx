@@ -186,7 +186,7 @@ function RootComponent() {
                   document.documentElement.classList.remove("dark");
                 }
               }}
-              className="p-1.5 rounded-full hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
+              className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-border bg-card text-foreground shadow-sm hover:bg-muted hover:text-primary transition-colors text-base"
               aria-label="Toggle theme"
             >
               <span className="dark:hidden">🌙</span>
