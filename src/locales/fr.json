@@ -5,7 +5,8 @@
     "library": "Bibliothèque des lois",
     "about": "À propos",
     "login": "Connexion",
-    "logout": "Déconnexion"
+    "logout": "Déconnexion",
+    "back": "RETOUR"
   },
   "home": {
     "heroTitle": "Vos droits, en clair.",

@@ -5,7 +5,8 @@
     "library": "Law Library",
     "about": "About",
     "login": "Sign in",
-    "logout": "Sign out"
+    "logout": "Sign out",
+    "back": "BACK"
   },
   "home": {
     "heroTitle": "Your rights, clearly.",
