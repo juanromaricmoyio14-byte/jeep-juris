@@ -509,6 +509,7 @@ function AgentPage() {
                   }}
                   placeholder={t("agent.placeholder")}
                   rows={2}
+                  maxLength={2000}
                   className="flex-1 resize-none rounded-lg border border-border bg-background px-3 py-2 text-sm focus:border-primary focus:outline-none"
                 />
                 <button
