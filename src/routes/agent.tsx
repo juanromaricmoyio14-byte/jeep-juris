@@ -109,21 +109,28 @@ function AgentPage() {
       return;
     }
     const db = getDb();
-    if (!db) return;
+    if (!db) {
+      console.warn("[agent] Firestore not initialized — history disabled");
+      return;
+    }
     const q = query(
       collection(db, "users", user.uid, "consultations"),
       orderBy("createdAt", "desc"),
       limit(50),
     );
-    const unsub = onSnapshot(q, (snap) => {
-      setHistory(
-        snap.docs.map((d) => ({
-          id: d.id,
-          question: (d.data().question as string) ?? "",
-          createdAt: d.data().createdAt as Timestamp | undefined,
-        })),
-      );
-    });
+    const unsub = onSnapshot(
+      q,
+      (snap) => {
+        setHistory(
+          snap.docs.map((d) => ({
+            id: d.id,
+            question: (d.data().question as string) ?? "",
+            createdAt: d.data().createdAt as Timestamp | undefined,
+          })),
+        );
+      },
+      (err) => console.error("[agent] history snapshot error", err),
+    );
     return () => unsub();
   }, [user]);
 
