@@ -56,7 +56,9 @@ function LoginPage() {
       navigate({ to: "/" });
     } catch (err) {
       const code =
-        err && typeof err === "object" && "code" in err ? String((err as { code: unknown }).code) : "";
+        err && typeof err === "object" && "code" in err
+          ? String((err as { code: unknown }).code)
+          : "";
       if (mode === "signup" && code === "auth/email-already-in-use") {
         setError(t("auth.emailInUse"));
       } else if (code === "auth/weak-password") {
@@ -95,10 +97,14 @@ function LoginPage() {
 
           <form onSubmit={submit} className="mt-5 space-y-4">
             <div>
-              <label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+              <label
+                htmlFor="email"
+                className="text-xs font-semibold uppercase tracking-wide text-muted-foreground"
+              >
                 {t("auth.email")}
               </label>
               <input
+                id="email"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -107,11 +113,15 @@ function LoginPage() {
               />
             </div>
             <div>
-              <label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+              <label
+                htmlFor="password"
+                className="text-xs font-semibold uppercase tracking-wide text-muted-foreground"
+              >
                 {t("auth.password")}
               </label>
               <div className="mt-1">
                 <PasswordInput
+                  id="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
