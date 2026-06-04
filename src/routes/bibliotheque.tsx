@@ -187,13 +187,18 @@ function LibraryPage() {
                   setLawContent(null);
                   try {
                     const res = await getDoc({ data: { domain: l.domain } });
-                    if (res.ok && res.text) {
+                    if (res.ok && res.text && res.text.trim().length > 0) {
                       setLawContent(res.text);
                     } else {
-                      setLawContent("Le document n'a pas pu être chargé.");
+                      setLawContent(
+                        "⚠️ Ce texte n'est pas encore disponible en lecture directe. Vous pouvez toutefois poser une question à l'agent juridique sur ce domaine.",
+                      );
                     }
                   } catch (e) {
-                    setLawContent("Erreur de chargement.");
+                    console.error("getLibraryDoc failed", e);
+                    setLawContent(
+                      "Erreur de chargement du document. Veuillez réessayer plus tard.",
+                    );
                   } finally {
                     setLoadingLaw(false);
                   }
