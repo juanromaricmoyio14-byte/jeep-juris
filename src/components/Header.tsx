@@ -70,8 +70,9 @@ export function Header() {
         <div className="flex items-center gap-2">
           <button
             onClick={toggleTheme}
-            className="p-1.5 rounded-full hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
+            className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-border bg-card text-foreground shadow-sm hover:bg-muted hover:text-primary transition-colors"
             aria-label="Toggle theme"
+            title="Toggle theme"
           >
             {theme === "light" ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
           </button>
