@@ -10,9 +10,10 @@ const InputSchema = z.object({
     .array(
       z.object({
         role: z.enum(["user", "model"]),
-        text: z.string(),
+        text: z.string().max(4000),
       }),
     )
+    .max(10)
     .optional()
     .default([]),
 });

@@ -55,7 +55,17 @@ function LoginPage() {
       }
       navigate({ to: "/" });
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Error");
+      const code =
+        err && typeof err === "object" && "code" in err ? String((err as { code: unknown }).code) : "";
+      if (mode === "signup" && code === "auth/email-already-in-use") {
+        setError(t("auth.emailInUse"));
+      } else if (code === "auth/weak-password") {
+        setError(t("auth.weakPassword"));
+      } else if (code === "auth/invalid-email") {
+        setError(t("auth.invalidEmail"));
+      } else {
+        setError(t("auth.invalidCredentials"));
+      }
     } finally {
       setLoading(false);
     }
