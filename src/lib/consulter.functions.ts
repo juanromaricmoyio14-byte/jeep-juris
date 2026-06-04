@@ -28,16 +28,30 @@ const DOMAIN_DRIVE_KEYS: Record<string, string[]> = {
 };
 
 async function fetchDriveText(id: string): Promise<string> {
-  try {
-    const res = await fetch(`https://drive.google.com/uc?export=download&id=${id}`, {
-      headers: { "User-Agent": "JEEP-JURIS/1.0" },
-    });
-    if (!res.ok) return "";
-    const text = await res.text();
-    return text.slice(0, 40000);
-  } catch {
-    return "";
+  const endpoints = [
+    `https://docs.google.com/document/d/${id}/export?format=txt`,
+    `https://drive.google.com/uc?export=download&id=${id}`,
+  ];
+  for (const url of endpoints) {
+    try {
+      const res = await fetch(url, {
+        headers: { "User-Agent": "Mozilla/5.0 JEEP-JURIS/1.0" },
+        redirect: "follow",
+      });
+      if (!res.ok) continue;
+      const ct = res.headers.get("content-type") || "";
+      const text = await res.text();
+      // Skip Google login / virus-scan HTML pages
+      if (ct.includes("text/html") && /<html|accounts\.google\.com|virus scan/i.test(text)) {
+        continue;
+      }
+      if (text.trim().length < 20) continue;
+      return text.slice(0, 80000);
+    } catch {
+      // try next
+    }
   }
+  return "";
 }
 
 const LEVEL_INSTRUCTIONS: Record<string, string> = {
