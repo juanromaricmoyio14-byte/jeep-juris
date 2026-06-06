@@ -51,7 +51,7 @@ function HomePage() {
       <Header />
 
       {/* Hero */}
-      <section className="relative overflow-hidden border-b border-border">
+      <section className="relative overflow-hidden border-b border-border animate-in fade-in duration-500">
         <div className="absolute inset-0 -z-10 bg-gradient-to-br from-primary/5 via-background to-secondary/10" />
         <div className="mx-auto max-w-6xl px-4 py-20 md:py-28 text-center">
           <h1 className="font-serif text-5xl md:text-7xl font-bold tracking-tight text-primary">

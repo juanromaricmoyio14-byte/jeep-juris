@@ -56,7 +56,9 @@ function LoginPage() {
       navigate({ to: "/" });
     } catch (err) {
       const code =
-        err && typeof err === "object" && "code" in err ? String((err as { code: unknown }).code) : "";
+        err && typeof err === "object" && "code" in err
+          ? String((err as { code: unknown }).code)
+          : "";
       if (mode === "signup" && code === "auth/email-already-in-use") {
         setError(t("auth.emailInUse"));
       } else if (code === "auth/weak-password") {
@@ -74,7 +76,7 @@ function LoginPage() {
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
-      <main className="mx-auto w-full max-w-md flex-1 px-4 py-16">
+      <main className="mx-auto w-full max-w-md flex-1 px-4 py-16 animate-in fade-in duration-500">
         <BackButton />
         <div className="rounded-2xl border border-border bg-card p-8 shadow-sm">
           <h1 className="font-serif text-2xl font-bold text-primary">

@@ -604,10 +604,6 @@ function AgentBubble({ response, lang }: { response: AgentResponse; lang: "fr" |
         </Block>
       )}
 
-      <Block title={t("agent.analysis")}>
-        <p className="whitespace-pre-wrap leading-relaxed">{response.analyse}</p>
-      </Block>
-
       {response.textes_applicables?.length > 0 && (
         <Accordion.Root type="single" collapsible className="w-full mt-4">
           <Accordion.Item
@@ -642,6 +638,10 @@ function AgentBubble({ response, lang }: { response: AgentResponse; lang: "fr" |
           </Accordion.Item>
         </Accordion.Root>
       )}
+
+      <Block title={t("agent.analysis")}>
+        <p className="whitespace-pre-wrap leading-relaxed">{response.analyse}</p>
+      </Block>
 
       {response.institutions?.length > 0 && (
         <Block title={t("agent.institutions")}>
