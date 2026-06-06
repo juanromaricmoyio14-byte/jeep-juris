@@ -1,0 +1,4 @@
+## 2024-05-18 - Admin Authorization Bypass Vulnerability
+**Vulnerability:** Client-side email string matching `isAdminEmail(user?.email)` was used to enforce administrative access in `src/routes/admin.feedbacks.tsx`. The `ADMIN_EMAILS` list was sourced from an environment variable (`VITE_ADMIN_EMAILS`). Client-side checks are insufficient as they can be easily manipulated or bypassed by an attacker modifying the client code or response.
+**Learning:** Authorization rules must be enforced server-side or via cryptographically signed tokens. Relying on frontend string comparisons to show/hide admin panels provides security theater.
+**Prevention:** Use Firebase custom claims (`admin: true`) set on the backend, and read these claims from the user's validated ID token (`u.getIdTokenResult()`) to authorize admin features. Avoid using `VITE_*` public environment variables for defining sensitive authorization lists.
