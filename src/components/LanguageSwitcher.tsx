@@ -38,7 +38,7 @@ export function LanguageSwitcher() {
           key={lng}
           type="button"
           onClick={() => change(lng)}
-          className={`px-3 py-1 rounded-full transition-colors ${
+          className={`px-3 py-1 rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${
             current === lng
               ? "bg-primary text-primary-foreground"
               : "text-muted-foreground hover:text-foreground"
