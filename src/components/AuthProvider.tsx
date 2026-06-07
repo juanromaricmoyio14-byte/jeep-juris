@@ -1,9 +1,10 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
-import { onAuthStateChanged, signOut, type User } from "firebase/auth";
+import { onIdTokenChanged, signOut, type User } from "firebase/auth";
 import { firebaseConfigured, getFirebaseAuth } from "@/lib/firebase";
 
 interface AuthCtx {
   user: User | null;
+  isAdmin: boolean;
   loading: boolean;
   configured: boolean;
   logout: () => Promise<void>;
@@ -11,6 +12,7 @@ interface AuthCtx {
 
 const Ctx = createContext<AuthCtx>({
   user: null,
+  isAdmin: false,
   loading: true,
   configured: false,
   logout: async () => {},
@@ -18,6 +20,7 @@ const Ctx = createContext<AuthCtx>({
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
+  const [isAdmin, setIsAdmin] = useState<boolean>(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -26,8 +29,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setLoading(false);
       return;
     }
-    return onAuthStateChanged(auth, (u) => {
+    return onIdTokenChanged(auth, async (u) => {
       setUser(u);
+      if (u) {
+        try {
+          const token = await u.getIdTokenResult();
+          setIsAdmin(!!token.claims.admin);
+        } catch (err) {
+          console.error("Error fetching token claims", err);
+          setIsAdmin(false);
+        }
+      } else {
+        setIsAdmin(false);
+      }
       setLoading(false);
     });
   }, []);
@@ -36,6 +50,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     <Ctx.Provider
       value={{
         user,
+        isAdmin,
         loading,
         configured: firebaseConfigured,
         logout: async () => {
