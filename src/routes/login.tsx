@@ -56,7 +56,9 @@ function LoginPage() {
       navigate({ to: "/" });
     } catch (err) {
       const code =
-        err && typeof err === "object" && "code" in err ? String((err as { code: unknown }).code) : "";
+        err && typeof err === "object" && "code" in err
+          ? String((err as { code: unknown }).code)
+          : "";
       if (mode === "signup" && code === "auth/email-already-in-use") {
         setError(t("auth.emailInUse"));
       } else if (code === "auth/weak-password") {
@@ -125,7 +127,7 @@ function LoginPage() {
             <button
               type="submit"
               disabled={loading || !firebaseConfigured}
-              className="w-full rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground hover:opacity-90 disabled:opacity-40"
+              className="w-full min-h-[44px] rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground hover:opacity-90 disabled:opacity-40"
             >
               {mode === "login" ? t("auth.submitLogin") : t("auth.submitSignup")}
             </button>
@@ -133,7 +135,7 @@ function LoginPage() {
 
           <button
             onClick={() => setMode(mode === "login" ? "signup" : "login")}
-            className="mt-4 w-full text-center text-xs text-muted-foreground hover:text-primary"
+            className="mt-4 w-full min-h-[44px] text-center text-xs text-muted-foreground hover:text-primary"
           >
             {mode === "login" ? t("auth.switchToSignup") : t("auth.switchToLogin")}
           </button>

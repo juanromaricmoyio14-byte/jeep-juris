@@ -516,7 +516,7 @@ function AgentPage() {
                   onClick={toggleListening}
                   title={t("agent.mic")}
                   aria-label={t("agent.mic")}
-                  className={`inline-flex items-center justify-center rounded-lg border px-3 py-2 text-sm font-semibold transition-colors ${
+                  className={`min-h-[44px] min-w-[44px] inline-flex items-center justify-center rounded-lg border px-3 py-2 text-sm font-semibold transition-colors ${
                     listening
                       ? "border-destructive bg-destructive text-destructive-foreground"
                       : "border-border bg-background hover:bg-muted"
@@ -527,7 +527,7 @@ function AgentPage() {
                 <button
                   type="submit"
                   disabled={loading || !input.trim()}
-                  className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:opacity-90 disabled:opacity-40"
+                  className="min-h-[44px] min-w-[44px] inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:opacity-90 disabled:opacity-40"
                 >
                   <Send className="h-4 w-4" /> {t("agent.send")}
                 </button>
