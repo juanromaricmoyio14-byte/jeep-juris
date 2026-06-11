@@ -163,47 +163,45 @@ const ALLOWED_LAW_DRIVE_IDS = new Set<string>([
 
 export const fetchLawContent = createServerFn({ method: "GET" })
   .inputValidator(z.object({ driveId: z.string().min(10).max(80) }))
-  .handler(
-    async ({ data }): Promise<{ ok: boolean; content?: string; error?: string }> => {
-      if (!ALLOWED_LAW_DRIVE_IDS.has(data.driveId)) {
-        return { ok: false, error: "Document non autorisé" };
-      }
-      console.log("Fetching Drive ID:", data.driveId);
-      const endpoints = [
-        `https://docs.google.com/document/d/${data.driveId}/export?format=txt`,
-        `https://drive.google.com/uc?export=download&id=${data.driveId}`,
-        `https://drive.usercontent.google.com/download?id=${data.driveId}&export=download&confirm=t`,
-      ];
-      for (const url of endpoints) {
-        try {
-          const response = await fetch(url, {
-            headers: { "User-Agent": "Mozilla/5.0", Accept: "text/plain, */*" },
-            redirect: "follow",
-          });
-          console.log("Response status:", response.status, "for", url);
-          if (!response.ok) continue;
-          const ct = response.headers.get("content-type") || "";
-          const text = await response.text();
-          console.log("Content length:", text?.length, "ct:", ct);
-          if (
-            ct.includes("text/html") &&
-            /<html|accounts\.google\.com|virus scan|ServiceLogin/i.test(text)
-          ) {
-            continue;
-          }
-          if (!text || text.trim().length < 10) continue;
-          return { ok: true, content: text.slice(0, 200000) };
-        } catch (e) {
-          console.error("fetchLawContent endpoint error", url, e);
+  .handler(async ({ data }): Promise<{ ok: boolean; content?: string; error?: string }> => {
+    if (!ALLOWED_LAW_DRIVE_IDS.has(data.driveId)) {
+      return { ok: false, error: "Document non autorisé" };
+    }
+    console.log("Fetching Drive ID:", data.driveId);
+    const endpoints = [
+      `https://docs.google.com/document/d/${data.driveId}/export?format=txt`,
+      `https://drive.google.com/uc?export=download&id=${data.driveId}`,
+      `https://drive.usercontent.google.com/download?id=${data.driveId}&export=download&confirm=t`,
+    ];
+    for (const url of endpoints) {
+      try {
+        const response = await fetch(url, {
+          headers: { "User-Agent": "Mozilla/5.0", Accept: "text/plain, */*" },
+          redirect: "follow",
+        });
+        console.log("Response status:", response.status, "for", url);
+        if (!response.ok) continue;
+        const ct = response.headers.get("content-type") || "";
+        const text = await response.text();
+        console.log("Content length:", text?.length, "ct:", ct);
+        if (
+          ct.includes("text/html") &&
+          /<html|accounts\.google\.com|virus scan|ServiceLogin/i.test(text)
+        ) {
+          continue;
         }
+        if (!text || text.trim().length < 10) continue;
+        return { ok: true, content: text.slice(0, 200000) };
+      } catch (e) {
+        console.error("fetchLawContent endpoint error", url, e);
       }
-      return {
-        ok: false,
-        error:
-          "Contenu indisponible. Vérifiez que le fichier Drive est partagé en accès public (Tous les utilisateurs avec le lien).",
-      };
-    },
-  );
+    }
+    return {
+      ok: false,
+      error:
+        "Contenu indisponible. Vérifiez que le fichier Drive est partagé en accès public (Tous les utilisateurs avec le lien).",
+    };
+  });
 
 export const consulterAgent = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) =>

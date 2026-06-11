@@ -1,0 +1,5 @@
+## 2024-11-23 - Hardcoded Admin Emails Exposure
+
+**Vulnerability:** The application was hardcoding administrative email addresses in an environment variable `VITE_ADMIN_EMAILS` which was then split into an array `ADMIN_EMAILS` and checked on the client side using an `isAdminEmail` function. Environment variables starting with `VITE_` are bundled directly into the frontend codebase, effectively exposing all administrator email addresses publicly.
+**Learning:** Client-side environment variables and email-based authorization checks are both insecure and unreliable. Authorization logic should be based on secure tokens and validated server-side.
+**Prevention:** Always use Firebase custom claims (e.g., `admin: true`) for authorization checks. Retrieve these claims securely via the user's ID token (`u.getIdTokenResult()`) and base UI access off of this derived state. Ensure Firestore security rules also enforce this claim (`request.auth.token.admin == true`). Do not store sensitive information like administrator lists in `VITE_` environment variables.
