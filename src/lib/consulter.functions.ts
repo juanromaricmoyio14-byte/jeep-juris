@@ -148,6 +148,35 @@ export const getLibraryDoc = createServerFn({ method: "GET" })
     }
   });
 
+const ALLOWED_LAW_DRIVE_IDS = new Set<string>([
+  "1wIjlKSB2A9mmpBlVsd4v9w0aiozevp4N",
+  "1xCSo-SeTBvYDVu_-oUbIviKmJHkq6gNw",
+  "1Y7kj1HZlGqZlcL1ROXQEF8VjyaZakoZD",
+  "1woQkWM36vu4bxayUHveBBUI-d4P7GfJE",
+  "1rpdHHOMB1Fq6GSQGtdcD5BINK1Uk5ZKR",
+  "1U4VWTk0QUZjmIjary8tMS3o1RxLt95tO",
+  "190nAFspoU6dYVWd3EMefTW2zPfXEIeN2",
+  "1XOCeoQFFYzwsXAMBOjR3jIL2n7uOUoFy",
+  "1CqCqRDlKKodbnxIXspAiIFkWDiOr5hlg",
+  "13egld3dHJO21aMKM-EyFmuNGi7N4yGtM",
+]);
+
+export const fetchLawContent = createServerFn({ method: "GET" })
+  .inputValidator(z.object({ driveId: z.string().min(10).max(80) }))
+  .handler(async ({ data }): Promise<{ ok: boolean; text?: string; error?: string }> => {
+    if (!ALLOWED_LAW_DRIVE_IDS.has(data.driveId)) {
+      return { ok: false, error: "NOT_ALLOWED" };
+    }
+    try {
+      const text = await fetchDriveText(data.driveId);
+      if (!text) return { ok: false, error: "EMPTY" };
+      return { ok: true, text };
+    } catch (e) {
+      console.error("fetchLawContent error", e);
+      return { ok: false, error: "FETCH_ERROR" };
+    }
+  });
+
 export const consulterAgent = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) =>
     InputSchema.extend({ idToken: z.string().min(10).max(4096) }).parse(input),
