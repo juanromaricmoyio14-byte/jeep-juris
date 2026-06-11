@@ -64,7 +64,31 @@ const LEVEL_INSTRUCTIONS: Record<string, string> = {
 };
 
 const SYSTEM_PROMPT = (langue: string, niveau: string) =>
-  `Tu es JEEP JURIS, un assistant juridique intelligent spécialisé dans le droit camerounais. La langue de réponse est : ${langue}. Si langue=fr, réponds entièrement en français. Si langue=en, réponds entièrement en English. ${LEVEL_INSTRUCTIONS[niveau] ?? LEVEL_INSTRUCTIONS.standard} Tu réponds UNIQUEMENT en JSON valide selon ce format exact : { "reformulation": string, "textes_applicables": [{"loi": string, "article": string, "contenu": string}], "analyse": string, "actions_recommandees": [string], "institutions": [string], "disclaimer": string }. Tu bases tes réponses UNIQUEMENT sur les documents fournis quand ils sont disponibles. Si aucun document n'est fourni, indique-le clairement dans l'analyse mais réponds quand même avec ta meilleure connaissance générale du droit camerounais. Tu cites toujours les articles précis. Tu termines TOUJOURS par le disclaimer.`;
+  `Tu es JEEP JURIS, un assistant juridique intelligent spécialisé dans le droit camerounais.
+La langue de réponse est : ${langue}. Si langue=fr, réponds entièrement en français. Si langue=en, réponds entièrement en English.
+Niveau de langage : ${niveau}. ${LEVEL_INSTRUCTIONS[niveau] ?? LEVEL_INSTRUCTIONS.standard}
+
+RÈGLE ABSOLUE DE CITATION : Pour chaque affirmation juridique, tu DOIS citer l'article exact en incluant :
+- Le nom complet de la loi
+- Le numéro de l'article
+- Le contenu EXACT de l'article tel qu'il apparaît dans le document fourni (entre guillemets)
+
+Exemple de citation correcte :
+Selon l'Article 34 du Code du Travail camerounais : "Tout licenciement d'un travailleur doit être précédé d'un entretien préalable..."
+
+Tu réponds UNIQUEMENT en JSON valide selon ce format exact :
+{
+  "reformulation": string,
+  "textes_applicables": [
+    { "loi": string, "article": string, "contenu": string (CONTENU EXACT entre guillemets) }
+  ],
+  "analyse": string (explication avec références aux articles cités),
+  "actions_recommandees": [string],
+  "institutions": [string],
+  "disclaimer": string
+}
+
+Tu bases tes réponses UNIQUEMENT sur les documents fournis. Si un article n'est pas dans les documents, dis-le clairement. Tu termines TOUJOURS par : "Cette réponse est informative uniquement et ne remplace pas un avocat inscrit au Barreau du Cameroun."`;
 
 export interface AgentResponse {
   reformulation: string;
@@ -120,6 +144,35 @@ export const getLibraryDoc = createServerFn({ method: "GET" })
       return { ok: true, text };
     } catch (e) {
       console.error("getLibraryDoc error", e);
+      return { ok: false, error: "FETCH_ERROR" };
+    }
+  });
+
+const ALLOWED_LAW_DRIVE_IDS = new Set<string>([
+  "1wIjlKSB2A9mmpBlVsd4v9w0aiozevp4N",
+  "1xCSo-SeTBvYDVu_-oUbIviKmJHkq6gNw",
+  "1Y7kj1HZlGqZlcL1ROXQEF8VjyaZakoZD",
+  "1woQkWM36vu4bxayUHveBBUI-d4P7GfJE",
+  "1rpdHHOMB1Fq6GSQGtdcD5BINK1Uk5ZKR",
+  "1U4VWTk0QUZjmIjary8tMS3o1RxLt95tO",
+  "190nAFspoU6dYVWd3EMefTW2zPfXEIeN2",
+  "1XOCeoQFFYzwsXAMBOjR3jIL2n7uOUoFy",
+  "1CqCqRDlKKodbnxIXspAiIFkWDiOr5hlg",
+  "13egld3dHJO21aMKM-EyFmuNGi7N4yGtM",
+]);
+
+export const fetchLawContent = createServerFn({ method: "GET" })
+  .inputValidator(z.object({ driveId: z.string().min(10).max(80) }))
+  .handler(async ({ data }): Promise<{ ok: boolean; text?: string; error?: string }> => {
+    if (!ALLOWED_LAW_DRIVE_IDS.has(data.driveId)) {
+      return { ok: false, error: "NOT_ALLOWED" };
+    }
+    try {
+      const text = await fetchDriveText(data.driveId);
+      if (!text) return { ok: false, error: "EMPTY" };
+      return { ok: true, text };
+    } catch (e) {
+      console.error("fetchLawContent error", e);
       return { ok: false, error: "FETCH_ERROR" };
     }
   });
