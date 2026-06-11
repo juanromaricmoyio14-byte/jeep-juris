@@ -77,11 +77,12 @@ function LibraryPage() {
     setErrorLaw(null);
     try {
       const res = await getContent({ data: { driveId: l.driveId } });
-      if (res.ok && res.text) {
-        setLawContent(formatLawText(res.text));
+      if (res.ok && res.content) {
+        setLawContent(formatLawText(res.content));
       } else {
         setErrorLaw(
-          "Impossible de charger ce texte pour le moment. Veuillez réessayer dans quelques instants.",
+          res.error ||
+            "Impossible de charger ce texte pour le moment. Veuillez réessayer dans quelques instants.",
         );
       }
     } catch (e) {
