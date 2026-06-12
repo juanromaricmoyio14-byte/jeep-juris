@@ -156,6 +156,7 @@ function RootShell({ children }: { children: React.ReactNode }) {
 
 import { Home, MessageSquare, BookOpen, User } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { MobileNav } from "@/components/MobileNav";
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
@@ -168,31 +169,14 @@ function RootComponent() {
           <Outlet />
         </div>
 
-        {/* Mobile Header (replaces main header on mobile for minimal UI) */}
-        <header className="sticky top-0 z-40 border-b border-border bg-background/85 backdrop-blur md:hidden flex justify-between items-center px-4 py-3">
-          <Link to="/" className="flex items-center gap-2 text-primary">
-            <span className="font-serif text-lg font-bold tracking-tight">JEEP JURIS</span>
+        {/* Mobile Header — logo + hamburger only */}
+        <header className="sticky top-0 z-40 border-b border-border bg-background/95 backdrop-blur md:hidden flex justify-between items-center px-4 py-3">
+          <Link to="/" className="flex items-center gap-2 text-primary min-w-0">
+            <span className="font-serif text-lg font-bold tracking-tight truncate">
+              JEEP <span className="text-secondary">JURIS</span>
+            </span>
           </Link>
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => {
-                const newTheme = document.documentElement.classList.contains("dark")
-                  ? "light"
-                  : "dark";
-                localStorage.setItem("theme", newTheme);
-                if (newTheme === "dark") {
-                  document.documentElement.classList.add("dark");
-                } else {
-                  document.documentElement.classList.remove("dark");
-                }
-              }}
-              className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-border bg-card text-foreground shadow-sm hover:bg-muted hover:text-primary transition-colors text-base"
-              aria-label="Toggle theme"
-            >
-              <span className="dark:hidden">🌙</span>
-              <span className="hidden dark:inline">☀️</span>
-            </button>
-          </div>
+          <MobileNav />
         </header>
 
         {/* Mobile Bottom Navigation */}

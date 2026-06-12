@@ -31,10 +31,14 @@ import {
   limit,
   onSnapshot,
   serverTimestamp,
+  getDocs,
+  deleteDoc,
+  doc,
   type Timestamp,
 } from "firebase/firestore";
 import { getSpeechRecognition, speak, stopSpeaking } from "@/lib/speech";
 import { BackButton } from "@/components/BackButton";
+import { Briefcase, Scale, Users, Heart, MapPin, FileText, Trash2 } from "lucide-react";
 
 const searchSchema = z.object({
   domaine: z.string().optional(),
@@ -77,7 +81,28 @@ interface ChatMessage {
 interface HistoryItem {
   id: string;
   question: string;
+  domaine?: string;
+  response?: AgentResponse;
   createdAt?: Timestamp;
+}
+
+const DOMAIN_ICONS: Record<string, typeof Briefcase> = {
+  labour: Briefcase,
+  criminal: Scale,
+  civil: FileText,
+  family: Heart,
+  land: MapPin,
+  procedures: Users,
+};
+
+function relativeTime(date: Date, lang: "fr" | "en"): string {
+  const diff = (Date.now() - date.getTime()) / 1000;
+  const rtf = new Intl.RelativeTimeFormat(lang, { numeric: "auto" });
+  if (diff < 60) return rtf.format(-Math.round(diff), "second");
+  if (diff < 3600) return rtf.format(-Math.round(diff / 60), "minute");
+  if (diff < 86400) return rtf.format(-Math.round(diff / 3600), "hour");
+  if (diff < 604800) return rtf.format(-Math.round(diff / 86400), "day");
+  return date.toLocaleDateString(lang, { day: "2-digit", month: "short" });
 }
 
 function AgentPage() {
@@ -116,23 +141,51 @@ function AgentPage() {
     const q = query(
       collection(db, "users", user.uid, "consultations"),
       orderBy("createdAt", "desc"),
-      limit(50),
+      limit(10),
     );
     const unsub = onSnapshot(
       q,
       (snap) => {
         setHistory(
-          snap.docs.map((d) => ({
-            id: d.id,
-            question: (d.data().question as string) ?? "",
-            createdAt: d.data().createdAt as Timestamp | undefined,
-          })),
+          snap.docs.map((d) => {
+            const data = d.data() as any;
+            return {
+              id: d.id,
+              question: (data.question as string) ?? "",
+              domaine: data.domaine as string | undefined,
+              response: data.response as AgentResponse | undefined,
+              createdAt: data.createdAt as Timestamp | undefined,
+            };
+          }),
         );
       },
       (err) => console.error("[agent] history snapshot error", err),
     );
     return () => unsub();
   }, [user]);
+
+  const clearHistory = useCallback(async () => {
+    if (!user) return;
+    if (!confirm(lang === "en" ? "Clear all history?" : "Effacer tout l'historique ?")) return;
+    const db = getDb();
+    if (!db) return;
+    try {
+      const snap = await getDocs(collection(db, "users", user.uid, "consultations"));
+      await Promise.all(snap.docs.map((d) => deleteDoc(doc(db, "users", user.uid, "consultations", d.id))));
+    } catch (e) {
+      console.error("Clear history failed", e);
+    }
+  }, [user]);
+
+  const loadHistoryItem = useCallback((h: HistoryItem) => {
+    setError(null);
+    setMessages([
+      { role: "user", text: h.question },
+      ...(h.response ? [{ role: "agent" as const, response: h.response }] : []),
+    ]);
+    if (h.domaine) setDomaine(h.domaine);
+    setSidebarOpen(false);
+  }, []);
 
   const submit = useCallback(
     async (questionArg?: string) => {
@@ -346,38 +399,38 @@ function AgentPage() {
               {user && history.length === 0 && (
                 <p className="text-xs text-muted-foreground">{t("agent.historyEmpty")}</p>
               )}
-              <ul className="max-h-64 space-y-1 overflow-y-auto -mx-1 px-1">
+              <ul className="space-y-1 max-h-80 overflow-y-auto -mx-1 px-1">
                 {history.map((h) => {
-                  const preview = h.question.split(/\s+/).slice(0, 5).join(" ");
+                  const words = h.question.split(/\s+/);
+                  const preview = words.slice(0, 8).join(" ") + (words.length > 8 ? "…" : "");
                   const date = h.createdAt?.toDate?.();
+                  const Icon = DOMAIN_ICONS[h.domaine ?? ""] ?? FileText;
                   return (
                     <li key={h.id}>
                       <button
-                        onClick={() => {
-                          submit(h.question);
-                          setSidebarOpen(false);
-                        }}
-                        className="w-full rounded-md px-2 py-2 text-left text-xs hover:bg-muted transition"
+                        onClick={() => loadHistoryItem(h)}
+                        className="w-full rounded-md px-2 py-2 text-left hover:bg-muted transition group"
                       >
-                        <div className="font-medium text-foreground line-clamp-1">
-                          {preview}
-                          {h.question.split(/\s+/).length > 5 ? "…" : ""}
+                        <div className="flex items-center gap-2 text-[10px] text-muted-foreground mb-1">
+                          <Icon className="h-3 w-3 text-primary" />
+                          <span>{date ? relativeTime(date, lang) : ""}</span>
                         </div>
-                        {date && (
-                          <div className="text-[10px] text-muted-foreground mt-0.5">
-                            {date.toLocaleDateString(lang, {
-                              day: "2-digit",
-                              month: "short",
-                              hour: "2-digit",
-                              minute: "2-digit",
-                            })}
-                          </div>
-                        )}
+                        <div className="italic text-xs text-foreground/90 line-clamp-2 group-hover:text-primary">
+                          {preview}
+                        </div>
                       </button>
                     </li>
                   );
                 })}
               </ul>
+              {user && history.length > 0 && (
+                <button
+                  onClick={clearHistory}
+                  className="mt-3 inline-flex w-full items-center justify-center gap-1.5 rounded-lg border border-destructive/30 bg-destructive/5 px-3 py-2 text-xs font-medium text-destructive hover:bg-destructive/10 transition"
+                >
+                  <Trash2 className="h-3.5 w-3.5" /> {lang === "en" ? "Clear history" : "Effacer l'historique"}
+                </button>
+              )}
             </div>
 
             <div className="flex gap-3 rounded-2xl border border-secondary/40 bg-secondary/10 p-4 text-xs text-secondary-foreground">
