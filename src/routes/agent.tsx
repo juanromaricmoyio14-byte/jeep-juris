@@ -81,7 +81,28 @@ interface ChatMessage {
 interface HistoryItem {
   id: string;
   question: string;
+  domaine?: string;
+  response?: AgentResponse;
   createdAt?: Timestamp;
+}
+
+const DOMAIN_ICONS: Record<string, typeof Briefcase> = {
+  labour: Briefcase,
+  criminal: Scale,
+  civil: FileText,
+  family: Heart,
+  land: MapPin,
+  procedures: Users,
+};
+
+function relativeTime(date: Date, lang: "fr" | "en"): string {
+  const diff = (Date.now() - date.getTime()) / 1000;
+  const rtf = new Intl.RelativeTimeFormat(lang, { numeric: "auto" });
+  if (diff < 60) return rtf.format(-Math.round(diff), "second");
+  if (diff < 3600) return rtf.format(-Math.round(diff / 60), "minute");
+  if (diff < 86400) return rtf.format(-Math.round(diff / 3600), "hour");
+  if (diff < 604800) return rtf.format(-Math.round(diff / 86400), "day");
+  return date.toLocaleDateString(lang, { day: "2-digit", month: "short" });
 }
 
 function AgentPage() {
