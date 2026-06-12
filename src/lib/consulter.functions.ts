@@ -206,43 +206,51 @@ export const fetchLawContent = createServerFn({ method: "GET" })
         return { ok: true, content: hit.content, cached: true };
       }
       console.log("Law cache MISS, fetching Drive ID:", data.driveId);
-      const endpoints = [
-        `https://drive.google.com/uc?export=download&id=${data.driveId}`,
-        `https://docs.google.com/document/d/${data.driveId}/export?format=txt`,
-        `https://drive.usercontent.google.com/download?id=${data.driveId}&export=download&confirm=t`,
+      const fileId = data.driveId;
+      const urls = [
+        `https://drive.usercontent.google.com/download?id=${fileId}&export=download&confirm=t`,
+        `https://drive.google.com/uc?export=download&id=${fileId}&confirm=t`,
+        `https://docs.google.com/uc?export=download&id=${fileId}`,
       ];
-      for (const url of endpoints) {
+
+      for (const url of urls) {
         try {
           const response = await fetch(url, {
-            headers: { "User-Agent": "Mozilla/5.0", Accept: "text/plain, */*" },
+            headers: {
+              "User-Agent":
+                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+              Accept: "text/plain, text/html, */*",
+              "Accept-Language": "fr-FR,fr;q=0.9",
+              "Cache-Control": "no-cache",
+            },
             redirect: "follow",
+            signal: AbortSignal.timeout(15000),
           });
-          console.log("Response status:", response.status, "for", url);
+
           if (!response.ok) continue;
-          const ct = response.headers.get("content-type") || "";
+
           const text = await response.text();
-          console.log("Content length:", text?.length, "ct:", ct);
-          if (
-            ct.includes("text/html") &&
-            /<html|accounts\.google\.com|virus scan|ServiceLogin/i.test(text)
-          ) {
+
+          // Skip HTML confirmation pages from Google
+          if (text.includes("<!DOCTYPE") || text.includes("<html") || text.length < 50) {
             continue;
           }
-          if (!text || text.trim().length < 10) continue;
+
+          // Valid text content found
           const content = text.slice(0, 200000);
           LAW_CONTENT_CACHE.set(data.driveId, {
             content,
             expiresAt: now + LAW_CACHE_TTL_MS,
           });
-          return { ok: true, content, cached: false };
+          return { ok: true, content: content, cached: false };
         } catch (e) {
-          console.error("fetchLawContent endpoint error", url, e);
+          continue;
         }
       }
+
       return {
         ok: false,
-        error:
-          "Contenu indisponible. Vérifiez que le fichier Drive est partagé en accès public (Tous les utilisateurs avec le lien).",
+        error: "Fichier inaccessible. Vérifiez le partage Drive.",
       };
     },
   );
