@@ -31,10 +31,14 @@ import {
   limit,
   onSnapshot,
   serverTimestamp,
+  getDocs,
+  deleteDoc,
+  doc,
   type Timestamp,
 } from "firebase/firestore";
 import { getSpeechRecognition, speak, stopSpeaking } from "@/lib/speech";
 import { BackButton } from "@/components/BackButton";
+import { Briefcase, Scale, Users, Heart, MapPin, FileText, Trash2 } from "lucide-react";
 
 const searchSchema = z.object({
   domaine: z.string().optional(),
