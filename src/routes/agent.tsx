@@ -399,38 +399,38 @@ function AgentPage() {
               {user && history.length === 0 && (
                 <p className="text-xs text-muted-foreground">{t("agent.historyEmpty")}</p>
               )}
-              <ul className="max-h-64 space-y-1 overflow-y-auto -mx-1 px-1">
+              <ul className="space-y-1 max-h-80 overflow-y-auto -mx-1 px-1">
                 {history.map((h) => {
-                  const preview = h.question.split(/\s+/).slice(0, 5).join(" ");
+                  const words = h.question.split(/\s+/);
+                  const preview = words.slice(0, 8).join(" ") + (words.length > 8 ? "…" : "");
                   const date = h.createdAt?.toDate?.();
+                  const Icon = DOMAIN_ICONS[h.domaine ?? ""] ?? FileText;
                   return (
                     <li key={h.id}>
                       <button
-                        onClick={() => {
-                          submit(h.question);
-                          setSidebarOpen(false);
-                        }}
-                        className="w-full rounded-md px-2 py-2 text-left text-xs hover:bg-muted transition"
+                        onClick={() => loadHistoryItem(h)}
+                        className="w-full rounded-md px-2 py-2 text-left hover:bg-muted transition group"
                       >
-                        <div className="font-medium text-foreground line-clamp-1">
-                          {preview}
-                          {h.question.split(/\s+/).length > 5 ? "…" : ""}
+                        <div className="flex items-center gap-2 text-[10px] text-muted-foreground mb-1">
+                          <Icon className="h-3 w-3 text-primary" />
+                          <span>{date ? relativeTime(date, lang) : ""}</span>
                         </div>
-                        {date && (
-                          <div className="text-[10px] text-muted-foreground mt-0.5">
-                            {date.toLocaleDateString(lang, {
-                              day: "2-digit",
-                              month: "short",
-                              hour: "2-digit",
-                              minute: "2-digit",
-                            })}
-                          </div>
-                        )}
+                        <div className="italic text-xs text-foreground/90 line-clamp-2 group-hover:text-primary">
+                          {preview}
+                        </div>
                       </button>
                     </li>
                   );
                 })}
               </ul>
+              {user && history.length > 0 && (
+                <button
+                  onClick={clearHistory}
+                  className="mt-3 inline-flex w-full items-center justify-center gap-1.5 rounded-lg border border-destructive/30 bg-destructive/5 px-3 py-2 text-xs font-medium text-destructive hover:bg-destructive/10 transition"
+                >
+                  <Trash2 className="h-3.5 w-3.5" /> {lang === "en" ? "Clear history" : "Effacer l'historique"}
+                </button>
+              )}
             </div>
 
             <div className="flex gap-3 rounded-2xl border border-secondary/40 bg-secondary/10 p-4 text-xs text-secondary-foreground">
