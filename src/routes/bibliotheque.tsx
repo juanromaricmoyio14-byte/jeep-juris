@@ -29,16 +29,66 @@ export const Route = createFileRoute("/bibliotheque")({
 });
 
 const LAWS = [
-  { id: "travail_1", titre: "Code du Travail — Titre I : Dispositions Générales", domaine: "travail", driveId: "1wIjlKSB2A9mmpBlVsd4v9w0aiozevp4N" },
-  { id: "travail_2", titre: "Code du Travail — Titre II : Syndicats", domaine: "travail", driveId: "1xCSo-SeTBvYDVu_-oUbIviKmJHkq6gNw" },
-  { id: "travail_3", titre: "Code du Travail — Titre III : Contrat de Travail", domaine: "travail", driveId: "1Y7kj1HZlGqZlcL1ROXQEF8VjyaZakoZD" },
-  { id: "travail_4", titre: "Code du Travail — Titre IV : Salaire", domaine: "travail", driveId: "1woQkWM36vu4bxayUHveBBUI-d4P7GfJE" },
-  { id: "travail_5", titre: "Code du Travail — Titre V : Conditions de Travail", domaine: "travail", driveId: "1rpdHHOMB1Fq6GSQGtdcD5BINK1Uk5ZKR" },
-  { id: "travail_6", titre: "Code du Travail — Titre VI : Sécurité et Santé", domaine: "travail", driveId: "1U4VWTk0QUZjmIjary8tMS3o1RxLt95tO" },
-  { id: "travail_7", titre: "Code du Travail — Titre VII : Organismes de Contrôle", domaine: "travail", driveId: "190nAFspoU6dYVWd3EMefTW2zPfXEIeN2" },
-  { id: "travail_8", titre: "Code du Travail — Titre VIII : Institutions", domaine: "travail", driveId: "1XOCeoQFFYzwsXAMBOjR3jIL2n7uOUoFy" },
-  { id: "travail_9", titre: "Code du Travail — Titre IX : Différends", domaine: "travail", driveId: "1CqCqRDlKKodbnxIXspAiIFkWDiOr5hlg" },
-  { id: "travail_10", titre: "Code du Travail — Titre X & XI : Pénalités", domaine: "travail", driveId: "13egld3dHJO21aMKM-EyFmuNGi7N4yGtM" },
+  {
+    id: "travail_1",
+    titre: "Code du Travail — Titre I : Dispositions Générales",
+    domaine: "travail",
+    driveId: "1wIjlKSB2A9mmpBlVsd4v9w0aiozevp4N",
+  },
+  {
+    id: "travail_2",
+    titre: "Code du Travail — Titre II : Syndicats",
+    domaine: "travail",
+    driveId: "1xCSo-SeTBvYDVu_-oUbIviKmJHkq6gNw",
+  },
+  {
+    id: "travail_3",
+    titre: "Code du Travail — Titre III : Contrat de Travail",
+    domaine: "travail",
+    driveId: "1Y7kj1HZlGqZlcL1ROXQEF8VjyaZakoZD",
+  },
+  {
+    id: "travail_4",
+    titre: "Code du Travail — Titre IV : Salaire",
+    domaine: "travail",
+    driveId: "1woQkWM36vu4bxayUHveBBUI-d4P7GfJE",
+  },
+  {
+    id: "travail_5",
+    titre: "Code du Travail — Titre V : Conditions de Travail",
+    domaine: "travail",
+    driveId: "1rpdHHOMB1Fq6GSQGtdcD5BINK1Uk5ZKR",
+  },
+  {
+    id: "travail_6",
+    titre: "Code du Travail — Titre VI : Sécurité et Santé",
+    domaine: "travail",
+    driveId: "1U4VWTk0QUZjmIjary8tMS3o1RxLt95tO",
+  },
+  {
+    id: "travail_7",
+    titre: "Code du Travail — Titre VII : Organismes de Contrôle",
+    domaine: "travail",
+    driveId: "190nAFspoU6dYVWd3EMefTW2zPfXEIeN2",
+  },
+  {
+    id: "travail_8",
+    titre: "Code du Travail — Titre VIII : Institutions",
+    domaine: "travail",
+    driveId: "1XOCeoQFFYzwsXAMBOjR3jIL2n7uOUoFy",
+  },
+  {
+    id: "travail_9",
+    titre: "Code du Travail — Titre IX : Différends",
+    domaine: "travail",
+    driveId: "1CqCqRDlKKodbnxIXspAiIFkWDiOr5hlg",
+  },
+  {
+    id: "travail_10",
+    titre: "Code du Travail — Titre X & XI : Pénalités",
+    domaine: "travail",
+    driveId: "13egld3dHJO21aMKM-EyFmuNGi7N4yGtM",
+  },
 ] as const;
 
 type Law = (typeof LAWS)[number];
@@ -178,9 +228,7 @@ function LibraryPage() {
                   ))}
                 </div>
               )}
-              {!loadingLaw && errorLaw && (
-                <p className="text-sm text-destructive">{errorLaw}</p>
-              )}
+              {!loadingLaw && errorLaw && <p className="text-sm text-destructive">{errorLaw}</p>}
               {!loadingLaw && !errorLaw && lawContent && (
                 <div className="text-sm text-foreground leading-relaxed space-y-3">
                   {lawContent.split(/\n\n+/).map((para, i) => {

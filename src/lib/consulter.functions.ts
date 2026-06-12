@@ -167,7 +167,9 @@ const LAW_CACHE_TTL_MS = 1000 * 60 * 60 * 24; // 24h
 export const fetchLawContent = createServerFn({ method: "GET" })
   .inputValidator(z.object({ driveId: z.string().min(10).max(80) }))
   .handler(
-    async ({ data }): Promise<{ ok: boolean; content?: string; error?: string; cached?: boolean }> => {
+    async ({
+      data,
+    }): Promise<{ ok: boolean; content?: string; error?: string; cached?: boolean }> => {
       if (!ALLOWED_LAW_DRIVE_IDS.has(data.driveId)) {
         return { ok: false, error: "Document non autorisé" };
       }

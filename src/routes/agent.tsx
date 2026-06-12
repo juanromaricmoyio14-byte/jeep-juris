@@ -34,6 +34,7 @@ import {
   getDocs,
   deleteDoc,
   doc,
+  where,
   type Timestamp,
 } from "firebase/firestore";
 import { getSpeechRecognition, speak, stopSpeaking } from "@/lib/speech";
@@ -139,7 +140,8 @@ function AgentPage() {
       return;
     }
     const q = query(
-      collection(db, "users", user.uid, "consultations"),
+      collection(db, "consultations"),
+      where("userId", "==", user.uid),
       orderBy("createdAt", "desc"),
       limit(10),
     );
@@ -170,8 +172,9 @@ function AgentPage() {
     const db = getDb();
     if (!db) return;
     try {
-      const snap = await getDocs(collection(db, "users", user.uid, "consultations"));
-      await Promise.all(snap.docs.map((d) => deleteDoc(doc(db, "users", user.uid, "consultations", d.id))));
+      const q = query(collection(db, "consultations"), where("userId", "==", user.uid));
+      const snap = await getDocs(q);
+      await Promise.all(snap.docs.map((d) => deleteDoc(doc(db, "consultations", d.id))));
     } catch (e) {
       console.error("Clear history failed", e);
     }
@@ -221,11 +224,12 @@ function AgentPage() {
             const db = getDb();
             if (db) {
               try {
-                await addDoc(collection(db, "users", user.uid, "consultations"), {
-                  question,
-                  domaine,
-                  niveau,
-                  langue,
+                await addDoc(collection(db, "consultations"), {
+                  userId: user.uid,
+                  question: question,
+                  domaine: domaine,
+                  langue: langue,
+                  reponse: result.data,
                   response: result.data,
                   createdAt: serverTimestamp(),
                 });
@@ -394,15 +398,17 @@ function AgentPage() {
                 <History className="h-3.5 w-3.5" /> {t("agent.historyTitle")}
               </div>
               {!user && (
-                <p className="text-xs text-muted-foreground">{t("agent.historyLoginRequired")}</p>
+                <p className="text-xs text-muted-foreground p-2">
+                  Connectez-vous pour voir votre historique
+                </p>
               )}
               {user && history.length === 0 && (
-                <p className="text-xs text-muted-foreground">{t("agent.historyEmpty")}</p>
+                <p className="text-xs text-muted-foreground p-2">Aucune consultation</p>
               )}
               <ul className="space-y-1 max-h-80 overflow-y-auto -mx-1 px-1">
                 {history.map((h) => {
                   const words = h.question.split(/\s+/);
-                  const preview = words.slice(0, 8).join(" ") + (words.length > 8 ? "…" : "");
+                  const preview = words.slice(0, 8).join(" ") + (words.length > 8 ? "..." : "");
                   const date = h.createdAt?.toDate?.();
                   const Icon = DOMAIN_ICONS[h.domaine ?? ""] ?? FileText;
                   return (
@@ -411,9 +417,11 @@ function AgentPage() {
                         onClick={() => loadHistoryItem(h)}
                         className="w-full rounded-md px-2 py-2 text-left hover:bg-muted transition group"
                       >
-                        <div className="flex items-center gap-2 text-[10px] text-muted-foreground mb-1">
+                        <div className="flex items-center gap-2 text-[10px] text-muted-foreground mb-1 flex-wrap">
                           <Icon className="h-3 w-3 text-primary" />
                           <span>{date ? relativeTime(date, lang) : ""}</span>
+                          <span>•</span>
+                          <span>{h.domaine ? t(`agent.domains.${h.domaine}`) : ""}</span>
                         </div>
                         <div className="italic text-xs text-foreground/90 line-clamp-2 group-hover:text-primary">
                           {preview}
@@ -428,7 +436,8 @@ function AgentPage() {
                   onClick={clearHistory}
                   className="mt-3 inline-flex w-full items-center justify-center gap-1.5 rounded-lg border border-destructive/30 bg-destructive/5 px-3 py-2 text-xs font-medium text-destructive hover:bg-destructive/10 transition"
                 >
-                  <Trash2 className="h-3.5 w-3.5" /> {lang === "en" ? "Clear history" : "Effacer l'historique"}
+                  <Trash2 className="h-3.5 w-3.5" />{" "}
+                  {lang === "en" ? "Clear history" : "Effacer l'historique"}
                 </button>
               )}
             </div>

@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Logo } from "./Logo";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import { useAuth } from "./AuthProvider";
-import { LogIn, LogOut, Sun, Moon } from "lucide-react";
+import { LogIn, LogOut, Sun, Moon, Menu, X } from "lucide-react";
 import { useEffect, useState } from "react";
 
 export function Header() {
@@ -22,6 +22,8 @@ export function Header() {
     }
   }, []);
 
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
   const toggleTheme = () => {
     const newTheme = theme === "light" ? "dark" : "light";
     setTheme(newTheme);
@@ -34,8 +36,8 @@ export function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-40 border-b border-border bg-background/85 backdrop-blur hidden md:block">
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3">
+    <header className="sticky top-0 z-40 border-b border-border bg-background/85 backdrop-blur block">
+      <div className="mx-auto flex max-w-6xl items-center justify-between px-4 h-14 md:py-3 md:h-auto">
         <Link to="/" className="flex items-center gap-2 text-primary">
           <Logo className="h-8 w-8" />
           <span className="font-serif text-xl font-bold tracking-tight">
@@ -67,7 +69,15 @@ export function Header() {
           </Link>
         </nav>
 
-        <div className="flex items-center gap-2">
+        <button
+          onClick={() => setMobileMenuOpen(true)}
+          className="md:hidden flex items-center justify-center h-11 w-11 text-foreground"
+          aria-label="Open menu"
+        >
+          <Menu className="h-6 w-6" />
+        </button>
+
+        <div className="hidden md:flex items-center gap-2">
           <button
             onClick={toggleTheme}
             className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-border bg-card text-foreground shadow-sm hover:bg-muted hover:text-primary transition-colors"
@@ -97,6 +107,114 @@ export function Header() {
             ))}
         </div>
       </div>
+
+      {/* Mobile Drawer */}
+      {mobileMenuOpen && (
+        <div className="md:hidden fixed inset-0 z-50 flex justify-end">
+          {/* Overlay */}
+          <div
+            className="absolute inset-0 bg-background/80 backdrop-blur-sm"
+            onClick={() => setMobileMenuOpen(false)}
+          />
+
+          {/* Drawer content */}
+          <div className="relative w-4/5 max-w-sm bg-card h-full shadow-xl flex flex-col animate-in slide-in-from-right">
+            <div className="flex items-center justify-between p-4 border-b border-border">
+              <span className="font-serif text-lg font-bold tracking-tight text-primary">
+                JEEP <span className="text-secondary">JURIS</span>
+              </span>
+              <button
+                onClick={() => setMobileMenuOpen(false)}
+                className="inline-flex items-center justify-center h-9 w-9 rounded-full hover:bg-muted"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            <nav className="flex flex-col gap-4 p-4 text-sm font-medium">
+              <Link
+                to="/"
+                onClick={() => setMobileMenuOpen(false)}
+                className="text-foreground/80 hover:text-primary"
+                activeProps={{ className: "text-primary" }}
+              >
+                Accueil
+              </Link>
+              <Link
+                to="/agent"
+                onClick={() => setMobileMenuOpen(false)}
+                className="text-foreground/80 hover:text-primary"
+                activeProps={{ className: "text-primary" }}
+              >
+                {t("nav.agent")}
+              </Link>
+              <Link
+                to="/bibliotheque"
+                onClick={() => setMobileMenuOpen(false)}
+                className="text-foreground/80 hover:text-primary"
+                activeProps={{ className: "text-primary" }}
+              >
+                {t("nav.library")}
+              </Link>
+              <Link
+                to="/apropos"
+                onClick={() => setMobileMenuOpen(false)}
+                className="text-foreground/80 hover:text-primary"
+                activeProps={{ className: "text-primary" }}
+              >
+                {t("nav.about")}
+              </Link>
+            </nav>
+
+            <div className="px-4">
+              <hr className="border-border my-2" />
+            </div>
+
+            <div className="flex flex-col gap-4 p-4">
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium">Langue</span>
+                <LanguageSwitcher />
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium">Thème</span>
+                <button
+                  onClick={toggleTheme}
+                  className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-border bg-background text-foreground shadow-sm hover:bg-muted hover:text-primary transition-colors"
+                  aria-label="Toggle theme"
+                  title="Toggle theme"
+                >
+                  {theme === "light" ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
+                </button>
+              </div>
+            </div>
+
+            <div className="mt-auto p-4 border-t border-border">
+              {configured &&
+                (user ? (
+                  <button
+                    onClick={() => {
+                      logout();
+                      setMobileMenuOpen(false);
+                    }}
+                    className="flex w-full items-center justify-center gap-2 rounded-lg border border-border bg-card px-4 py-2.5 text-sm font-semibold hover:bg-muted"
+                  >
+                    <LogOut className="h-4 w-4" />
+                    {t("nav.logout")}
+                  </button>
+                ) : (
+                  <Link
+                    to="/login"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground hover:opacity-90"
+                  >
+                    <LogIn className="h-4 w-4" />
+                    {t("nav.login")}
+                  </Link>
+                ))}
+            </div>
+          </div>
+        </div>
+      )}
     </header>
   );
 }
