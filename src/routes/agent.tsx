@@ -155,7 +155,7 @@ function AgentPage() {
               id: d.id,
               question: (data.question as string) ?? "",
               domaine: data.domaine as string | undefined,
-              response: data.response as AgentResponse | undefined,
+              response: data.reponse || data.response,
               createdAt: data.createdAt as Timestamp | undefined,
             };
           }),

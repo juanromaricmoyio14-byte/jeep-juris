@@ -149,16 +149,42 @@ export const getLibraryDoc = createServerFn({ method: "GET" })
   });
 
 const ALLOWED_LAW_DRIVE_IDS = new Set<string>([
-  "1wIjlKSB2A9mmpBlVsd4v9w0aiozevp4N",
-  "1xCSo-SeTBvYDVu_-oUbIviKmJHkq6gNw",
-  "1Y7kj1HZlGqZlcL1ROXQEF8VjyaZakoZD",
-  "1woQkWM36vu4bxayUHveBBUI-d4P7GfJE",
-  "1rpdHHOMB1Fq6GSQGtdcD5BINK1Uk5ZKR",
-  "1U4VWTk0QUZjmIjary8tMS3o1RxLt95tO",
-  "190nAFspoU6dYVWd3EMefTW2zPfXEIeN2",
-  "1XOCeoQFFYzwsXAMBOjR3jIL2n7uOUoFy",
-  "1CqCqRDlKKodbnxIXspAiIFkWDiOr5hlg",
-  "13egld3dHJO21aMKM-EyFmuNGi7N4yGtM",
+  "1lksA0cP6u5-iGXTFsxh9TynQJBRZJYeG1",
+  "1cILsBLAerIA96bDGQWy4ue6gTzFK4skK2",
+  "1bws1O_JmGIrvslxN8im7_BQM0t3q4qJ0",
+  "1ZONIR51xktYEkuBQ0w35fHiUVlBjBalt3",
+  "1CEwpJGpkKyAvgcYwyaIj-V7qN04l54zb4",
+  "1_a7Wnt1zgICsplEfdJDHzia7Zlp2d9xj5",
+  "1I3Nu31Oyrhukw-4xIAQtnPkwRzPqEtLV",
+  "1LkMalkcxmW8Ikw5TUl_uI7QY5WSKNrZv",
+  "1OPkB3wjYDGDyGaruOPr314te1AWh4D3G",
+  "1Wa6BcPCLjKBl3AMhQSOd5QH-kMSpNBys",
+  "1_eaFyb-uGVcBdtyLs1TaFhq4ZSlT23QU",
+  "1a9dVcYGqk1COv-8sUPDu9VgHNvg9Zp5r",
+  "1nMTLZ_OhRd2zMvNVcjLmAUZ8pWiayMxD",
+  "1pO9wGAOph7FDmM1L9UAouiCweMXXDxyG",
+  "1uXoVPdLMWZ0JMst1UfxaK9igi9BcD-H",
+  "192tQxLvzwVl8NnwtHAxtd9OyMvFwEKub",
+  "1uS3QOB1CQVuIflWdCjaiatfQI-zGK-Iw",
+  "1v6_iRz-VlvVe-WZQE8_IZAeYHbhuFbMN",
+  "1i6NXTLWFi2RHUaQBxngRj4cwGH9ELesU",
+  "1SuI2J2nMO7FWY5nYW6TYpVRZAVVTarqF",
+  "1yWqYK9ovoPT0QZpsjPePJOCAfLFROXUp",
+  "18vli-sjr25lh3nw_5EV2ZIifVHBtwY4R",
+  "1wnUgum0FQO3lSZ067BTBnRrF9qst3FwZ",
+  "1DE7jpLhpomYt30enoLrlbWvUADSevs_H",
+  "1DSgOHNJlqLpQdBDaYeXRpqKCE4JZGyLd",
+  "17-eBawTpL8qjxoBHEFlQYuBcov75O3wQ",
+  "1g_EkupmZPAuc-ZSWUst899vi-eTJ9ruq",
+  "1I7Z4o3dOs01oBdB4Hv4jfchNRRNZdkEP",
+  "1w6aN0cXjFikuJe30q9Z8a6K-0E4aH35e",
+  "1jsjDzyhpYlm39rCMRoQJZvgXUP8NpHjs",
+  "1DOpTCDuHuLB9aJfIZfae7fhqILAWVofy",
+  "1WT3ATsZHErwfAobBJ7YyKi9FQUuuN1OI",
+  "1qUWJtCMHMR4K959wu844RBSDblodYN-5",
+  "1Sm2O4v7a9ieNJZoOlzHAN5Abp6d_AMP1",
+  "1r6-roMC-KYoORdDDvhaWKWQ5Wy4vdwFV",
+  "1-gFzEgOrOrYFo7Oa-VF8zDJNdsZfeOaP",
 ]);
 
 const LAW_CONTENT_CACHE = new Map<string, { content: string; expiresAt: number }>();
@@ -181,8 +207,8 @@ export const fetchLawContent = createServerFn({ method: "GET" })
       }
       console.log("Law cache MISS, fetching Drive ID:", data.driveId);
       const endpoints = [
-        `https://docs.google.com/document/d/${data.driveId}/export?format=txt`,
         `https://drive.google.com/uc?export=download&id=${data.driveId}`,
+        `https://docs.google.com/document/d/${data.driveId}/export?format=txt`,
         `https://drive.usercontent.google.com/download?id=${data.driveId}&export=download&confirm=t`,
       ];
       for (const url of endpoints) {
