@@ -1,7 +1,18 @@
 import { Link } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { Menu, X, Home, MessageSquare, BookOpen, Info, Sun, Moon, LogIn, LogOut } from "lucide-react";
+import {
+  Menu,
+  X,
+  Home,
+  MessageSquare,
+  BookOpen,
+  Info,
+  Sun,
+  Moon,
+  LogIn,
+  LogOut,
+} from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
 import { useAuth } from "./AuthProvider";
 

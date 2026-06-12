@@ -29,19 +29,282 @@ export const Route = createFileRoute("/bibliotheque")({
 });
 
 const LAWS = [
-  { id: "travail_1", titre: "Code du Travail — Titre I : Dispositions Générales", domaine: "travail", driveId: "1wIjlKSB2A9mmpBlVsd4v9w0aiozevp4N" },
-  { id: "travail_2", titre: "Code du Travail — Titre II : Syndicats", domaine: "travail", driveId: "1xCSo-SeTBvYDVu_-oUbIviKmJHkq6gNw" },
-  { id: "travail_3", titre: "Code du Travail — Titre III : Contrat de Travail", domaine: "travail", driveId: "1Y7kj1HZlGqZlcL1ROXQEF8VjyaZakoZD" },
-  { id: "travail_4", titre: "Code du Travail — Titre IV : Salaire", domaine: "travail", driveId: "1woQkWM36vu4bxayUHveBBUI-d4P7GfJE" },
-  { id: "travail_5", titre: "Code du Travail — Titre V : Conditions de Travail", domaine: "travail", driveId: "1rpdHHOMB1Fq6GSQGtdcD5BINK1Uk5ZKR" },
-  { id: "travail_6", titre: "Code du Travail — Titre VI : Sécurité et Santé", domaine: "travail", driveId: "1U4VWTk0QUZjmIjary8tMS3o1RxLt95tO" },
-  { id: "travail_7", titre: "Code du Travail — Titre VII : Organismes de Contrôle", domaine: "travail", driveId: "190nAFspoU6dYVWd3EMefTW2zPfXEIeN2" },
-  { id: "travail_8", titre: "Code du Travail — Titre VIII : Institutions", domaine: "travail", driveId: "1XOCeoQFFYzwsXAMBOjR3jIL2n7uOUoFy" },
-  { id: "travail_9", titre: "Code du Travail — Titre IX : Différends", domaine: "travail", driveId: "1CqCqRDlKKodbnxIXspAiIFkWDiOr5hlg" },
-  { id: "travail_10", titre: "Code du Travail — Titre X & XI : Pénalités", domaine: "travail", driveId: "13egld3dHJO21aMKM-EyFmuNGi7N4yGtM" },
+  // TITRE I
+  {
+    id: "1",
+    titre: "Art. 1-2 — Dispositions Générales",
+    domaine: "travail",
+    section: "Titre I",
+    driveId: "1lksA0cP6u5-iGXTFsxh9TynQJBRZJYeG1",
+  },
+
+  // TITRE II — Syndicats
+  {
+    id: "2",
+    titre: "Art. 3-5 — Constitution des syndicats",
+    domaine: "travail",
+    section: "Titre II",
+    driveId: "1cILsBLAerIA96bDGQWy4ue6gTzFK4skK2",
+  },
+  {
+    id: "3",
+    titre: "Art. 6-14 — Enregistrement",
+    domaine: "travail",
+    section: "Titre II",
+    driveId: "1bws1O_JmGIrvslxN8im7_BQM0t3q4qJ0",
+  },
+  {
+    id: "4",
+    titre: "Art. 15 — Statuts",
+    domaine: "travail",
+    section: "Titre II",
+    driveId: "1ZONIR51xktYEkuBQ0w35fHiUVlBjBalt3",
+  },
+  {
+    id: "5",
+    titre: "Art. 16-21 — Dispositions diverses",
+    domaine: "travail",
+    section: "Titre II",
+    driveId: "1CEwpJGpkKyAvgcYwyaIj-V7qN04l54zb4",
+  },
+  {
+    id: "6",
+    titre: "Art. 22 — Unions",
+    domaine: "travail",
+    section: "Titre II",
+    driveId: "1_a7Wnt1zgICsplEfdJDHzia7Zlp2d9xj5",
+  },
+
+  // TITRE III — Contrat de travail
+  {
+    id: "7",
+    titre: "Art. 23-27 — Contrat individuel",
+    domaine: "travail",
+    section: "Titre III",
+    driveId: "1I3Nu31Oyrhukw-4xIAQtnPkwRzPqEtLV",
+  },
+  {
+    id: "8",
+    titre: "Art. 28-31 — Essai et discipline",
+    domaine: "travail",
+    section: "Titre III",
+    driveId: "1LkMalkcxmW8Ikw5TUl_uI7QY5WSKNrZv",
+  },
+  {
+    id: "9",
+    titre: "Art. 32-33 — Suspension",
+    domaine: "travail",
+    section: "Titre III",
+    driveId: "1OPkB3wjYDGDyGaruOPr314te1AWh4D3G",
+  },
+  {
+    id: "10",
+    titre: "Art. 34-43 — Rupture du contrat",
+    domaine: "travail",
+    section: "Titre III",
+    driveId: "1Wa6BcPCLjKBl3AMhQSOd5QH-kMSpNBys",
+  },
+  {
+    id: "11",
+    titre: "Art. 44 — Certificat de travail",
+    domaine: "travail",
+    section: "Titre III",
+    driveId: "1_eaFyb-uGVcBdtyLs1TaFhq4ZSlT23QU",
+  },
+  {
+    id: "12",
+    titre: "Art. 45-47 — Apprentissage",
+    domaine: "travail",
+    section: "Titre III",
+    driveId: "1a9dVcYGqk1COv-8sUPDu9VgHNvg9Zp5r",
+  },
+  {
+    id: "13",
+    titre: "Art. 48-51 — Tâcheronnat",
+    domaine: "travail",
+    section: "Titre III",
+    driveId: "1nMTLZ_OhRd2zMvNVcjLmAUZ8pWiayMxD",
+  },
+  {
+    id: "14",
+    titre: "Art. 52-60 — Conventions collectives",
+    domaine: "travail",
+    section: "Titre III",
+    driveId: "1pO9wGAOph7FDmM1L9UAouiCweMXXDxyG",
+  },
+
+  // TITRE IV — Salaire
+  {
+    id: "15",
+    titre: "Art. 61-66 — Détermination du salaire",
+    domaine: "travail",
+    section: "Titre IV",
+    driveId: "1uXoVPdLMWZ0JMst1UfxaK9igi9BcD-H",
+  },
+  {
+    id: "16",
+    titre: "Art. 67-76 — Paiement du salaire",
+    domaine: "travail",
+    section: "Titre IV",
+    driveId: "192tQxLvzwVl8NnwtHAxtd9OyMvFwEKub",
+  },
+  {
+    id: "17",
+    titre: "Art. 77 — Disposition sur le salaire",
+    domaine: "travail",
+    section: "Titre IV",
+    driveId: "1uS3QOB1CQVuIflWdCjaiatfQI-zGK-Iw",
+  },
+  {
+    id: "18",
+    titre: "Art. 78-79 — Économats",
+    domaine: "travail",
+    section: "Titre IV",
+    driveId: "1v6_iRz-VlvVe-WZQE8_IZAeYHbhuFbMN",
+  },
+
+  // TITRE V — Conditions de travail
+  {
+    id: "19",
+    titre: "Art. 80 — Durée du travail",
+    domaine: "travail",
+    section: "Titre V",
+    driveId: "1i6NXTLWFi2RHUaQBxngRj4cwGH9ELesU",
+  },
+  {
+    id: "20",
+    titre: "Art. 81-82 — Travail de nuit",
+    domaine: "travail",
+    section: "Titre V",
+    driveId: "1SuI2J2nMO7FWY5nYW6TYpVRZAVVTarqF",
+  },
+  {
+    id: "21",
+    titre: "Art. 83-87 — Femmes et enfants",
+    domaine: "travail",
+    section: "Titre V",
+    driveId: "1yWqYK9ovoPT0QZpsjPePJOCAfLFROXUp",
+  },
+  {
+    id: "22",
+    titre: "Art. 88 — Repos hebdomadaire",
+    domaine: "travail",
+    section: "Titre V",
+    driveId: "18vli-sjr25lh3nw_5EV2ZIifVHBtwY4R",
+  },
+  {
+    id: "23",
+    titre: "Art. 89-93 — Congés payés",
+    domaine: "travail",
+    section: "Titre V",
+    driveId: "1wnUgum0FQO3lSZ067BTBnRrF9qst3FwZ",
+  },
+  {
+    id: "24",
+    titre: "Art. 94 — Transports",
+    domaine: "travail",
+    section: "Titre V",
+    driveId: "1DE7jpLhpomYt30enoLrlbWvUADSevs_H",
+  },
+
+  // TITRE VI — Sécurité et santé
+  {
+    id: "25",
+    titre: "Art. 95-97 — Sécurité",
+    domaine: "travail",
+    section: "Titre VI",
+    driveId: "1DSgOHNJlqLpQdBDaYeXRpqKCE4JZGyLd",
+  },
+  {
+    id: "26",
+    titre: "Art. 98-103 — Santé",
+    domaine: "travail",
+    section: "Titre VI",
+    driveId: "17-eBawTpL8qjxoBHEFlQYuBcov75O3wQ",
+  },
+
+  // TITRE VII — Organismes de contrôle
+  {
+    id: "27",
+    titre: "Art. 104-111 — Inspection du travail",
+    domaine: "travail",
+    section: "Titre VII",
+    driveId: "1g_EkupmZPAuc-ZSWUst899vi-eTJ9ruq",
+  },
+  {
+    id: "28",
+    titre: "Art. 112-113 — Placement",
+    domaine: "travail",
+    section: "Titre VII",
+    driveId: "1I7Z4o3dOs01oBdB4Hv4jfchNRRNZdkEP",
+  },
+  {
+    id: "29",
+    titre: "Art. 114-116 — Registres",
+    domaine: "travail",
+    section: "Titre VII",
+    driveId: "1w6aN0cXjFikuJe30q9Z8a6K-0E4aH35e",
+  },
+
+  // TITRE VIII — Institutions
+  {
+    id: "30",
+    titre: "Art. 117-119 — Commission du travail",
+    domaine: "travail",
+    section: "Titre VIII",
+    driveId: "1jsjDzyhpYlm39rCMRoQJZvgXUP8NpHjs",
+  },
+  {
+    id: "31",
+    titre: "Art. 120-121 — Commission de santé",
+    domaine: "travail",
+    section: "Titre VIII",
+    driveId: "1DOpTCDuHuLB9aJfIZfae7fhqILAWVofy",
+  },
+  {
+    id: "32",
+    titre: "Art. 122-130 — Délégués du personnel",
+    domaine: "travail",
+    section: "Titre VIII",
+    driveId: "1WT3ATsZHErwfAobBJ7YyKi9FQUuuN1OI",
+  },
+
+  // TITRE IX — Différends
+  {
+    id: "33",
+    titre: "Art. 131-156 — Différend individuel",
+    domaine: "travail",
+    section: "Titre IX",
+    driveId: "1qUWJtCMHMR4K959wu844RBSDblodYN-5",
+  },
+  {
+    id: "34",
+    titre: "Art. 157-165 — Différend collectif",
+    domaine: "travail",
+    section: "Titre IX",
+    driveId: "1Sm2O4v7a9ieNJZoOlzHAN5Abp6d_AMP1",
+  },
+
+  // TITRE X & XI — Pénalités et dispositions finales
+  {
+    id: "35",
+    titre: "Art. 166-173 — Pénalités",
+    domaine: "travail",
+    section: "Titre X-XI",
+    driveId: "1r6-roMC-KYoORdDDvhaWKWQ5Wy4vdwFV",
+  },
+  {
+    id: "36",
+    titre: "Art. 174-177 — Dispositions finales",
+    domaine: "travail",
+    section: "Titre X-XI",
+    driveId: "1-gFzEgOrOrYFo7Oa-VF8zDJNdsZfeOaP",
+  },
 ] as const;
 
 type Law = (typeof LAWS)[number];
+
+type GroupedLaws = Record<string, Law[]>;
 
 function formatLawText(raw: string) {
   // Put each "Article N" on its own line, bolded via markdown-ish marker rendered by component.
@@ -116,30 +379,50 @@ function LibraryPage() {
           </div>
         </div>
 
-        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {filtered.map((l, index) => (
-            <article
-              key={l.id}
-              className="rounded-2xl border border-border bg-card p-5 transition-shadow hover:shadow-md animate-in slide-in-from-bottom-4 duration-500 flex flex-col"
-              style={{ animationDelay: `${index * 40}ms`, animationFillMode: "both" }}
-            >
-              <BookOpen className="h-6 w-6 text-secondary" />
-              <h2 className="mt-3 font-serif text-base font-semibold leading-snug">{l.titre}</h2>
-              <p className="mt-1 text-xs uppercase tracking-wide text-primary/70">
-                Droit du Travail
-              </p>
-              <button
-                onClick={() => openLaw(l)}
-                className="mt-auto pt-4 inline-flex items-center gap-1 text-xs font-semibold text-primary hover:underline self-start min-h-[44px]"
-              >
-                {t("library.read")} →
-              </button>
-            </article>
-          ))}
-          {filtered.length === 0 && (
-            <p className="col-span-full text-center text-sm text-muted-foreground">
-              {t("library.noResults")}
-            </p>
+        <div className="mt-8 space-y-12">
+          {filtered.length === 0 ? (
+            <p className="text-center text-sm text-muted-foreground">{t("library.noResults")}</p>
+          ) : (
+            Object.entries(
+              filtered.reduce((acc: GroupedLaws, law) => {
+                const section = law.section || "Autres";
+                if (!acc[section]) acc[section] = [];
+                acc[section].push(law);
+                return acc;
+              }, {}),
+            ).map(([section, sectionLaws], sectionIndex) => (
+              <section key={section} className="space-y-4">
+                <h2 className="font-serif text-2xl font-semibold text-primary border-b border-border pb-2">
+                  {section}
+                </h2>
+                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                  {sectionLaws.map((l, index) => (
+                    <article
+                      key={l.id}
+                      className="rounded-2xl border border-border bg-card p-5 transition-shadow hover:shadow-md animate-in slide-in-from-bottom-4 duration-500 flex flex-col"
+                      style={{
+                        animationDelay: `${(sectionIndex * 4 + index) * 40}ms`,
+                        animationFillMode: "both",
+                      }}
+                    >
+                      <BookOpen className="h-6 w-6 text-secondary" />
+                      <h3 className="mt-3 font-serif text-base font-semibold leading-snug">
+                        {l.titre}
+                      </h3>
+                      <p className="mt-1 text-xs uppercase tracking-wide text-primary/70">
+                        Droit du Travail
+                      </p>
+                      <button
+                        onClick={() => openLaw(l)}
+                        className="mt-auto pt-4 inline-flex items-center gap-1 text-xs font-semibold text-primary hover:underline self-start min-h-[44px]"
+                      >
+                        {t("library.read")} →
+                      </button>
+                    </article>
+                  ))}
+                </div>
+              </section>
+            ))
           )}
         </div>
       </main>
@@ -178,9 +461,7 @@ function LibraryPage() {
                   ))}
                 </div>
               )}
-              {!loadingLaw && errorLaw && (
-                <p className="text-sm text-destructive">{errorLaw}</p>
-              )}
+              {!loadingLaw && errorLaw && <p className="text-sm text-destructive">{errorLaw}</p>}
               {!loadingLaw && !errorLaw && lawContent && (
                 <div className="text-sm text-foreground leading-relaxed space-y-3">
                   {lawContent.split(/\n\n+/).map((para, i) => {
