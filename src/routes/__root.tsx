@@ -156,6 +156,7 @@ function RootShell({ children }: { children: React.ReactNode }) {
 
 import { Home, MessageSquare, BookOpen, User } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { MobileNav } from "@/components/MobileNav";
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
