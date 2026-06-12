@@ -29,22 +29,19 @@ export const Route = createFileRoute("/bibliotheque")({
 });
 
 const LAWS = [
-  // TITRE I
   {
     id: "1",
     titre: "Art. 1-2 — Dispositions Générales",
     domaine: "travail",
     section: "Titre I",
-    driveId: "1lksA0cP6u5-iGXTFsxh9TynQJBRZJYeG1",
+    driveId: "1lksA0cP6u5-iGXTFsxh9TynQJBRZJYeG",
   },
-
-  // TITRE II — Syndicats
   {
     id: "2",
     titre: "Art. 3-5 — Constitution des syndicats",
     domaine: "travail",
     section: "Titre II",
-    driveId: "1cILsBLAerIA96bDGQWy4ue6gTzFK4skK2",
+    driveId: "1cILsBLAerIA96bDGQWy4ue6gTzFK4skK",
   },
   {
     id: "3",
@@ -58,24 +55,22 @@ const LAWS = [
     titre: "Art. 15 — Statuts",
     domaine: "travail",
     section: "Titre II",
-    driveId: "1ZONIR51xktYEkuBQ0w35fHiUVlBjBalt3",
+    driveId: "1ZONIR51xktYEkuBQ0w35fHiUVlBjBalt",
   },
   {
     id: "5",
     titre: "Art. 16-21 — Dispositions diverses",
     domaine: "travail",
     section: "Titre II",
-    driveId: "1CEwpJGpkKyAvgcYwyaIj-V7qN04l54zb4",
+    driveId: "1CEwpJGpkKyAvgcYwyaIj-V7qN04l54zb",
   },
   {
     id: "6",
     titre: "Art. 22 — Unions",
     domaine: "travail",
     section: "Titre II",
-    driveId: "1_a7Wnt1zgICsplEfdJDHzia7Zlp2d9xj5",
+    driveId: "1_a7Wnt1zgICsplEfdJDHzia7Zlp2d9xj",
   },
-
-  // TITRE III — Contrat de travail
   {
     id: "7",
     titre: "Art. 23-27 — Contrat individuel",
@@ -132,14 +127,12 @@ const LAWS = [
     section: "Titre III",
     driveId: "1pO9wGAOph7FDmM1L9UAouiCweMXXDxyG",
   },
-
-  // TITRE IV — Salaire
   {
     id: "15",
     titre: "Art. 61-66 — Détermination du salaire",
     domaine: "travail",
     section: "Titre IV",
-    driveId: "1uXoVPdLMWZ0JMst1UfxaK9igi9BcD-H",
+    driveId: "1uXoWVPdLMWZ0JMst1UfxaK9igi9BcD-H",
   },
   {
     id: "16",
@@ -162,8 +155,6 @@ const LAWS = [
     section: "Titre IV",
     driveId: "1v6_iRz-VlvVe-WZQE8_IZAeYHbhuFbMN",
   },
-
-  // TITRE V — Conditions de travail
   {
     id: "19",
     titre: "Art. 80 — Durée du travail",
@@ -206,8 +197,6 @@ const LAWS = [
     section: "Titre V",
     driveId: "1DE7jpLhpomYt30enoLrlbWvUADSevs_H",
   },
-
-  // TITRE VI — Sécurité et santé
   {
     id: "25",
     titre: "Art. 95-97 — Sécurité",
@@ -222,8 +211,6 @@ const LAWS = [
     section: "Titre VI",
     driveId: "17-eBawTpL8qjxoBHEFlQYuBcov75O3wQ",
   },
-
-  // TITRE VII — Organismes de contrôle
   {
     id: "27",
     titre: "Art. 104-111 — Inspection du travail",
@@ -245,8 +232,6 @@ const LAWS = [
     section: "Titre VII",
     driveId: "1w6aN0cXjFikuJe30q9Z8a6K-0E4aH35e",
   },
-
-  // TITRE VIII — Institutions
   {
     id: "30",
     titre: "Art. 117-119 — Commission du travail",
@@ -268,8 +253,6 @@ const LAWS = [
     section: "Titre VIII",
     driveId: "1WT3ATsZHErwfAobBJ7YyKi9FQUuuN1OI",
   },
-
-  // TITRE IX — Différends
   {
     id: "33",
     titre: "Art. 131-156 — Différend individuel",
@@ -284,8 +267,6 @@ const LAWS = [
     section: "Titre IX",
     driveId: "1Sm2O4v7a9ieNJZoOlzHAN5Abp6d_AMP1",
   },
-
-  // TITRE X & XI — Pénalités et dispositions finales
   {
     id: "35",
     titre: "Art. 166-173 — Pénalités",

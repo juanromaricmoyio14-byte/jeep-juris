@@ -113,12 +113,12 @@ export function Header() {
         <div className="md:hidden fixed inset-0 z-50 flex justify-end">
           {/* Overlay */}
           <div
-            className="absolute inset-0 bg-black/70 backdrop-blur-sm"
+            className="absolute inset-0 z-40 bg-black/75 backdrop-blur-sm"
             onClick={() => setMobileMenuOpen(false)}
           />
 
           {/* Drawer content */}
-          <div className="relative w-4/5 max-w-sm bg-white dark:bg-[#1A2634] opacity-100 shadow-[-4px_0_20px_rgba(0,0,0,0.3)] z-50 h-full flex flex-col animate-in slide-in-from-right">
+          <div className="relative w-4/5 max-w-sm bg-white dark:bg-[#1A2634] shadow-[-4px_0_20px_rgba(0,0,0,0.3)] z-50 h-full flex flex-col animate-in slide-in-from-right">
             <div className="flex items-center justify-between p-4 border-b border-border">
               <span className="font-serif text-lg font-bold tracking-tight text-primary">
                 JEEP <span className="text-secondary">JURIS</span>
