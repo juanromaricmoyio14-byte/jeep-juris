@@ -7,6 +7,7 @@ import { PasswordInput } from "@/components/PasswordInput";
 import { getFirebaseAuth, firebaseConfigured } from "@/lib/firebase";
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 import { useAuth } from "@/components/AuthProvider";
+import { Loader2 } from "lucide-react";
 
 export const Route = createFileRoute("/login")({
   head: () => ({
@@ -127,15 +128,16 @@ function LoginPage() {
             <button
               type="submit"
               disabled={loading || !firebaseConfigured}
-              className="w-full rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground hover:opacity-90 disabled:opacity-40"
+              className="w-full flex items-center justify-center rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground hover:opacity-90 disabled:opacity-40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
             >
+              {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {mode === "login" ? t("auth.submitLogin") : t("auth.submitSignup")}
             </button>
           </form>
 
           <button
             onClick={() => setMode(mode === "login" ? "signup" : "login")}
-            className="mt-4 w-full text-center text-xs text-muted-foreground hover:text-primary"
+            className="mt-4 w-full text-center text-xs text-muted-foreground hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-sm"
           >
             {mode === "login" ? t("auth.switchToSignup") : t("auth.switchToLogin")}
           </button>
