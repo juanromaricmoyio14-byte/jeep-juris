@@ -161,14 +161,23 @@ const ALLOWED_LAW_DRIVE_IDS = new Set<string>([
   "13egld3dHJO21aMKM-EyFmuNGi7N4yGtM",
 ]);
 
+const LAW_CONTENT_CACHE = new Map<string, { content: string; expiresAt: number }>();
+const LAW_CACHE_TTL_MS = 1000 * 60 * 60 * 24; // 24h
+
 export const fetchLawContent = createServerFn({ method: "GET" })
   .inputValidator(z.object({ driveId: z.string().min(10).max(80) }))
   .handler(
-    async ({ data }): Promise<{ ok: boolean; content?: string; error?: string }> => {
+    async ({ data }): Promise<{ ok: boolean; content?: string; error?: string; cached?: boolean }> => {
       if (!ALLOWED_LAW_DRIVE_IDS.has(data.driveId)) {
         return { ok: false, error: "Document non autorisé" };
       }
-      console.log("Fetching Drive ID:", data.driveId);
+      const now = Date.now();
+      const hit = LAW_CONTENT_CACHE.get(data.driveId);
+      if (hit && hit.expiresAt > now) {
+        console.log("Law cache HIT:", data.driveId);
+        return { ok: true, content: hit.content, cached: true };
+      }
+      console.log("Law cache MISS, fetching Drive ID:", data.driveId);
       const endpoints = [
         `https://docs.google.com/document/d/${data.driveId}/export?format=txt`,
         `https://drive.google.com/uc?export=download&id=${data.driveId}`,
@@ -192,7 +201,12 @@ export const fetchLawContent = createServerFn({ method: "GET" })
             continue;
           }
           if (!text || text.trim().length < 10) continue;
-          return { ok: true, content: text.slice(0, 200000) };
+          const content = text.slice(0, 200000);
+          LAW_CONTENT_CACHE.set(data.driveId, {
+            content,
+            expiresAt: now + LAW_CACHE_TTL_MS,
+          });
+          return { ok: true, content, cached: false };
         } catch (e) {
           console.error("fetchLawContent endpoint error", url, e);
         }
