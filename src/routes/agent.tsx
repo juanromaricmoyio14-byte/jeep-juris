@@ -141,23 +141,51 @@ function AgentPage() {
     const q = query(
       collection(db, "users", user.uid, "consultations"),
       orderBy("createdAt", "desc"),
-      limit(50),
+      limit(10),
     );
     const unsub = onSnapshot(
       q,
       (snap) => {
         setHistory(
-          snap.docs.map((d) => ({
-            id: d.id,
-            question: (d.data().question as string) ?? "",
-            createdAt: d.data().createdAt as Timestamp | undefined,
-          })),
+          snap.docs.map((d) => {
+            const data = d.data() as any;
+            return {
+              id: d.id,
+              question: (data.question as string) ?? "",
+              domaine: data.domaine as string | undefined,
+              response: data.response as AgentResponse | undefined,
+              createdAt: data.createdAt as Timestamp | undefined,
+            };
+          }),
         );
       },
       (err) => console.error("[agent] history snapshot error", err),
     );
     return () => unsub();
   }, [user]);
+
+  const clearHistory = useCallback(async () => {
+    if (!user) return;
+    if (!confirm(lang === "en" ? "Clear all history?" : "Effacer tout l'historique ?")) return;
+    const db = getDb();
+    if (!db) return;
+    try {
+      const snap = await getDocs(collection(db, "users", user.uid, "consultations"));
+      await Promise.all(snap.docs.map((d) => deleteDoc(doc(db, "users", user.uid, "consultations", d.id))));
+    } catch (e) {
+      console.error("Clear history failed", e);
+    }
+  }, [user]);
+
+  const loadHistoryItem = useCallback((h: HistoryItem) => {
+    setError(null);
+    setMessages([
+      { role: "user", text: h.question },
+      ...(h.response ? [{ role: "agent" as const, response: h.response }] : []),
+    ]);
+    if (h.domaine) setDomaine(h.domaine);
+    setSidebarOpen(false);
+  }, []);
 
   const submit = useCallback(
     async (questionArg?: string) => {
