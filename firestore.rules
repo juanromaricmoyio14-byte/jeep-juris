@@ -35,8 +35,9 @@ service cloud.firestore {
     }
 
     // Per-user consultation history: only the owning user can read/write.
-    match /users/{uid}/consultations/{doc} {
-      allow read, write: if request.auth != null && request.auth.uid == uid;
+    match /consultations/{doc} {
+      allow create: if request.auth != null && request.auth.uid == request.resource.data.userId;
+      allow read, update, delete: if request.auth != null && request.auth.uid == resource.data.userId;
     }
 
     // Default deny.
