@@ -38,7 +38,10 @@ export function Header() {
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-background/85 backdrop-blur block">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 h-14 md:py-3 md:h-auto">
-        <Link to="/" className="flex items-center gap-2 text-primary">
+        <Link
+          to="/"
+          className="flex items-center gap-2 text-primary rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+        >
           <Logo className="h-8 w-8" />
           <span className="font-serif text-xl font-bold tracking-tight">
             JEEP <span className="text-secondary">JURIS</span>
@@ -48,21 +51,21 @@ export function Header() {
         <nav className="hidden items-center gap-6 text-sm font-medium md:flex">
           <Link
             to="/agent"
-            className="text-foreground/80 hover:text-primary"
+            className="text-foreground/80 hover:text-primary rounded-md px-2 py-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
             activeProps={{ className: "text-primary" }}
           >
             {t("nav.agent")}
           </Link>
           <Link
             to="/bibliotheque"
-            className="text-foreground/80 hover:text-primary"
+            className="text-foreground/80 hover:text-primary rounded-md px-2 py-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
             activeProps={{ className: "text-primary" }}
           >
             {t("nav.library")}
           </Link>
           <Link
             to="/apropos"
-            className="text-foreground/80 hover:text-primary"
+            className="text-foreground/80 hover:text-primary rounded-md px-2 py-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
             activeProps={{ className: "text-primary" }}
           >
             {t("nav.about")}
@@ -71,7 +74,7 @@ export function Header() {
 
         <button
           onClick={() => setMobileMenuOpen(true)}
-          className="md:hidden flex items-center justify-center h-10 w-10 rounded-full bg-primary text-primary-foreground hover:bg-primary/90 transition-colors shadow-sm"
+          className="md:hidden flex items-center justify-center h-10 w-10 rounded-full bg-primary text-primary-foreground hover:bg-primary/90 transition-colors shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
           aria-label="Open menu"
         >
           <Menu className="h-5 w-5" />
@@ -80,7 +83,7 @@ export function Header() {
         <div className="hidden md:flex items-center gap-2">
           <button
             onClick={toggleTheme}
-            className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-border bg-card text-foreground shadow-sm hover:bg-muted hover:text-primary transition-colors"
+            className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-border bg-card text-foreground shadow-sm hover:bg-muted hover:text-primary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
             aria-label="Toggle theme"
             title="Toggle theme"
           >
@@ -91,7 +94,7 @@ export function Header() {
             (user ? (
               <button
                 onClick={() => logout()}
-                className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-3 py-1.5 text-xs font-semibold hover:bg-muted"
+                className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-3 py-1.5 text-xs font-semibold hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
               >
                 <LogOut className="h-3.5 w-3.5" />
                 {t("nav.logout")}
@@ -99,7 +102,7 @@ export function Header() {
             ) : (
               <Link
                 to="/login"
-                className="inline-flex items-center gap-1.5 rounded-full bg-primary px-3 py-1.5 text-xs font-semibold text-primary-foreground hover:opacity-90"
+                className="inline-flex items-center gap-1.5 rounded-full bg-primary px-3 py-1.5 text-xs font-semibold text-primary-foreground hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
               >
                 <LogIn className="h-3.5 w-3.5" />
                 {t("nav.login")}
@@ -125,7 +128,7 @@ export function Header() {
               </span>
               <button
                 onClick={() => setMobileMenuOpen(false)}
-                className="inline-flex items-center justify-center h-9 w-9 rounded-full hover:bg-muted"
+                className="inline-flex items-center justify-center h-9 w-9 rounded-full hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
               >
                 <X className="h-5 w-5" />
               </button>
@@ -135,7 +138,7 @@ export function Header() {
               <Link
                 to="/"
                 onClick={() => setMobileMenuOpen(false)}
-                className="text-foreground/80 hover:text-primary"
+                className="text-foreground/80 hover:text-primary rounded-md px-2 py-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                 activeProps={{ className: "text-primary" }}
               >
                 Accueil
@@ -143,7 +146,7 @@ export function Header() {
               <Link
                 to="/agent"
                 onClick={() => setMobileMenuOpen(false)}
-                className="text-foreground/80 hover:text-primary"
+                className="text-foreground/80 hover:text-primary rounded-md px-2 py-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                 activeProps={{ className: "text-primary" }}
               >
                 {t("nav.agent")}
@@ -151,7 +154,7 @@ export function Header() {
               <Link
                 to="/bibliotheque"
                 onClick={() => setMobileMenuOpen(false)}
-                className="text-foreground/80 hover:text-primary"
+                className="text-foreground/80 hover:text-primary rounded-md px-2 py-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                 activeProps={{ className: "text-primary" }}
               >
                 {t("nav.library")}
@@ -159,7 +162,7 @@ export function Header() {
               <Link
                 to="/apropos"
                 onClick={() => setMobileMenuOpen(false)}
-                className="text-foreground/80 hover:text-primary"
+                className="text-foreground/80 hover:text-primary rounded-md px-2 py-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                 activeProps={{ className: "text-primary" }}
               >
                 {t("nav.about")}
@@ -179,7 +182,7 @@ export function Header() {
                 <span className="text-sm font-medium">Thème</span>
                 <button
                   onClick={toggleTheme}
-                  className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-border bg-background text-foreground shadow-sm hover:bg-muted hover:text-primary transition-colors"
+                  className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-border bg-background text-foreground shadow-sm hover:bg-muted hover:text-primary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                   aria-label="Toggle theme"
                   title="Toggle theme"
                 >
@@ -196,7 +199,7 @@ export function Header() {
                       logout();
                       setMobileMenuOpen(false);
                     }}
-                    className="flex w-full items-center justify-center gap-2 rounded-lg border border-border bg-card px-4 py-2.5 text-sm font-semibold hover:bg-muted"
+                    className="flex w-full items-center justify-center gap-2 rounded-lg border border-border bg-card px-4 py-2.5 text-sm font-semibold hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                   >
                     <LogOut className="h-4 w-4" />
                     {t("nav.logout")}
@@ -205,7 +208,7 @@ export function Header() {
                   <Link
                     to="/login"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground hover:opacity-90"
+                    className="flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                   >
                     <LogIn className="h-4 w-4" />
                     {t("nav.login")}
