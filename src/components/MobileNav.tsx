@@ -56,7 +56,7 @@ export function MobileNav() {
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
         <button
-          className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-primary text-primary-foreground hover:bg-primary/90 transition-colors shadow-sm"
+          className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-primary text-primary-foreground hover:bg-primary/90 transition-colors shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
           aria-label="Menu"
         >
           <Menu className="h-5 w-5" />
@@ -69,7 +69,7 @@ export function MobileNav() {
           </SheetTitle>
           <button
             onClick={close}
-            className="inline-flex h-9 w-9 items-center justify-center rounded-full hover:bg-muted"
+            className="inline-flex h-9 w-9 items-center justify-center rounded-full hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
             aria-label="Fermer"
           >
             <X className="h-5 w-5" />
@@ -83,7 +83,7 @@ export function MobileNav() {
                 <Link
                   to={l.to}
                   onClick={close}
-                  className="flex items-center gap-3 rounded-lg px-3 py-3 text-sm font-medium text-foreground hover:bg-muted hover:text-primary transition-colors"
+                  className="flex items-center gap-3 rounded-lg px-3 py-3 text-sm font-medium text-foreground hover:bg-muted hover:text-primary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                   activeProps={{ className: "bg-primary/10 text-primary" }}
                 >
                   <l.icon className="h-5 w-5" />
@@ -103,7 +103,7 @@ export function MobileNav() {
                   <button
                     key={l}
                     onClick={() => changeLang(l)}
-                    className={`flex-1 px-3 py-1.5 rounded-full transition-colors ${
+                    className={`flex-1 px-3 py-1.5 rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${
                       lang === l ? "bg-primary text-primary-foreground" : "text-muted-foreground"
                     }`}
                   >
@@ -119,7 +119,7 @@ export function MobileNav() {
               </div>
               <button
                 onClick={toggleTheme}
-                className="flex w-full items-center justify-between rounded-lg border border-border bg-card px-3 py-2.5 text-sm font-medium hover:bg-muted"
+                className="flex w-full items-center justify-between rounded-lg border border-border bg-card px-3 py-2.5 text-sm font-medium hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
               >
                 <span className="flex items-center gap-2">
                   {theme === "light" ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
@@ -136,7 +136,7 @@ export function MobileNav() {
                       logout();
                       close();
                     }}
-                    className="flex w-full items-center gap-2 rounded-lg border border-border bg-card px-3 py-2.5 text-sm font-medium hover:bg-muted"
+                    className="flex w-full items-center gap-2 rounded-lg border border-border bg-card px-3 py-2.5 text-sm font-medium hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                   >
                     <LogOut className="h-4 w-4" /> {t("nav.logout")}
                   </button>
@@ -144,7 +144,7 @@ export function MobileNav() {
                   <Link
                     to="/login"
                     onClick={close}
-                    className="flex w-full items-center gap-2 rounded-lg bg-primary px-3 py-2.5 text-sm font-semibold text-primary-foreground hover:opacity-90"
+                    className="flex w-full items-center gap-2 rounded-lg bg-primary px-3 py-2.5 text-sm font-semibold text-primary-foreground hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                   >
                     <LogIn className="h-4 w-4" /> {t("nav.login")}
                   </Link>
