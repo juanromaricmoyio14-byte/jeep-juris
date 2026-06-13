@@ -384,7 +384,7 @@ function LibraryPage() {
             <p className="text-center text-sm text-muted-foreground">{t("library.noResults")}</p>
           ) : (
             Object.entries(
-              filtered.reduce((acc: GroupedLaws, law) => {
+              (filtered as Law[]).reduce<GroupedLaws>((acc, law) => {
                 const section = law.section || "Autres";
                 if (!acc[section]) acc[section] = [];
                 acc[section].push(law);
