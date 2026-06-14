@@ -140,8 +140,7 @@ function AgentPage() {
       return;
     }
     const q = query(
-      collection(db, "consultations"),
-      where("userId", "==", user.uid),
+      collection(db, `users/${user.uid}/consultations`),
       orderBy("createdAt", "desc"),
       limit(10),
     );
@@ -172,9 +171,11 @@ function AgentPage() {
     const db = getDb();
     if (!db) return;
     try {
-      const q = query(collection(db, "consultations"), where("userId", "==", user.uid));
+      const q = query(collection(db, `users/${user.uid}/consultations`));
       const snap = await getDocs(q);
-      await Promise.all(snap.docs.map((d) => deleteDoc(doc(db, "consultations", d.id))));
+      await Promise.all(
+        snap.docs.map((d) => deleteDoc(doc(db, `users/${user.uid}/consultations`, d.id))),
+      );
     } catch (e) {
       console.error("Clear history failed", e);
     }
@@ -224,8 +225,7 @@ function AgentPage() {
             const db = getDb();
             if (db) {
               try {
-                await addDoc(collection(db, "consultations"), {
-                  userId: user.uid,
+                await addDoc(collection(db, `users/${user.uid}/consultations`), {
                   question: question,
                   domaine: domaine,
                   langue: langue,
@@ -386,7 +386,7 @@ function AgentPage() {
 
               <button
                 onClick={reset}
-                className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-lg border border-border bg-background px-3 py-2.5 text-sm font-medium hover:bg-muted hover:border-primary/40 transition"
+                className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-lg border border-border bg-background px-3 py-2.5 text-sm font-medium hover:bg-muted hover:border-primary/40 transition min-h-[44px]"
               >
                 <RefreshCcw className="h-3.5 w-3.5" /> {t("agent.newConsult")}
               </button>
@@ -415,7 +415,7 @@ function AgentPage() {
                     <li key={h.id}>
                       <button
                         onClick={() => loadHistoryItem(h)}
-                        className="w-full rounded-md px-2 py-2 text-left hover:bg-muted transition group"
+                        className="w-full rounded-md px-2 py-2 text-left hover:bg-muted transition group min-h-[44px]"
                       >
                         <div className="flex items-center gap-2 text-[10px] text-muted-foreground mb-1 flex-wrap">
                           <Icon className="h-3 w-3 text-primary" />
@@ -434,7 +434,7 @@ function AgentPage() {
               {user && history.length > 0 && (
                 <button
                   onClick={clearHistory}
-                  className="mt-3 inline-flex w-full items-center justify-center gap-1.5 rounded-lg border border-destructive/30 bg-destructive/5 px-3 py-2 text-xs font-medium text-destructive hover:bg-destructive/10 transition"
+                  className="mt-3 flex w-full items-center justify-center gap-2 rounded-md border border-destructive/20 bg-destructive/5 px-2 py-1.5 text-xs font-medium text-destructive hover:bg-destructive/10 transition-colors min-h-[44px]"
                 >
                   <Trash2 className="h-3.5 w-3.5" />{" "}
                   {lang === "en" ? "Clear history" : "Effacer l'historique"}
@@ -488,7 +488,7 @@ function AgentPage() {
                           setInput(q);
                           submit(q);
                         }}
-                        className="p-3 text-sm rounded-xl border border-border bg-card hover:bg-muted transition-colors"
+                        className="p-3 text-sm rounded-xl border border-border bg-card hover:bg-muted transition-colors min-h-[44px]"
                       >
                         {q}
                       </button>
@@ -578,7 +578,7 @@ function AgentPage() {
                   onClick={toggleListening}
                   title={t("agent.mic")}
                   aria-label={t("agent.mic")}
-                  className={`inline-flex items-center justify-center rounded-lg border px-3 py-2 text-sm font-semibold transition-colors ${
+                  className={`inline-flex items-center justify-center rounded-lg border px-3 py-2 text-sm font-semibold transition-colors min-h-[44px] min-w-[44px] ${
                     listening
                       ? "border-destructive bg-destructive text-destructive-foreground"
                       : "border-border bg-background hover:bg-muted"
@@ -589,7 +589,7 @@ function AgentPage() {
                 <button
                   type="submit"
                   disabled={loading || !input.trim()}
-                  className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:opacity-90 disabled:opacity-40"
+                  className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:opacity-90 disabled:opacity-40 min-h-[44px]"
                 >
                   <Send className="h-4 w-4" /> {t("agent.send")}
                 </button>
@@ -637,7 +637,7 @@ function AgentBubble({ response, lang }: { response: AgentResponse; lang: "fr" |
           <button
             onClick={handleStop}
             title={t("agent.stopSpeak")}
-            className="inline-flex items-center gap-1 rounded-full border border-destructive/40 bg-destructive/10 px-2.5 py-1 text-xs font-medium text-destructive hover:bg-destructive/20"
+            className="inline-flex items-center gap-1 rounded-full border border-destructive/40 bg-destructive/10 px-2.5 py-1 text-xs font-medium text-destructive hover:bg-destructive/20 min-h-[44px]"
           >
             <Square className="h-3 w-3" /> {t("agent.stopSpeak")}
           </button>
@@ -645,7 +645,7 @@ function AgentBubble({ response, lang }: { response: AgentResponse; lang: "fr" |
           <button
             onClick={handleSpeak}
             title={t("agent.speak")}
-            className="inline-flex items-center gap-1 rounded-full border border-border bg-card px-2.5 py-1 text-xs font-medium text-muted-foreground hover:text-primary"
+            className="inline-flex items-center gap-1 rounded-full border border-border bg-card px-2.5 py-1 text-xs font-medium text-muted-foreground hover:text-primary min-h-[44px]"
           >
             <Volume2 className="h-3 w-3" /> {t("agent.speak")}
           </button>
@@ -666,39 +666,47 @@ function AgentBubble({ response, lang }: { response: AgentResponse; lang: "fr" |
         </Block>
       )}
 
-      <Block title={t("agent.analysis")}>
-        <p className="whitespace-pre-wrap leading-relaxed">{response.analyse}</p>
-      </Block>
-
-      {response.textes_applicables?.length > 0 && (
+      {(response.textes_applicables?.length > 0 || response.analyse) && (
         <Accordion.Root type="single" collapsible className="w-full mt-4">
           <Accordion.Item
             value="sources"
             className="border border-border rounded-lg overflow-hidden"
           >
             <Accordion.Header className="flex">
-              <Accordion.Trigger className="flex flex-1 items-center justify-between bg-muted/30 px-4 py-3 text-sm font-semibold hover:bg-muted/50 transition-all [&[data-state=open]>svg]:rotate-180">
+              <Accordion.Trigger className="flex flex-1 items-center justify-between bg-muted/30 px-4 py-3 text-sm font-semibold hover:bg-muted/50 transition-all [&[data-state=open]>svg]:rotate-180 min-h-[44px]">
                 Voir les sources
                 <ChevronDown className="h-4 w-4 transition-transform duration-200" />
               </Accordion.Trigger>
             </Accordion.Header>
             <Accordion.Content className="overflow-hidden text-sm data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down">
-              <div className="p-4 bg-card/50">
-                <ul className="space-y-3">
-                  {response.textes_applicables.map((tx, i) => (
-                    <li
-                      key={i}
-                      className="rounded-lg border-l-4 border-secondary bg-secondary/5 px-3 py-2"
-                    >
-                      <p className="font-semibold text-foreground">
-                        {tx.loi} — {tx.article}
-                      </p>
-                      <p className="mt-1.5 text-muted-foreground text-xs leading-relaxed">
-                        {tx.contenu}
-                      </p>
-                    </li>
-                  ))}
-                </ul>
+              <div className="p-4 bg-card/50 space-y-4">
+                {response.analyse && (
+                  <Block title={t("agent.analysis")}>
+                    <p className="whitespace-pre-wrap leading-relaxed">{response.analyse}</p>
+                  </Block>
+                )}
+                {response.textes_applicables?.length > 0 && (
+                  <div>
+                    <h4 className="mb-1.5 font-serif text-base font-semibold text-primary">
+                      Articles
+                    </h4>
+                    <ul className="space-y-3">
+                      {response.textes_applicables.map((tx, i) => (
+                        <li
+                          key={i}
+                          className="rounded-lg border-l-4 border-secondary bg-secondary/5 px-3 py-2"
+                        >
+                          <p className="font-semibold text-foreground">
+                            {tx.loi} — {tx.article}
+                          </p>
+                          <p className="mt-1.5 text-muted-foreground text-xs leading-relaxed">
+                            {tx.contenu}
+                          </p>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
               </div>
             </Accordion.Content>
           </Accordion.Item>

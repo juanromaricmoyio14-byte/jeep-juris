@@ -71,7 +71,7 @@ export function Header() {
 
         <button
           onClick={() => setMobileMenuOpen(true)}
-          className="md:hidden flex items-center justify-center h-10 w-10 rounded-full bg-primary text-primary-foreground hover:bg-primary/90 transition-colors shadow-sm"
+          className="md:hidden flex items-center justify-center h-11 w-11 rounded-full bg-primary text-primary-foreground hover:bg-primary/90 transition-colors shadow-sm"
           aria-label="Open menu"
         >
           <Menu className="h-5 w-5" />
@@ -125,7 +125,7 @@ export function Header() {
               </span>
               <button
                 onClick={() => setMobileMenuOpen(false)}
-                className="inline-flex items-center justify-center h-9 w-9 rounded-full hover:bg-muted"
+                className="inline-flex items-center justify-center h-11 w-11 rounded-full hover:bg-muted"
               >
                 <X className="h-5 w-5" />
               </button>
@@ -179,7 +179,7 @@ export function Header() {
                 <span className="text-sm font-medium">Thème</span>
                 <button
                   onClick={toggleTheme}
-                  className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-border bg-background text-foreground shadow-sm hover:bg-muted hover:text-primary transition-colors"
+                  className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-border bg-background text-foreground shadow-sm hover:bg-muted hover:text-primary transition-colors"
                   aria-label="Toggle theme"
                   title="Toggle theme"
                 >
@@ -196,7 +196,7 @@ export function Header() {
                       logout();
                       setMobileMenuOpen(false);
                     }}
-                    className="flex w-full items-center justify-center gap-2 rounded-lg border border-border bg-card px-4 py-2.5 text-sm font-semibold hover:bg-muted"
+                    className="flex w-full items-center justify-center gap-2 rounded-lg border border-border bg-card px-4 py-2.5 text-sm font-semibold hover:bg-muted min-h-[44px]"
                   >
                     <LogOut className="h-4 w-4" />
                     {t("nav.logout")}
@@ -205,7 +205,7 @@ export function Header() {
                   <Link
                     to="/login"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground hover:opacity-90"
+                    className="flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground hover:opacity-90 min-h-[44px]"
                   >
                     <LogIn className="h-4 w-4" />
                     {t("nav.login")}

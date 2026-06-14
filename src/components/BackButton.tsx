@@ -9,10 +9,9 @@ export function BackButton() {
   return (
     <button
       onClick={() => router.history.back()}
-      className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-primary mb-6 transition-colors"
+      className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-primary mb-6 transition-colors min-h-[44px]"
     >
-      <ArrowLeft className="h-4 w-4" />
-      {t("nav.back") || "Retour"}
+      {t("nav.back") || "← Retour"}
     </button>
   );
 }

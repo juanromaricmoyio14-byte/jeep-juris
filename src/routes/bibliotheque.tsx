@@ -442,7 +442,7 @@ function LibraryPage() {
               <Dialog.Close asChild>
                 <button
                   aria-label="Fermer"
-                  className="rounded-full p-2 hover:bg-muted min-h-[40px] min-w-[40px] inline-flex items-center justify-center shrink-0"
+                  className="rounded-full p-2 hover:bg-muted min-h-[44px] min-w-[44px] inline-flex items-center justify-center shrink-0"
                 >
                   <X className="h-4 w-4" />
                 </button>
