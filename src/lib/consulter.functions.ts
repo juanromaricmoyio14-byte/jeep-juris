@@ -200,6 +200,49 @@ const ALLOWED_LAW_DRIVE_IDS = new Set<string>([
 const LAW_CONTENT_CACHE = new Map<string, { content: string; expiresAt: number }>();
 const LAW_CACHE_TTL_MS = 1000 * 60 * 60 * 24; // 24h
 
+async function fetchFromDrive(fileId: string): Promise<string> {
+  const endpoints = [
+    `https://drive.usercontent.google.com/download?id=${fileId}&export=download&confirm=t&authuser=0`,
+    `https://drive.google.com/uc?id=${fileId}&export=download&confirm=t`,
+    `https://docs.google.com/uc?id=${fileId}&export=download`,
+  ];
+
+  for (const url of endpoints) {
+    try {
+      const res = await fetch(url, {
+        method: "GET",
+        headers: {
+          "User-Agent": "Mozilla/5.0 (compatible; bot)",
+          Accept: "text/plain,*/*",
+        },
+        redirect: "follow",
+        signal: AbortSignal.timeout(20000),
+      });
+
+      if (!res.ok) continue;
+
+      const text = await res.text();
+
+      // Reject HTML pages (Google confirmation pages)
+      if (
+        text.trim().startsWith("<!") ||
+        text.trim().startsWith("<html") ||
+        text.includes("accounts.google.com") ||
+        text.length < 30
+      ) {
+        continue;
+      }
+
+      // Valid text content
+      return text;
+    } catch {
+      continue;
+    }
+  }
+
+  throw new Error("DRIVE_UNREACHABLE");
+}
+
 export const fetchLawContent = createServerFn({ method: "GET" })
   .inputValidator(z.object({ driveId: z.string().min(10).max(80) }))
   .handler(
@@ -216,44 +259,28 @@ export const fetchLawContent = createServerFn({ method: "GET" })
         return { ok: true, content: hit.content, cached: true };
       }
       console.log("Law cache MISS, fetching Drive ID:", data.driveId);
-      const endpoints = [
-        `https://drive.google.com/uc?export=download&id=${data.driveId}`,
-        `https://docs.google.com/document/d/${data.driveId}/export?format=txt`,
-        `https://drive.usercontent.google.com/download?id=${data.driveId}&export=download&confirm=t`,
-      ];
-      for (const url of endpoints) {
-        try {
-          const response = await fetch(url, {
-            headers: { "User-Agent": "Mozilla/5.0", Accept: "text/plain, */*" },
-            redirect: "follow",
-          });
-          console.log("Response status:", response.status, "for", url);
-          if (!response.ok) continue;
-          const ct = response.headers.get("content-type") || "";
-          const text = await response.text();
-          console.log("Content length:", text?.length, "ct:", ct);
-          if (
-            ct.includes("text/html") &&
-            /<html|accounts\.google\.com|virus scan|ServiceLogin/i.test(text)
-          ) {
-            continue;
-          }
-          if (!text || text.trim().length < 10) continue;
-          const content = text.slice(0, 200000);
-          LAW_CONTENT_CACHE.set(data.driveId, {
-            content,
-            expiresAt: now + LAW_CACHE_TTL_MS,
-          });
-          return { ok: true, content, cached: false };
-        } catch (e) {
-          console.error("fetchLawContent endpoint error", url, e);
+
+      try {
+        const text = await fetchFromDrive(data.driveId);
+        const content = text.slice(0, 200000);
+        LAW_CONTENT_CACHE.set(data.driveId, {
+          content,
+          expiresAt: now + LAW_CACHE_TTL_MS,
+        });
+        return { ok: true, content, cached: false };
+      } catch (e) {
+        if (e instanceof Error && e.message === "DRIVE_UNREACHABLE") {
+          return {
+            ok: false,
+            error: `Le document ne peut pas être chargé automatiquement.\nCliquez ici pour l'ouvrir directement dans Google Drive.\nhttps://drive.google.com/file/d/${data.driveId}/view`,
+          };
         }
+        return {
+          ok: false,
+          error:
+            "Contenu indisponible. Vérifiez que le fichier Drive est partagé en accès public (Tous les utilisateurs avec le lien).",
+        };
       }
-      return {
-        ok: false,
-        error:
-          "Contenu indisponible. Vérifiez que le fichier Drive est partagé en accès public (Tous les utilisateurs avec le lien).",
-      };
     },
   );
 
