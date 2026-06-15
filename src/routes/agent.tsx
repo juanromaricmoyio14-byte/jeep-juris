@@ -688,14 +688,15 @@ function AgentBubble({ response, lang }: { response: AgentResponse; lang: "fr" |
                   {response.textes_applicables.map((tx, i) => (
                     <li
                       key={i}
-                      className="rounded-lg border-l-4 border-secondary bg-secondary/5 px-3 py-2"
+                      className="border-l-4 border-[#1a5c38] bg-[#f0f7f4] dark:bg-[#0d2b1e] rounded-lg p-4 mb-3"
                     >
-                      <p className="font-semibold text-foreground">
-                        {tx.loi} — {tx.article}
-                      </p>
-                      <p className="mt-1.5 text-muted-foreground text-xs leading-relaxed">
-                        {tx.contenu}
-                      </p>
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className="font-semibold text-[#1a5c38]">{tx.loi}</span>
+                        <span className="inline-flex items-center rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-800 dark:bg-amber-900/30 dark:text-amber-300">
+                          {tx.article}
+                        </span>
+                      </div>
+                      <p className="text-sm italic text-foreground/80">« {tx.contenu} »</p>
                     </li>
                   ))}
                 </ul>

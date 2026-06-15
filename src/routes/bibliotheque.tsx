@@ -1,13 +1,11 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import { useMemo, useState } from "react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
-import { Search, BookOpen, X } from "lucide-react";
+import { Search, BookOpen } from "lucide-react";
 import { BackButton } from "@/components/BackButton";
-import { useServerFn } from "@tanstack/react-start";
-import { fetchLawContent } from "@/lib/consulter.functions";
-import * as Dialog from "@radix-ui/react-dialog";
+
 
 export const Route = createFileRoute("/bibliotheque")({
   head: () => ({
@@ -36,6 +34,7 @@ const LAWS = [
     domaine: "travail",
     section: "Titre I",
     driveId: "1lksA0cP6u5-iGXTFsxh9TynQJBRZJYeG1",
+    driveUrl: "https://drive.google.com/file/d/1lksA0cP6u5-iGXTFsxh9TynQJBRZJYeG1/view",
   },
 
   // TITRE II — Syndicats
@@ -45,6 +44,7 @@ const LAWS = [
     domaine: "travail",
     section: "Titre II",
     driveId: "1cILsBLAerIA96bDGQWy4ue6gTzFK4skK2",
+    driveUrl: "https://drive.google.com/file/d/1cILsBLAerIA96bDGQWy4ue6gTzFK4skK2/view",
   },
   {
     id: "3",
@@ -52,6 +52,7 @@ const LAWS = [
     domaine: "travail",
     section: "Titre II",
     driveId: "1bws1O_JmGIrvslxN8im7_BQM0t3q4qJ0",
+    driveUrl: "https://drive.google.com/file/d/1bws1O_JmGIrvslxN8im7_BQM0t3q4qJ0/view",
   },
   {
     id: "4",
@@ -59,6 +60,7 @@ const LAWS = [
     domaine: "travail",
     section: "Titre II",
     driveId: "1ZONIR51xktYEkuBQ0w35fHiUVlBjBalt3",
+    driveUrl: "https://drive.google.com/file/d/1ZONIR51xktYEkuBQ0w35fHiUVlBjBalt3/view",
   },
   {
     id: "5",
@@ -66,6 +68,7 @@ const LAWS = [
     domaine: "travail",
     section: "Titre II",
     driveId: "1CEwpJGpkKyAvgcYwyaIj-V7qN04l54zb4",
+    driveUrl: "https://drive.google.com/file/d/1CEwpJGpkKyAvgcYwyaIj-V7qN04l54zb4/view",
   },
   {
     id: "6",
@@ -73,6 +76,7 @@ const LAWS = [
     domaine: "travail",
     section: "Titre II",
     driveId: "1_a7Wnt1zgICsplEfdJDHzia7Zlp2d9xj5",
+    driveUrl: "https://drive.google.com/file/d/1_a7Wnt1zgICsplEfdJDHzia7Zlp2d9xj5/view",
   },
 
   // TITRE III — Contrat de travail
@@ -82,6 +86,7 @@ const LAWS = [
     domaine: "travail",
     section: "Titre III",
     driveId: "1I3Nu31Oyrhukw-4xIAQtnPkwRzPqEtLV",
+    driveUrl: "https://drive.google.com/file/d/1I3Nu31Oyrhukw-4xIAQtnPkwRzPqEtLV/view",
   },
   {
     id: "8",
@@ -89,6 +94,7 @@ const LAWS = [
     domaine: "travail",
     section: "Titre III",
     driveId: "1LkMalkcxmW8Ikw5TUl_uI7QY5WSKNrZv",
+    driveUrl: "https://drive.google.com/file/d/1LkMalkcxmW8Ikw5TUl_uI7QY5WSKNrZv/view",
   },
   {
     id: "9",
@@ -96,6 +102,7 @@ const LAWS = [
     domaine: "travail",
     section: "Titre III",
     driveId: "1OPkB3wjYDGDyGaruOPr314te1AWh4D3G",
+    driveUrl: "https://drive.google.com/file/d/1OPkB3wjYDGDyGaruOPr314te1AWh4D3G/view",
   },
   {
     id: "10",
@@ -103,6 +110,7 @@ const LAWS = [
     domaine: "travail",
     section: "Titre III",
     driveId: "1Wa6BcPCLjKBl3AMhQSOd5QH-kMSpNBys",
+    driveUrl: "https://drive.google.com/file/d/1Wa6BcPCLjKBl3AMhQSOd5QH-kMSpNBys/view",
   },
   {
     id: "11",
@@ -110,6 +118,7 @@ const LAWS = [
     domaine: "travail",
     section: "Titre III",
     driveId: "1_eaFyb-uGVcBdtyLs1TaFhq4ZSlT23QU",
+    driveUrl: "https://drive.google.com/file/d/1_eaFyb-uGVcBdtyLs1TaFhq4ZSlT23QU/view",
   },
   {
     id: "12",
@@ -117,6 +126,7 @@ const LAWS = [
     domaine: "travail",
     section: "Titre III",
     driveId: "1a9dVcYGqk1COv-8sUPDu9VgHNvg9Zp5r",
+    driveUrl: "https://drive.google.com/file/d/1a9dVcYGqk1COv-8sUPDu9VgHNvg9Zp5r/view",
   },
   {
     id: "13",
@@ -124,6 +134,7 @@ const LAWS = [
     domaine: "travail",
     section: "Titre III",
     driveId: "1nMTLZ_OhRd2zMvNVcjLmAUZ8pWiayMxD",
+    driveUrl: "https://drive.google.com/file/d/1nMTLZ_OhRd2zMvNVcjLmAUZ8pWiayMxD/view",
   },
   {
     id: "14",
@@ -131,6 +142,7 @@ const LAWS = [
     domaine: "travail",
     section: "Titre III",
     driveId: "1pO9wGAOph7FDmM1L9UAouiCweMXXDxyG",
+    driveUrl: "https://drive.google.com/file/d/1pO9wGAOph7FDmM1L9UAouiCweMXXDxyG/view",
   },
 
   // TITRE IV — Salaire
@@ -140,6 +152,7 @@ const LAWS = [
     domaine: "travail",
     section: "Titre IV",
     driveId: "1uXoVPdLMWZ0JMst1UfxaK9igi9BcD-H",
+    driveUrl: "https://drive.google.com/file/d/1uXoVPdLMWZ0JMst1UfxaK9igi9BcD-H/view",
   },
   {
     id: "16",
@@ -147,6 +160,7 @@ const LAWS = [
     domaine: "travail",
     section: "Titre IV",
     driveId: "192tQxLvzwVl8NnwtHAxtd9OyMvFwEKub",
+    driveUrl: "https://drive.google.com/file/d/192tQxLvzwVl8NnwtHAxtd9OyMvFwEKub/view",
   },
   {
     id: "17",
@@ -154,6 +168,7 @@ const LAWS = [
     domaine: "travail",
     section: "Titre IV",
     driveId: "1uS3QOB1CQVuIflWdCjaiatfQI-zGK-Iw",
+    driveUrl: "https://drive.google.com/file/d/1uS3QOB1CQVuIflWdCjaiatfQI-zGK-Iw/view",
   },
   {
     id: "18",
@@ -161,6 +176,7 @@ const LAWS = [
     domaine: "travail",
     section: "Titre IV",
     driveId: "1v6_iRz-VlvVe-WZQE8_IZAeYHbhuFbMN",
+    driveUrl: "https://drive.google.com/file/d/1v6_iRz-VlvVe-WZQE8_IZAeYHbhuFbMN/view",
   },
 
   // TITRE V — Conditions de travail
@@ -170,6 +186,7 @@ const LAWS = [
     domaine: "travail",
     section: "Titre V",
     driveId: "1i6NXTLWFi2RHUaQBxngRj4cwGH9ELesU",
+    driveUrl: "https://drive.google.com/file/d/1i6NXTLWFi2RHUaQBxngRj4cwGH9ELesU/view",
   },
   {
     id: "20",
@@ -177,6 +194,7 @@ const LAWS = [
     domaine: "travail",
     section: "Titre V",
     driveId: "1SuI2J2nMO7FWY5nYW6TYpVRZAVVTarqF",
+    driveUrl: "https://drive.google.com/file/d/1SuI2J2nMO7FWY5nYW6TYpVRZAVVTarqF/view",
   },
   {
     id: "21",
@@ -184,6 +202,7 @@ const LAWS = [
     domaine: "travail",
     section: "Titre V",
     driveId: "1yWqYK9ovoPT0QZpsjPePJOCAfLFROXUp",
+    driveUrl: "https://drive.google.com/file/d/1yWqYK9ovoPT0QZpsjPePJOCAfLFROXUp/view",
   },
   {
     id: "22",
@@ -191,6 +210,7 @@ const LAWS = [
     domaine: "travail",
     section: "Titre V",
     driveId: "18vli-sjr25lh3nw_5EV2ZIifVHBtwY4R",
+    driveUrl: "https://drive.google.com/file/d/18vli-sjr25lh3nw_5EV2ZIifVHBtwY4R/view",
   },
   {
     id: "23",
@@ -198,6 +218,7 @@ const LAWS = [
     domaine: "travail",
     section: "Titre V",
     driveId: "1wnUgum0FQO3lSZ067BTBnRrF9qst3FwZ",
+    driveUrl: "https://drive.google.com/file/d/1wnUgum0FQO3lSZ067BTBnRrF9qst3FwZ/view",
   },
   {
     id: "24",
@@ -205,6 +226,7 @@ const LAWS = [
     domaine: "travail",
     section: "Titre V",
     driveId: "1DE7jpLhpomYt30enoLrlbWvUADSevs_H",
+    driveUrl: "https://drive.google.com/file/d/1DE7jpLhpomYt30enoLrlbWvUADSevs_H/view",
   },
 
   // TITRE VI — Sécurité et santé
@@ -214,6 +236,7 @@ const LAWS = [
     domaine: "travail",
     section: "Titre VI",
     driveId: "1DSgOHNJlqLpQdBDaYeXRpqKCE4JZGyLd",
+    driveUrl: "https://drive.google.com/file/d/1DSgOHNJlqLpQdBDaYeXRpqKCE4JZGyLd/view",
   },
   {
     id: "26",
@@ -221,6 +244,7 @@ const LAWS = [
     domaine: "travail",
     section: "Titre VI",
     driveId: "17-eBawTpL8qjxoBHEFlQYuBcov75O3wQ",
+    driveUrl: "https://drive.google.com/file/d/17-eBawTpL8qjxoBHEFlQYuBcov75O3wQ/view",
   },
 
   // TITRE VII — Organismes de contrôle
@@ -230,6 +254,7 @@ const LAWS = [
     domaine: "travail",
     section: "Titre VII",
     driveId: "1g_EkupmZPAuc-ZSWUst899vi-eTJ9ruq",
+    driveUrl: "https://drive.google.com/file/d/1g_EkupmZPAuc-ZSWUst899vi-eTJ9ruq/view",
   },
   {
     id: "28",
@@ -237,6 +262,7 @@ const LAWS = [
     domaine: "travail",
     section: "Titre VII",
     driveId: "1I7Z4o3dOs01oBdB4Hv4jfchNRRNZdkEP",
+    driveUrl: "https://drive.google.com/file/d/1I7Z4o3dOs01oBdB4Hv4jfchNRRNZdkEP/view",
   },
   {
     id: "29",
@@ -244,6 +270,7 @@ const LAWS = [
     domaine: "travail",
     section: "Titre VII",
     driveId: "1w6aN0cXjFikuJe30q9Z8a6K-0E4aH35e",
+    driveUrl: "https://drive.google.com/file/d/1w6aN0cXjFikuJe30q9Z8a6K-0E4aH35e/view",
   },
 
   // TITRE VIII — Institutions
@@ -253,6 +280,7 @@ const LAWS = [
     domaine: "travail",
     section: "Titre VIII",
     driveId: "1jsjDzyhpYlm39rCMRoQJZvgXUP8NpHjs",
+    driveUrl: "https://drive.google.com/file/d/1jsjDzyhpYlm39rCMRoQJZvgXUP8NpHjs/view",
   },
   {
     id: "31",
@@ -260,6 +288,7 @@ const LAWS = [
     domaine: "travail",
     section: "Titre VIII",
     driveId: "1DOpTCDuHuLB9aJfIZfae7fhqILAWVofy",
+    driveUrl: "https://drive.google.com/file/d/1DOpTCDuHuLB9aJfIZfae7fhqILAWVofy/view",
   },
   {
     id: "32",
@@ -267,6 +296,7 @@ const LAWS = [
     domaine: "travail",
     section: "Titre VIII",
     driveId: "1WT3ATsZHErwfAobBJ7YyKi9FQUuuN1OI",
+    driveUrl: "https://drive.google.com/file/d/1WT3ATsZHErwfAobBJ7YyKi9FQUuuN1OI/view",
   },
 
   // TITRE IX — Différends
@@ -276,6 +306,7 @@ const LAWS = [
     domaine: "travail",
     section: "Titre IX",
     driveId: "1qUWJtCMHMR4K959wu844RBSDblodYN-5",
+    driveUrl: "https://drive.google.com/file/d/1qUWJtCMHMR4K959wu844RBSDblodYN-5/view",
   },
   {
     id: "34",
@@ -283,6 +314,7 @@ const LAWS = [
     domaine: "travail",
     section: "Titre IX",
     driveId: "1Sm2O4v7a9ieNJZoOlzHAN5Abp6d_AMP1",
+    driveUrl: "https://drive.google.com/file/d/1Sm2O4v7a9ieNJZoOlzHAN5Abp6d_AMP1/view",
   },
 
   // TITRE X & XI — Pénalités et dispositions finales
@@ -292,6 +324,7 @@ const LAWS = [
     domaine: "travail",
     section: "Titre X-XI",
     driveId: "1r6-roMC-KYoORdDDvhaWKWQ5Wy4vdwFV",
+    driveUrl: "https://drive.google.com/file/d/1r6-roMC-KYoORdDDvhaWKWQ5Wy4vdwFV/view",
   },
   {
     id: "36",
@@ -299,6 +332,7 @@ const LAWS = [
     domaine: "travail",
     section: "Titre X-XI",
     driveId: "1-gFzEgOrOrYFo7Oa-VF8zDJNdsZfeOaP",
+    driveUrl: "https://drive.google.com/file/d/1-gFzEgOrOrYFo7Oa-VF8zDJNdsZfeOaP/view",
   },
 ] as const;
 
@@ -306,55 +340,18 @@ type Law = (typeof LAWS)[number];
 
 type GroupedLaws = Record<string, Law[]>;
 
-function formatLawText(raw: string) {
-  // Put each "Article N" on its own line, bolded via markdown-ish marker rendered by component.
-  return raw
-    .replace(/\r\n/g, "\n")
-    .replace(/\s*\b(Article\s+\d+[A-Za-z\-]*)\s*[:.\-]?\s*/g, "\n\n§§$1§§ ")
-    .replace(/\n{3,}/g, "\n\n")
-    .trim();
-}
 
 function LibraryPage() {
   const { t } = useTranslation();
   const [query, setQuery] = useState("");
-  const [modalOpen, setModalOpen] = useState(false);
-  const [selectedLaw, setSelectedLaw] = useState<Law | null>(null);
-  const [lawContent, setLawContent] = useState<string | null>(null);
-  const [loadingLaw, setLoadingLaw] = useState(false);
-  const [errorLaw, setErrorLaw] = useState<string | null>(null);
-  const getContent = useServerFn(fetchLawContent);
-  const navigate = useNavigate();
 
+  
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
     if (!q) return LAWS;
     return LAWS.filter((l) => l.titre.toLowerCase().includes(q));
   }, [query]);
 
-  const openLaw = async (l: Law) => {
-    setSelectedLaw(l);
-    setModalOpen(true);
-    setLoadingLaw(true);
-    setLawContent(null);
-    setErrorLaw(null);
-    try {
-      const res = await getContent({ data: { driveId: l.driveId } });
-      if (res.ok && res.content) {
-        setLawContent(formatLawText(res.content));
-      } else {
-        setErrorLaw(
-          res.error ||
-            "Impossible de charger ce texte pour le moment. Veuillez réessayer dans quelques instants.",
-        );
-      }
-    } catch (e) {
-      console.error(e);
-      setErrorLaw("Erreur réseau lors du chargement du texte. Veuillez réessayer.");
-    } finally {
-      setLoadingLaw(false);
-    }
-  };
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -413,7 +410,7 @@ function LibraryPage() {
                         Droit du Travail
                       </p>
                       <button
-                        onClick={() => openLaw(l)}
+                        onClick={() => window.open(l.driveUrl, '_blank')}
                         className="mt-auto pt-4 inline-flex items-center gap-1 text-xs font-semibold text-primary hover:underline self-start min-h-[44px]"
                       >
                         {t("library.read")} →
@@ -428,85 +425,6 @@ function LibraryPage() {
       </main>
       <Footer />
 
-      <Dialog.Root open={modalOpen} onOpenChange={setModalOpen}>
-        <Dialog.Portal>
-          <Dialog.Overlay className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm animate-in fade-in" />
-          <Dialog.Content className="fixed left-[50%] top-[50%] z-50 w-[95vw] max-w-3xl translate-x-[-50%] translate-y-[-50%] rounded-2xl bg-background p-4 sm:p-6 shadow-lg border border-border animate-in zoom-in-95 max-h-[88vh] flex flex-col">
-            <div className="flex justify-between items-start gap-3 mb-4">
-              <Dialog.Title
-                className="text-lg sm:text-xl font-serif font-bold"
-                style={{ color: "#1a5c38" }}
-              >
-                {selectedLaw?.titre ?? ""}
-              </Dialog.Title>
-              <Dialog.Close asChild>
-                <button
-                  aria-label="Fermer"
-                  className="rounded-full p-2 hover:bg-muted min-h-[40px] min-w-[40px] inline-flex items-center justify-center shrink-0"
-                >
-                  <X className="h-4 w-4" />
-                </button>
-              </Dialog.Close>
-            </div>
-
-            <div className="flex-1 overflow-y-auto pr-2">
-              {loadingLaw && (
-                <div className="space-y-3">
-                  {Array.from({ length: 8 }).map((_, i) => (
-                    <div
-                      key={i}
-                      className="h-4 rounded bg-muted animate-pulse"
-                      style={{ width: `${60 + ((i * 7) % 35)}%` }}
-                    />
-                  ))}
-                </div>
-              )}
-              {!loadingLaw && errorLaw && <p className="text-sm text-destructive">{errorLaw}</p>}
-              {!loadingLaw && !errorLaw && lawContent && (
-                <div className="text-sm text-foreground leading-relaxed space-y-3">
-                  {lawContent.split(/\n\n+/).map((para, i) => {
-                    const m = para.match(/^§§(Article\s+\d+[A-Za-z\-]*)§§\s*(.*)$/s);
-                    if (m) {
-                      return (
-                        <p key={i} className="whitespace-pre-wrap">
-                          <strong className="font-bold" style={{ color: "#1a5c38" }}>
-                            {m[1]}
-                          </strong>
-                          {m[2] ? " — " : ""}
-                          {m[2]}
-                        </p>
-                      );
-                    }
-                    return (
-                      <p key={i} className="whitespace-pre-wrap">
-                        {para}
-                      </p>
-                    );
-                  })}
-                </div>
-              )}
-            </div>
-
-            <div className="mt-6 flex flex-col-reverse sm:flex-row sm:justify-end gap-3 pt-4 border-t border-border">
-              <Dialog.Close asChild>
-                <button className="px-4 py-2 rounded-lg border border-border text-sm font-semibold hover:bg-muted min-h-[44px]">
-                  Fermer
-                </button>
-              </Dialog.Close>
-              <button
-                onClick={() => {
-                  setModalOpen(false);
-                  navigate({ to: "/agent", search: { domaine: "labour" } });
-                }}
-                className="px-4 py-2 rounded-lg text-sm font-semibold text-white hover:opacity-90 min-h-[44px]"
-                style={{ backgroundColor: "#1a5c38" }}
-              >
-                Poser une question sur ce texte
-              </button>
-            </div>
-          </Dialog.Content>
-        </Dialog.Portal>
-      </Dialog.Root>
-    </div>
+          </div>
   );
 }
