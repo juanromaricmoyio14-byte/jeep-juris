@@ -6,7 +6,6 @@ import { Footer } from "@/components/Footer";
 import { Search, BookOpen } from "lucide-react";
 import { BackButton } from "@/components/BackButton";
 
-
 export const Route = createFileRoute("/bibliotheque")({
   head: () => ({
     meta: [
@@ -340,18 +339,15 @@ type Law = (typeof LAWS)[number];
 
 type GroupedLaws = Record<string, Law[]>;
 
-
 function LibraryPage() {
   const { t } = useTranslation();
   const [query, setQuery] = useState("");
 
-  
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
     if (!q) return LAWS;
     return LAWS.filter((l) => l.titre.toLowerCase().includes(q));
   }, [query]);
-
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -410,7 +406,7 @@ function LibraryPage() {
                         Droit du Travail
                       </p>
                       <button
-                        onClick={() => window.open(l.driveUrl, '_blank')}
+                        onClick={() => window.open(l.driveUrl, "_blank")}
                         className="mt-auto pt-4 inline-flex items-center gap-1 text-xs font-semibold text-primary hover:underline self-start min-h-[44px]"
                       >
                         {t("library.read")} →
@@ -424,7 +420,6 @@ function LibraryPage() {
         </div>
       </main>
       <Footer />
-
-          </div>
+    </div>
   );
 }
