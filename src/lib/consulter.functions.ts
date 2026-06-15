@@ -81,7 +81,7 @@ Code Civil et autres textes camerounais.
 
 Réponds UNIQUEMENT en JSON :
 {
-  "reformulation": "string",
+  "reformulation": "Un résumé de la situation et de la réponse en 1 à 2 phrases maximum.",
   "textes_applicables": [
     {
       "loi": "Nom complet de la loi",

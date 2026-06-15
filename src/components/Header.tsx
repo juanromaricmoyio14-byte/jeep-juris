@@ -71,7 +71,7 @@ export function Header() {
 
         <button
           onClick={() => setMobileMenuOpen(true)}
-          className="md:hidden flex items-center justify-center h-10 w-10 rounded-full bg-primary text-primary-foreground hover:bg-primary transition-colors shadow-lg border border-primary-foreground/20"
+          className="md:hidden flex items-center justify-center min-h-[44px] min-w-[44px] rounded-full bg-primary text-primary-foreground hover:bg-primary transition-colors shadow-lg border border-primary-foreground/20"
           aria-label="Open menu"
         >
           <Menu className="h-5 w-5" />
@@ -80,7 +80,7 @@ export function Header() {
         <div className="hidden md:flex items-center gap-2">
           <button
             onClick={toggleTheme}
-            className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-border bg-card text-foreground shadow-sm hover:bg-muted hover:text-primary transition-colors"
+            className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full border border-border bg-card text-foreground shadow-sm hover:bg-muted hover:text-primary transition-colors"
             aria-label="Toggle theme"
             title="Toggle theme"
           >
@@ -91,7 +91,7 @@ export function Header() {
             (user ? (
               <button
                 onClick={() => logout()}
-                className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-3 py-1.5 text-xs font-semibold hover:bg-muted"
+                className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-3 py-1.5 text-xs font-semibold hover:bg-muted min-h-[44px]"
               >
                 <LogOut className="h-3.5 w-3.5" />
                 {t("nav.logout")}
@@ -112,10 +112,7 @@ export function Header() {
       {mobileMenuOpen && (
         <div className="md:hidden fixed inset-0 z-50 flex justify-end">
           {/* Overlay */}
-          <div
-            className="absolute inset-0 bg-black/75"
-            onClick={() => setMobileMenuOpen(false)}
-          />
+          <div className="absolute inset-0 bg-black/75" onClick={() => setMobileMenuOpen(false)} />
 
           {/* Drawer content */}
           <div className="relative w-4/5 max-w-sm bg-white dark:bg-[#1A2634] h-full shadow-xl flex flex-col animate-in slide-in-from-right">
@@ -125,7 +122,7 @@ export function Header() {
               </span>
               <button
                 onClick={() => setMobileMenuOpen(false)}
-                className="inline-flex items-center justify-center h-9 w-9 rounded-full hover:bg-muted"
+                className="inline-flex items-center justify-center min-h-[44px] min-w-[44px] rounded-full hover:bg-muted"
               >
                 <X className="h-5 w-5" />
               </button>
@@ -179,7 +176,7 @@ export function Header() {
                 <span className="text-sm font-medium">Thème</span>
                 <button
                   onClick={toggleTheme}
-                  className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-border bg-background text-foreground shadow-sm hover:bg-muted hover:text-primary transition-colors"
+                  className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full border border-border bg-background text-foreground shadow-sm hover:bg-muted hover:text-primary transition-colors"
                   aria-label="Toggle theme"
                   title="Toggle theme"
                 >
@@ -196,7 +193,7 @@ export function Header() {
                       logout();
                       setMobileMenuOpen(false);
                     }}
-                    className="flex w-full items-center justify-center gap-2 rounded-lg border border-border bg-card px-4 py-2.5 text-sm font-semibold hover:bg-muted"
+                    className="flex w-full items-center justify-center gap-2 rounded-lg border border-border bg-card px-4 py-2.5 text-sm font-semibold hover:bg-muted min-h-[44px]"
                   >
                     <LogOut className="h-4 w-4" />
                     {t("nav.logout")}
