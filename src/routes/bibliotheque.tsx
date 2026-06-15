@@ -1,11 +1,12 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
-import { Search, BookOpen } from "lucide-react";
+import { Search, BookOpen, X, MessageSquare, LoaderCircle } from "lucide-react";
 import { BackButton } from "@/components/BackButton";
-
+import { fetchLawContent } from "@/lib/consulter.functions";
+import { useServerFn } from "@tanstack/react-start";
 
 export const Route = createFileRoute("/bibliotheque")({
   head: () => ({
@@ -340,18 +341,48 @@ type Law = (typeof LAWS)[number];
 
 type GroupedLaws = Record<string, Law[]>;
 
-
 function LibraryPage() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const [query, setQuery] = useState("");
+  const [selectedLaw, setSelectedLaw] = useState<Law | null>(null);
+  const [lawContent, setLawContent] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  
+  const fetchContent = useServerFn(fetchLawContent);
+
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
     if (!q) return LAWS;
     return LAWS.filter((l) => l.titre.toLowerCase().includes(q));
   }, [query]);
 
+  const handleRead = async (law: Law) => {
+    setSelectedLaw(law);
+    setIsLoading(true);
+    setError(null);
+    setLawContent(null);
+    try {
+      const result = await fetchContent({ data: { driveId: law.driveId } });
+      if (result.ok && result.content) {
+        setLawContent(result.content);
+      } else {
+        setError(result.error || "Impossible de charger le contenu.");
+      }
+    } catch (err) {
+      setError("Erreur lors du chargement du contenu.");
+      console.error(err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const closeDialog = () => {
+    setSelectedLaw(null);
+    setLawContent(null);
+    setError(null);
+  };
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -410,7 +441,7 @@ function LibraryPage() {
                         Droit du Travail
                       </p>
                       <button
-                        onClick={() => window.open(l.driveUrl, '_blank')}
+                        onClick={() => handleRead(l)}
                         className="mt-auto pt-4 inline-flex items-center gap-1 text-xs font-semibold text-primary hover:underline self-start min-h-[44px]"
                       >
                         {t("library.read")} →
@@ -422,9 +453,83 @@ function LibraryPage() {
             ))
           )}
         </div>
+
+        {selectedLaw && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6">
+            <div
+              className="absolute inset-0 bg-black/75 transition-opacity"
+              onClick={closeDialog}
+            />
+            <div className="relative z-50 flex max-h-[90vh] w-full max-w-3xl flex-col overflow-hidden rounded-2xl bg-background shadow-2xl animate-in zoom-in-95 duration-200">
+              <div className="flex items-center justify-between border-b border-border p-4 sm:p-6">
+                <div>
+                  <h3 className="font-serif text-xl font-bold text-primary pr-8">
+                    {selectedLaw.titre}
+                  </h3>
+                  <p className="mt-1 text-xs text-muted-foreground uppercase tracking-wide">
+                    {selectedLaw.section} • Droit du Travail
+                  </p>
+                </div>
+                <button
+                  onClick={closeDialog}
+                  className="absolute right-4 top-4 rounded-full p-2 hover:bg-muted min-h-[44px] min-w-[44px] flex items-center justify-center transition-colors"
+                >
+                  <X className="h-5 w-5 text-muted-foreground" />
+                </button>
+              </div>
+
+              <div className="flex-1 overflow-y-auto p-4 sm:p-6 text-sm leading-relaxed whitespace-pre-wrap">
+                {isLoading ? (
+                  <div className="space-y-4 animate-pulse">
+                    <div className="h-4 w-3/4 rounded bg-muted/60" />
+                    <div className="h-4 w-full rounded bg-muted/60" />
+                    <div className="h-4 w-5/6 rounded bg-muted/60" />
+                    <div className="h-4 w-full rounded bg-muted/60" />
+                    <div className="h-4 w-2/3 rounded bg-muted/60" />
+                    <div className="h-4 w-4/5 rounded bg-muted/60" />
+                    <div className="h-4 w-full rounded bg-muted/60" />
+                    <div className="h-4 w-3/4 rounded bg-muted/60" />
+                  </div>
+                ) : error ? (
+                  <div className="rounded-lg border border-destructive/30 bg-destructive/10 p-4 text-destructive flex flex-col items-center justify-center text-center">
+                    <p className="mb-4">{error}</p>
+                    <button
+                      onClick={() => window.open(selectedLaw.driveUrl, "_blank")}
+                      className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:opacity-90"
+                    >
+                      Ouvrir dans Google Drive
+                    </button>
+                  </div>
+                ) : (
+                  lawContent
+                )}
+              </div>
+
+              <div className="border-t border-border bg-muted/20 p-4 sm:p-6 flex flex-col sm:flex-row gap-3 justify-end items-center">
+                <button
+                  onClick={closeDialog}
+                  className="w-full sm:w-auto px-4 py-2.5 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors min-h-[44px]"
+                >
+                  Fermer
+                </button>
+                <button
+                  onClick={() => {
+                    navigate({
+                      to: "/agent",
+                      search: { domaine: selectedLaw.domaine || "labour" },
+                    });
+                  }}
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground hover:opacity-90 transition-opacity min-h-[44px]"
+                >
+                  <MessageSquare className="h-4 w-4" />
+                  Poser une question sur ce texte
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </main>
       <Footer />
-
-          </div>
+    </div>
   );
 }
