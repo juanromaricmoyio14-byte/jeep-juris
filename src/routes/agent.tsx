@@ -224,7 +224,7 @@ function AgentPage() {
             const db = getDb();
             if (db) {
               try {
-                await addDoc(collection(db, "consultations"), {
+                await addDoc(collection(db, "users", user.uid, "consultations"), {
                   userId: user.uid,
                   question: question,
                   domaine: domaine,
@@ -332,7 +332,7 @@ function AgentPage() {
 
           {/* Sidebar */}
           <aside
-            className={`space-y-4 fixed lg:sticky lg:top-20 inset-y-0 left-0 z-50 w-[300px] max-w-[85vw] bg-background lg:bg-transparent p-4 lg:p-0 shadow-2xl lg:shadow-none transition-transform duration-300 lg:transform-none lg:self-start lg:max-h-[calc(100vh-6rem)] overflow-y-auto ${sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}`}
+            className={`fixed inset-y-0 left-0 z-50 w-72 bg-background border-r border-border p-4 sm:p-6 shadow-xl transform transition-transform duration-300 ease-in-out lg:relative lg:w-auto lg:border-none lg:p-0 lg:shadow-none lg:bg-transparent lg:translate-x-0 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}`}
           >
             <div className="flex justify-between items-center lg:hidden mb-2">
               <h2 className="font-serif font-bold text-primary text-lg">Options</h2>
@@ -665,10 +665,6 @@ function AgentBubble({ response, lang }: { response: AgentResponse; lang: "fr" |
           </ul>
         </Block>
       )}
-
-      <Block title={t("agent.analysis")}>
-        <p className="whitespace-pre-wrap leading-relaxed">{response.analyse}</p>
-      </Block>
 
       {response.textes_applicables?.length > 0 && (
         <Accordion.Root type="single" collapsible className="w-full mt-4">
