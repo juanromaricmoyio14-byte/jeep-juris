@@ -186,7 +186,7 @@ function RootComponent() {
         <nav className="fixed bottom-0 left-0 right-0 z-50 flex h-16 bg-background border-t border-border md:hidden px-2 pb-safe">
           <Link
             to="/"
-            className="flex flex-1 flex-col items-center justify-center gap-1 text-muted-foreground hover:text-primary transition-colors"
+            className="flex flex-1 flex-col items-center justify-center gap-1 text-muted-foreground hover:text-primary transition-colors min-h-[44px] min-w-[44px]"
             activeProps={{ className: "text-primary" }}
           >
             <Home className="h-5 w-5" />
@@ -194,7 +194,7 @@ function RootComponent() {
           </Link>
           <Link
             to="/agent"
-            className="flex flex-1 flex-col items-center justify-center gap-1 text-muted-foreground hover:text-primary transition-colors"
+            className="flex flex-1 flex-col items-center justify-center gap-1 text-muted-foreground hover:text-primary transition-colors min-h-[44px] min-w-[44px]"
             activeProps={{ className: "text-primary" }}
           >
             <MessageSquare className="h-5 w-5" />
@@ -202,7 +202,7 @@ function RootComponent() {
           </Link>
           <Link
             to="/bibliotheque"
-            className="flex flex-1 flex-col items-center justify-center gap-1 text-muted-foreground hover:text-primary transition-colors"
+            className="flex flex-1 flex-col items-center justify-center gap-1 text-muted-foreground hover:text-primary transition-colors min-h-[44px] min-w-[44px]"
             activeProps={{ className: "text-primary" }}
           >
             <BookOpen className="h-5 w-5" />
@@ -210,7 +210,7 @@ function RootComponent() {
           </Link>
           <Link
             to="/login"
-            className="flex flex-1 flex-col items-center justify-center gap-1 text-muted-foreground hover:text-primary transition-colors"
+            className="flex flex-1 flex-col items-center justify-center gap-1 text-muted-foreground hover:text-primary transition-colors min-h-[44px] min-w-[44px]"
             activeProps={{ className: "text-primary" }}
           >
             <User className="h-5 w-5" />

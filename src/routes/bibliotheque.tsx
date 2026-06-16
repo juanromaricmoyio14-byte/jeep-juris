@@ -1,11 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
+import { useServerFn } from "@tanstack/react-start";
+import { fetchLawContent } from "@/lib/consulter.functions";
+import { Link } from "@tanstack/react-router";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
-import { Search, BookOpen } from "lucide-react";
+import { Search, BookOpen, X, MessageSquare } from "lucide-react";
 import { BackButton } from "@/components/BackButton";
-
 
 export const Route = createFileRoute("/bibliotheque")({
   head: () => ({
@@ -340,18 +342,15 @@ type Law = (typeof LAWS)[number];
 
 type GroupedLaws = Record<string, Law[]>;
 
-
 function LibraryPage() {
   const { t } = useTranslation();
   const [query, setQuery] = useState("");
 
-  
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
     if (!q) return LAWS;
     return LAWS.filter((l) => l.titre.toLowerCase().includes(q));
   }, [query]);
-
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -409,8 +408,9 @@ function LibraryPage() {
                       <p className="mt-1 text-xs uppercase tracking-wide text-primary/70">
                         Droit du Travail
                       </p>
+
                       <button
-                        onClick={() => window.open(l.driveUrl, '_blank')}
+                        onClick={() => setReadingLaw(l)}
                         className="mt-auto pt-4 inline-flex items-center gap-1 text-xs font-semibold text-primary hover:underline self-start min-h-[44px]"
                       >
                         {t("library.read")} →
@@ -425,6 +425,64 @@ function LibraryPage() {
       </main>
       <Footer />
 
+      {readingLaw && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/75 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="relative w-full max-w-4xl max-h-full bg-background rounded-2xl shadow-2xl flex flex-col overflow-hidden animate-in zoom-in-95 duration-200">
+            <div className="flex items-center justify-between p-4 sm:p-6 border-b border-border">
+              <div>
+                <h2 className="font-serif text-xl sm:text-2xl font-bold text-primary">
+                  {readingLaw.titre}
+                </h2>
+                <p className="text-sm text-muted-foreground mt-1">{readingLaw.section}</p>
+              </div>
+              <button
+                onClick={() => setReadingLaw(null)}
+                className="p-2 rounded-full hover:bg-muted text-muted-foreground transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
+                aria-label="Fermer"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            <div className="flex-1 overflow-y-auto p-4 sm:p-6 text-sm leading-relaxed text-foreground/90">
+              {loadingContent ? (
+                <div className="space-y-4 animate-pulse">
+                  <div className="h-4 bg-muted rounded w-3/4"></div>
+                  <div className="h-4 bg-muted rounded w-full"></div>
+                  <div className="h-4 bg-muted rounded w-5/6"></div>
+                  <div className="h-4 bg-muted rounded w-full"></div>
+                  <div className="h-4 bg-muted rounded w-2/3"></div>
+                </div>
+              ) : errorContent ? (
+                <div className="text-center py-10">
+                  <p className="text-destructive mb-4">{errorContent}</p>
+                  <a
+                    href={readingLaw.driveUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-primary hover:underline font-medium"
+                  >
+                    Ouvrir dans Google Drive
+                  </a>
+                </div>
+              ) : (
+                <div className="whitespace-pre-wrap">{lawContent}</div>
+              )}
+            </div>
+
+            <div className="p-4 sm:p-6 border-t border-border bg-muted/30 flex justify-end">
+              <Link
+                to="/agent"
+                search={{ domaine: readingLaw.domaine }}
+                className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-6 py-3 rounded-lg font-semibold hover:opacity-90 transition-opacity min-h-[44px]"
+              >
+                <MessageSquare className="h-4 w-4" />
+                Poser une question sur ce texte
+              </Link>
+            </div>
           </div>
+        </div>
+      )}
+    </div>
   );
 }
