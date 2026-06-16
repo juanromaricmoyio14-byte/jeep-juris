@@ -112,10 +112,7 @@ export function Header() {
       {mobileMenuOpen && (
         <div className="md:hidden fixed inset-0 z-50 flex justify-end">
           {/* Overlay */}
-          <div
-            className="absolute inset-0 bg-black/75"
-            onClick={() => setMobileMenuOpen(false)}
-          />
+          <div className="absolute inset-0 bg-black/75" onClick={() => setMobileMenuOpen(false)} />
 
           {/* Drawer content */}
           <div className="relative w-4/5 max-w-sm bg-white dark:bg-[#1A2634] h-full shadow-xl flex flex-col animate-in slide-in-from-right">

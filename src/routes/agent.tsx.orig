@@ -18,7 +18,6 @@ import {
   X,
   ChevronDown,
   ChevronUp,
-  LoaderCircle,
 } from "lucide-react";
 import * as Accordion from "@radix-ui/react-accordion";
 import { z } from "zod";
@@ -590,14 +589,9 @@ function AgentPage() {
                 <button
                   type="submit"
                   disabled={loading || !input.trim()}
-                  className="inline-flex items-center justify-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:opacity-90 disabled:opacity-40"
+                  className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:opacity-90 disabled:opacity-40"
                 >
-                  {loading ? (
-                    <LoaderCircle className="h-4 w-4 animate-spin" />
-                  ) : (
-                    <Send className="h-4 w-4" />
-                  )}{" "}
-                  {t("agent.send")}
+                  <Send className="h-4 w-4" /> {t("agent.send")}
                 </button>
               </div>
             </form>
