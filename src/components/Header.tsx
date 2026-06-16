@@ -119,7 +119,7 @@ export function Header() {
           />
 
           {/* Drawer content */}
-          <div className="relative w-4/5 max-w-sm bg-white dark:bg-[#1A2634] h-full shadow-xl flex flex-col animate-in slide-in-from-right" style={{backgroundColor: 'white'}}>
+          <div className="relative w-4/5 max-w-sm h-full shadow-xl flex flex-col animate-in slide-in-from-right" style={{backgroundColor: theme === 'dark' ? 'white' : 'black', color: theme === 'dark' ? 'blue' : 'blue'}}>
             <div className="flex items-center justify-between p-4 border-b border-border">
               <span className="font-serif text-lg font-bold tracking-tight text-primary">
                 JEEP <span className="text-secondary">JURIS</span>
@@ -136,32 +136,36 @@ export function Header() {
               <Link
                 to="/"
                 onClick={() => setMobileMenuOpen(false)}
-                className="text-foreground/80 hover:text-primary"
-                activeProps={{ className: "text-primary" }}
+                className="hover:opacity-80"
+                activeProps={{ className: "font-bold" }}
+                style={{color: 'blue'}}
               >
                 Accueil
               </Link>
               <Link
                 to="/agent"
                 onClick={() => setMobileMenuOpen(false)}
-                className="text-foreground/80 hover:text-primary"
-                activeProps={{ className: "text-primary" }}
+                className="hover:opacity-80"
+                activeProps={{ className: "font-bold" }}
+                style={{color: 'blue'}}
               >
                 {t("nav.agent")}
               </Link>
               <Link
                 to="/bibliotheque"
                 onClick={() => setMobileMenuOpen(false)}
-                className="text-foreground/80 hover:text-primary"
-                activeProps={{ className: "text-primary" }}
+                className="hover:opacity-80"
+                activeProps={{ className: "font-bold" }}
+                style={{color: 'blue'}}
               >
                 {t("nav.library")}
               </Link>
               <Link
                 to="/apropos"
                 onClick={() => setMobileMenuOpen(false)}
-                className="text-foreground/80 hover:text-primary"
-                activeProps={{ className: "text-primary" }}
+                className="hover:opacity-80"
+                activeProps={{ className: "font-bold" }}
+                style={{color: 'blue'}}
               >
                 {t("nav.about")}
               </Link>
@@ -171,7 +175,7 @@ export function Header() {
               <hr className="border-border my-2" />
             </div>
 
-            <div className="flex flex-col gap-4 p-4">
+            <div className="flex flex-col gap-4 p-4" style={{color: 'blue'}}>
               <div className="flex items-center justify-between">
                 <span className="text-sm font-medium">Langue</span>
                 <LanguageSwitcher />
