@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { useAuth } from "@/components/AuthProvider";
+import { LoaderCircle } from "lucide-react";
 import { getDb, firebaseConfigured } from "@/lib/firebase";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { MessageSquare, Check } from "lucide-react";
@@ -164,8 +165,9 @@ function FeedbackPage() {
             <button
               type="submit"
               disabled={loading || !message.trim() || !firebaseConfigured}
-              className="w-full rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground hover:opacity-90 disabled:opacity-40"
+              className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground hover:opacity-90 disabled:opacity-40"
             >
+              {loading && <LoaderCircle className="h-4 w-4 animate-spin" />}
               {t("feedback.submit")}
             </button>
           </form>
