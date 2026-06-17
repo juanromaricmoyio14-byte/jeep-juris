@@ -116,24 +116,15 @@ export function Header() {
           {/* Overlay */}
           <div
             onClick={() => setMobileMenuOpen(false)}
-            style={{
-              backgroundColor: "rgba(0, 0, 0, 0.85)",
-              position: "fixed",
-              inset: 0,
-              zIndex: 40,
-            }}
+            className="fixed inset-0 z-40"
+            style={{ backgroundColor: "rgba(0, 0, 0, 0.85)" }}
           />
 
           {/* Drawer panel */}
           <div
+            className="fixed top-0 right-0 h-full w-[280px] z-50 overflow-y-auto"
             style={{
-              backgroundColor: isDark ? "#1A2634" : "white",
-              position: "fixed",
-              top: 0,
-              right: 0,
-              height: "100%",
-              width: "280px",
-              zIndex: 50,
+              backgroundColor: isDark ? "#1A2634" : "#ffffff",
               boxShadow: "-4px 0 20px rgba(0,0,0,0.3)",
               display: "flex",
               flexDirection: "column",

@@ -93,3 +93,15 @@
     font-family: var(--font-serif);
   }
 }
+
+@layer base {
+  button {
+    min-height: 48px;
+  }
+  body {
+    font-size: 16px;
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+}
