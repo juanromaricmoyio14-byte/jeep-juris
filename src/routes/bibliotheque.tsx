@@ -116,7 +116,7 @@ function LibraryPage() {
                         <button
                           className="px-4 py-3 rounded-lg font-medium text-base min-h-[48px]"
                           style={{ backgroundColor: '#1a5c38', color: 'white' }}
-                          onClick={() => window.open('/code_travail_cameroun.pdf', '_blank')}
+                          onClick={() => window.open('/code_travail_cameroun.pdf', '_blank', 'noopener,noreferrer')}
                         >
                           📖 Lire le texte complet
                         </button>

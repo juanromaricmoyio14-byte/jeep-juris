@@ -417,14 +417,16 @@ function AgentPage() {
                         onClick={() => loadHistoryItem(h)}
                         className="w-full rounded-md px-2 py-2 text-left hover:bg-muted transition group"
                       >
-                        <div className="flex items-center gap-2 text-[10px] text-muted-foreground mb-1 flex-wrap">
-                          <Icon className="h-3 w-3 text-primary" />
-                          <span>{date ? relativeTime(date, lang) : ""}</span>
-                          <span>•</span>
-                          <span>{h.domaine ? t(`agent.domains.${h.domaine}`) : ""}</span>
+                        <div className="text-[10px] text-muted-foreground mb-1">
+                          {date ? date.toLocaleDateString() : ""}
                         </div>
-                        <div className="italic text-xs text-foreground/90 line-clamp-2 group-hover:text-primary">
+                        <div className="italic text-xs text-foreground/90 line-clamp-2 group-hover:text-primary mb-1">
                           {preview}
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <span className="rounded px-1.5 py-0.5 text-[10px] font-semibold" style={{ color: "#1a5c38", backgroundColor: "#e8f5e9" }}>
+                            {h.domaine}
+                          </span>
                         </div>
                       </button>
                     </li>

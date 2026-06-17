@@ -231,7 +231,7 @@ export function Header() {
               </div>
             </div>
 
-            <div className="mt-auto p-4 border-t border-border">
+            <div className="mt-auto p-4 border-t border-border sticky bottom-0" style={{ backgroundColor: isDark ? "#1A2634" : "#ffffff" }}>
               {configured &&
                 (user ? (
                   <button

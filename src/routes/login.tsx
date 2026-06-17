@@ -5,7 +5,7 @@ import { BackButton } from "@/components/BackButton";
 import { Header } from "@/components/Header";
 import { PasswordInput } from "@/components/PasswordInput";
 import { getFirebaseAuth, firebaseConfigured } from "@/lib/firebase";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail } from "firebase/auth";
 import { useAuth } from "@/components/AuthProvider";
 
 export const Route = createFileRoute("/login")({
@@ -37,6 +37,8 @@ function LoginPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
+  const [resetEmail, setResetEmail] = useState("");
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -70,6 +72,19 @@ function LoginPage() {
       }
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleForgotPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const auth = getFirebaseAuth();
+    if (!auth) return;
+    try {
+      await sendPasswordResetEmail(auth, resetEmail);
+      alert("Email de réinitialisation envoyé ! Vérifiez votre boîte mail.");
+      setShowForgotPassword(false);
+    } catch (err) {
+      alert("Erreur : vérifiez que l'email est correct.");
     }
   };
 
@@ -120,7 +135,48 @@ function LoginPage() {
                   minLength={6}
                 />
               </div>
+              {mode === "login" && (
+                <div className="mt-2 text-right">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowForgotPassword(true);
+                      setResetEmail(email);
+                    }}
+                    className="text-xs hover:underline"
+                    style={{ color: "#1a5c38" }}
+                  >
+                    Mot de passe oublié ?
+                  </button>
+                </div>
+              )}
             </div>
+
+            {showForgotPassword && (
+              <div className="rounded-lg border border-border bg-muted/50 p-4">
+                <p className="text-xs text-muted-foreground mb-2">
+                  Entrez votre adresse email pour recevoir un lien de réinitialisation.
+                </p>
+                <div className="flex gap-2">
+                  <input
+                    type="email"
+                    value={resetEmail}
+                    onChange={(e) => setResetEmail(e.target.value)}
+                    required
+                    placeholder="Votre email"
+                    className="w-full rounded-lg border border-border bg-background px-3 py-1.5 text-sm focus:border-primary focus:outline-none"
+                  />
+                  <button
+                    type="button"
+                    onClick={handleForgotPassword}
+                    disabled={!resetEmail}
+                    className="rounded-lg bg-primary px-3 py-1.5 text-sm font-semibold text-primary-foreground hover:opacity-90 disabled:opacity-40 whitespace-nowrap"
+                  >
+                    Envoyer le lien
+                  </button>
+                </div>
+              </div>
+            )}
 
             {error && <p className="text-sm text-destructive">{error}</p>}
 
