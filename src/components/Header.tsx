@@ -10,23 +10,25 @@ export function Header() {
   const { t } = useTranslation();
   const { user, configured, logout } = useAuth();
   const [theme, setTheme] = useState<"light" | "dark">("light");
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isDark, setIsDark] = useState(false);
 
   useEffect(() => {
     const saved = localStorage.getItem("theme");
-    if (saved === "dark" || (!saved && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
-      setTheme("dark");
+    const darkMode = saved === "dark" || (!saved && window.matchMedia("(prefers-color-scheme: dark)").matches);
+    setTheme(darkMode ? "dark" : "light");
+    setIsDark(darkMode);
+    if (darkMode) {
       document.documentElement.classList.add("dark");
     } else {
-      setTheme("light");
       document.documentElement.classList.remove("dark");
     }
   }, []);
 
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
   const toggleTheme = () => {
     const newTheme = theme === "light" ? "dark" : "light";
     setTheme(newTheme);
+    setIsDark(newTheme === "dark");
     localStorage.setItem("theme", newTheme);
     if (newTheme === "dark") {
       document.documentElement.classList.add("dark");
@@ -110,33 +112,61 @@ export function Header() {
 
       {/* Mobile Drawer */}
       {mobileMenuOpen && (
-        <div className="md:hidden fixed inset-0 z-50 flex justify-end">
+        <div className="md:hidden" style={{ position: "fixed", inset: 0, zIndex: 40 }}>
           {/* Overlay */}
           <div
-            className="absolute inset-0 bg-black/75"
             onClick={() => setMobileMenuOpen(false)}
-            style={{backgroundColor: 'rgba(0,0,0,0.8)'}}
+            style={{
+              backgroundColor: "rgba(0, 0, 0, 0.85)",
+              position: "fixed",
+              inset: 0,
+              zIndex: 40,
+            }}
           />
 
-          {/* Drawer content */}
-          <div className="relative w-4/5 max-w-sm bg-white dark:bg-[#1A2634] h-full shadow-xl flex flex-col animate-in slide-in-from-right" style={{backgroundColor: 'white'}}>
-            <div className="flex items-center justify-between p-4 border-b border-border">
-              <span className="font-serif text-lg font-bold tracking-tight text-primary">
-                JEEP <span className="text-secondary">JURIS</span>
+          {/* Drawer panel */}
+          <div
+            style={{
+              backgroundColor: isDark ? "#1A2634" : "white",
+              position: "fixed",
+              top: 0,
+              right: 0,
+              height: "100%",
+              width: "280px",
+              zIndex: 50,
+              boxShadow: "-4px 0 20px rgba(0,0,0,0.3)",
+              display: "flex",
+              flexDirection: "column",
+            }}
+          >
+            <div
+              className="flex items-center justify-between p-4 border-b"
+              style={{ borderColor: isDark ? "#2a3a4a" : "#e5e7eb" }}
+            >
+              <span
+                className="font-serif text-lg font-bold tracking-tight"
+                style={{ color: isDark ? "#E8EDF2" : "#1a1a1a" }}
+              >
+                JEEP <span style={{ color: "#1a5c38" }}>JURIS</span>
               </span>
               <button
                 onClick={() => setMobileMenuOpen(false)}
                 className="inline-flex items-center justify-center h-9 w-9 rounded-full hover:bg-muted"
+                style={{ color: isDark ? "#E8EDF2" : "#1a1a1a" }}
               >
                 <X className="h-5 w-5" />
               </button>
             </div>
 
-            <nav className="flex flex-col gap-4 p-4 text-sm font-medium">
+            <nav
+              className="flex flex-col gap-4 p-4 text-sm font-medium"
+              style={{ color: isDark ? "#E8EDF2" : "#1a1a1a" }}
+            >
               <Link
                 to="/"
                 onClick={() => setMobileMenuOpen(false)}
-                className="text-foreground/80 hover:text-primary"
+                className="hover:text-primary"
+                style={{ color: isDark ? "#E8EDF2" : "#1a1a1a" }}
                 activeProps={{ className: "text-primary" }}
               >
                 Accueil
@@ -144,7 +174,8 @@ export function Header() {
               <Link
                 to="/agent"
                 onClick={() => setMobileMenuOpen(false)}
-                className="text-foreground/80 hover:text-primary"
+                className="hover:text-primary"
+                style={{ color: isDark ? "#E8EDF2" : "#1a1a1a" }}
                 activeProps={{ className: "text-primary" }}
               >
                 {t("nav.agent")}
@@ -152,7 +183,8 @@ export function Header() {
               <Link
                 to="/bibliotheque"
                 onClick={() => setMobileMenuOpen(false)}
-                className="text-foreground/80 hover:text-primary"
+                className="hover:text-primary"
+                style={{ color: isDark ? "#E8EDF2" : "#1a1a1a" }}
                 activeProps={{ className: "text-primary" }}
               >
                 {t("nav.library")}
@@ -160,7 +192,8 @@ export function Header() {
               <Link
                 to="/apropos"
                 onClick={() => setMobileMenuOpen(false)}
-                className="text-foreground/80 hover:text-primary"
+                className="hover:text-primary"
+                style={{ color: isDark ? "#E8EDF2" : "#1a1a1a" }}
                 activeProps={{ className: "text-primary" }}
               >
                 {t("nav.about")}
@@ -173,11 +206,21 @@ export function Header() {
 
             <div className="flex flex-col gap-4 p-4">
               <div className="flex items-center justify-between">
-                <span className="text-sm font-medium">Langue</span>
+                <span
+                  className="text-sm font-medium"
+                  style={{ color: isDark ? "#E8EDF2" : "#1a1a1a" }}
+                >
+                  Langue
+                </span>
                 <LanguageSwitcher />
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-sm font-medium">Thème</span>
+                <span
+                  className="text-sm font-medium"
+                  style={{ color: isDark ? "#E8EDF2" : "#1a1a1a" }}
+                >
+                  Thème
+                </span>
                 <button
                   onClick={toggleTheme}
                   className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-border bg-background text-foreground shadow-sm hover:bg-muted hover:text-primary transition-colors"
@@ -198,6 +241,7 @@ export function Header() {
                       setMobileMenuOpen(false);
                     }}
                     className="flex w-full items-center justify-center gap-2 rounded-lg border border-border bg-card px-4 py-2.5 text-sm font-semibold hover:bg-muted"
+                    style={{ color: isDark ? "#E8EDF2" : "#1a1a1a" }}
                   >
                     <LogOut className="h-4 w-4" />
                     {t("nav.logout")}
