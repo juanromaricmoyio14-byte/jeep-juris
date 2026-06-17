@@ -543,7 +543,7 @@ function AgentPage() {
                 e.preventDefault();
                 submit();
               }}
-              className="border-t border-border p-4"
+              className="sticky bottom-0 border-t border-border p-4 bg-background"
             >
               {listening && (
                 <div className="mb-2 flex items-center gap-2 rounded-lg bg-destructive/10 px-3 py-1.5 text-xs font-medium text-destructive">
@@ -656,6 +656,43 @@ function AgentBubble({ response, lang }: { response: AgentResponse; lang: "fr" |
         <p className="italic text-muted-foreground">{response.reformulation}</p>
       </Block>
 
+      {response.textes_applicables?.length > 0 && (
+        <Block title="Textes applicables">
+          {response.textes_applicables.map((item, i) => (
+            <div key={i} style={{
+              borderLeft: '4px solid #1a5c38',
+              backgroundColor: '#f0f7f4',
+              borderRadius: '8px',
+              padding: '16px',
+              marginBottom: '12px'
+            }}>
+              <div style={{display:'flex', alignItems:'center', gap:'8px', marginBottom:'8px'}}>
+                <span style={{color:'#1a5c38', fontWeight:'bold', fontSize:'12px', textTransform:'uppercase'}}>
+                  ⚖️ {item.loi}
+                </span>
+                <span style={{
+                  backgroundColor:'#c9a84c',
+                  color:'white',
+                  fontSize:'11px',
+                  borderRadius:'20px',
+                  padding:'2px 8px'
+                }}>
+                  {item.article}
+                </span>
+              </div>
+              <p style={{
+                fontSize:'14px',
+                fontStyle:'italic',
+                color:'#4a5568',
+                lineHeight:'1.6'
+              }}>
+                « {item.contenu} »
+              </p>
+            </div>
+          ))}
+        </Block>
+      )}
+
       {response.actions_recommandees?.length > 0 && (
         <Block title={t("agent.recommendedActions") || "Que faire ?"}>
           <ul className="list-disc space-y-1 pl-5">
@@ -669,42 +706,6 @@ function AgentBubble({ response, lang }: { response: AgentResponse; lang: "fr" |
       <Block title={t("agent.analysis")}>
         <p className="whitespace-pre-wrap leading-relaxed">{response.analyse}</p>
       </Block>
-
-      {response.textes_applicables?.length > 0 && (
-        <Accordion.Root type="single" collapsible className="w-full mt-4">
-          <Accordion.Item
-            value="sources"
-            className="border border-border rounded-lg overflow-hidden"
-          >
-            <Accordion.Header className="flex">
-              <Accordion.Trigger className="flex flex-1 items-center justify-between bg-muted/30 px-4 py-3 text-sm font-semibold hover:bg-muted/50 transition-all [&[data-state=open]>svg]:rotate-180">
-                Voir les sources
-                <ChevronDown className="h-4 w-4 transition-transform duration-200" />
-              </Accordion.Trigger>
-            </Accordion.Header>
-            <Accordion.Content className="overflow-hidden text-sm data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down">
-              <div className="p-4 bg-card/50">
-                <ul className="space-y-3">
-                  {response.textes_applicables.map((tx, i) => (
-                    <li
-                      key={i}
-                      className="border-l-4 border-[#1a5c38] bg-[#f0f7f4] dark:bg-[#0d2b1e] rounded-lg p-4 mb-3"
-                    >
-                      <div className="flex items-center gap-2 mb-2">
-                        <span className="font-semibold text-[#1a5c38]">{tx.loi}</span>
-                        <span className="inline-flex items-center rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-800 dark:bg-amber-900/30 dark:text-amber-300">
-                          {tx.article}
-                        </span>
-                      </div>
-                      <p className="text-sm italic text-foreground/80">« {tx.contenu} »</p>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </Accordion.Content>
-          </Accordion.Item>
-        </Accordion.Root>
-      )}
 
       {response.institutions?.length > 0 && (
         <Block title={t("agent.institutions")}>

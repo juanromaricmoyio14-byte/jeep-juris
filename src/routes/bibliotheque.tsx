@@ -1,9 +1,6 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { useTranslation } from "react-i18next";
-import { useState } from "react";
+import { createFileRoute } from "@tanstack/react-router";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
-import { Search, BookOpen, Lock } from "lucide-react";
 import { BackButton } from "@/components/BackButton";
 
 export const Route = createFileRoute("/bibliotheque")({
@@ -25,223 +22,125 @@ export const Route = createFileRoute("/bibliotheque")({
   component: LibraryPage,
 });
 
-interface LegalCode {
-  id: string;
-  titre: string;
-  domaine: string;
-  description: string;
-  annee: string;
-  articles: string;
-  pdfPath?: string;
-  icon: string;
-  available: boolean;
-}
-
-const LEGAL_CODES: LegalCode[] = [
+const LEGAL_CODES = [
   {
-    id: "code_travail",
+    id: "travail",
     titre: "Code du Travail Camerounais",
-    domaine: "Droit du Travail",
-    description:
-      "177 articles régissant les rapports entre employeurs et travailleurs au Cameroun — contrats, salaires, conditions de travail, syndicats, contentieux.",
-    annee: "1992",
-    articles: "177 articles",
-    pdfPath: "/code_travail_cameroun.pdf",
+    loi: "Loi n°92/007 du 14 août 1992",
+    description: "Régit les rapports entre employeurs et travailleurs au Cameroun. Contient 177 articles organisés en 10 titres couvrant les contrats, salaires, conditions de travail et procédures.",
+    articles: "177 articles — 10 titres",
     icon: "💼",
     available: true,
+    pdfPath: "/code_travail_cameroun.pdf"
   },
   {
-    id: "code_penal",
-    titre: "Code Pénal",
-    domaine: "Droit Pénal",
-    description:
-      "Ensemble des infractions, des peines et des mesures de sûreté applicables au Cameroun.",
-    annee: "2016",
-    articles: "—",
+    id: "penal",
+    titre: "Code Pénal Camerounais",
+    loi: "Loi n°2016/007 du 12 juillet 2016",
+    description: "Définit les infractions pénales et les peines applicables sur le territoire camerounais.",
+    articles: "En cours d'intégration",
     icon: "⚖️",
-    available: false,
+    available: false
   },
   {
-    id: "code_civil",
-    titre: "Code Civil",
-    domaine: "Droit Civil",
-    description:
-      "Personnes, famille, biens, obligations, contrats, successions et régimes matrimoniaux.",
-    annee: "—",
-    articles: "—",
+    id: "civil",
+    titre: "Code Civil Camerounais",
+    loi: "Héritage du droit français",
+    description: "Régit les rapports entre personnes : contrats, obligations, responsabilité et propriété.",
+    articles: "En cours d'intégration",
     icon: "📜",
-    available: false,
+    available: false
   },
   {
-    id: "code_famille",
+    id: "famille",
     titre: "Code de la Famille",
-    domaine: "Droit de la Famille",
-    description:
-      "Mariage, filiation, autorité parentale, régimes matrimoniaux et succession.",
-    annee: "—",
-    articles: "—",
-    icon: "👨‍👩‍👧‍👦",
-    available: false,
+    loi: "Ordonnance n°81/02 du 29 juin 1981",
+    description: "Encadre le mariage, le divorce, la filiation, la succession et l'autorité parentale.",
+    articles: "En cours d'intégration",
+    icon: "👨‍👩‍👧",
+    available: false
   },
   {
-    id: "code_foncier",
-    titre: "Code Foncier",
-    domaine: "Droit Foncier",
-    description:
-      "Gestion des terres, propriété foncière, baux ruraux et urbains au Cameroun.",
-    annee: "—",
-    articles: "—",
+    id: "foncier",
+    titre: "Droit Foncier Camerounais",
+    loi: "Ordonnance n°74/1 du 6 juillet 1974",
+    description: "Régit la propriété foncière, les titres fonciers et la résolution des conflits de terrain.",
+    articles: "En cours d'intégration",
     icon: "🏡",
-    available: false,
-  },
+    available: false
+  }
 ];
 
 function LibraryPage() {
-  const { t } = useTranslation();
-  const [query, setQuery] = useState("");
-
-  const filtered = LEGAL_CODES.filter((code) => {
-    const q = query.trim().toLowerCase();
-    if (!q) return true;
-    return (
-      code.titre.toLowerCase().includes(q) ||
-      code.domaine.toLowerCase().includes(q) ||
-      code.description.toLowerCase().includes(q)
-    );
-  });
-
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
       <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-10 animate-in fade-in duration-500">
         <BackButton />
-        <h1 className="font-serif text-4xl font-bold text-primary">
-          {t("library.title")}
+        <h1 className="font-serif text-4xl font-bold text-primary mb-6">
+          Bibliothèque des lois
         </h1>
-        <p className="mt-2 text-muted-foreground max-w-2xl">
-          Consultez les principaux codes juridiques du Cameroun. Le Code du
-          Travail est disponible en intégralité, les autres arrivent prochainement.
-        </p>
 
-        <div className="mt-6 max-w-md">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-            <input
-              type="text"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder={t("library.search")}
-              className="w-full rounded-lg border border-border bg-card py-2.5 pl-10 pr-4 text-sm focus:border-primary focus:outline-none"
-            />
-          </div>
-        </div>
-
-        <div className="mt-10 space-y-6">
-          {filtered.length === 0 ? (
-            <p className="text-center text-sm text-muted-foreground">
-              {t("library.noResults")}
-            </p>
-          ) : (
-            filtered.map((code, index) => (
-              <article
-                key={code.id}
-                className={`rounded-2xl border p-6 transition-all duration-300 ${
-                  code.available
-                    ? "border-border bg-card hover:shadow-lg"
-                    : "border-dashed border-border/60 bg-muted/30"
-                }`}
-                style={{
-                  animationDelay: `${index * 80}ms`,
-                }}
-              >
-                <div className="flex flex-col gap-5 md:flex-row md:items-start md:justify-between">
-                  {/* Left: icon + info */}
-                  <div className="flex-1">
-                    <div className="flex items-center gap-3">
-                      <span className="text-3xl">{code.icon}</span>
-                      <div>
-                        <h2
-                          className={`font-serif text-xl font-bold ${
-                            code.available
-                              ? "text-primary"
-                              : "text-muted-foreground"
-                          }`}
-                        >
-                          {code.titre}
-                        </h2>
-                        <p className="text-xs font-medium text-primary/70 uppercase tracking-wide mt-0.5">
-                          {code.domaine}
-                        </p>
-                      </div>
-                    </div>
-
-                    <p
-                      className={`mt-3 text-sm leading-relaxed ${
-                        code.available
-                          ? "text-foreground/80"
-                          : "text-muted-foreground"
-                      }`}
-                    >
-                      {code.description}
-                    </p>
-
-                    <div className="mt-4 flex items-center gap-4 text-xs">
-                      <span className="inline-flex items-center gap-1 rounded-md bg-muted px-2.5 py-1 font-medium">
-                        <BookOpen className="h-3 w-3" />
-                        {code.articles}
-                      </span>
-                      <span className="text-muted-foreground">
-                        Année : {code.annee}
-                      </span>
-                      {!code.available && (
-                        <span className="inline-flex items-center gap-1 rounded-md bg-amber-100 px-2.5 py-1 text-amber-800 font-semibold">
-                          <Lock className="h-3 w-3" />
-                          Bientôt disponible
-                        </span>
-                      )}
-                    </div>
+        <div className="mt-6">
+          {LEGAL_CODES.map((code) => (
+            <div
+              key={code.id}
+              className="bg-white rounded-xl shadow-md p-6 mb-5 w-full"
+              style={{ borderLeft: '4px solid #1a5c38' }}
+            >
+              <div className="flex items-start gap-4">
+                <span className="text-4xl leading-none">{code.icon}</span>
+                <div className="flex-1">
+                  <h2
+                    className="text-xl font-bold"
+                    style={{ color: '#1a5c38' }}
+                  >
+                    {code.titre}
+                  </h2>
+                  <p className="text-sm italic text-gray-500 mt-1">
+                    {code.loi}
+                  </p>
+                  <p className="text-base text-gray-700 mt-3 leading-relaxed">
+                    {code.description}
+                  </p>
+                  <div
+                    className="inline-block mt-2 px-3 py-1 text-sm rounded-full font-medium"
+                    style={{ backgroundColor: '#f0f7f4', color: '#1a5c38' }}
+                  >
+                    {code.articles}
                   </div>
 
-                  {/* Right: actions */}
-                  <div className="flex flex-col gap-2 md:min-w-[180px]">
-                    {code.available && code.pdfPath ? (
+                  <div className="mt-4 flex gap-3 flex-wrap">
+                    {code.available ? (
                       <>
                         <button
-                          onClick={() =>
-                            window.open(code.pdfPath, "_blank")
-                          }
-                          className="inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground hover:opacity-90 transition-opacity"
+                          className="px-4 py-3 rounded-lg font-medium text-base min-h-[48px]"
+                          style={{ backgroundColor: '#1a5c38', color: 'white' }}
+                          onClick={() => window.open('/code_travail_cameroun.pdf', '_blank')}
                         >
-                          📖 Lire le texte
+                          📖 Lire le texte complet
                         </button>
-                        <Link
-                          to="/agent"
-                          className="inline-flex items-center justify-center gap-2 rounded-lg border border-border bg-card px-4 py-2.5 text-sm font-semibold hover:bg-muted transition-colors text-center"
+                        <button
+                          className="px-4 py-3 rounded-lg font-medium text-base min-h-[48px]"
+                          style={{ border: '2px solid #c9a84c', color: '#c9a84c' }}
+                          onClick={() => window.location.href = '/agent'}
                         >
                           💬 Poser une question
-                        </Link>
+                        </button>
                       </>
                     ) : (
-                      <>
-                        <button
-                          disabled
-                          className="inline-flex items-center justify-center gap-2 rounded-lg bg-muted px-4 py-2.5 text-sm font-semibold text-muted-foreground cursor-not-allowed"
-                        >
-                          📖 Lire le texte
-                        </button>
-                        <button
-                          disabled
-                          className="inline-flex items-center justify-center gap-2 rounded-lg border border-border bg-muted px-4 py-2.5 text-sm font-semibold text-muted-foreground cursor-not-allowed"
-                        >
-                          💬 Poser une question
-                        </button>
-                      </>
+                      <span
+                        className="px-4 py-2 rounded-full text-sm font-medium"
+                        style={{ backgroundColor: '#c9a84c', color: 'white' }}
+                      >
+                        ⏳ Bientôt disponible
+                      </span>
                     )}
                   </div>
                 </div>
-              </article>
-            ))
-          )}
+              </div>
+            </div>
+          ))}
         </div>
       </main>
       <Footer />

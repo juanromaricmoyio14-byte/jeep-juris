@@ -183,7 +183,7 @@ function RootComponent() {
         </header>
 
         {/* Mobile Bottom Navigation */}
-        <nav className="fixed bottom-0 left-0 right-0 z-50 flex h-16 bg-background border-t border-border md:hidden px-2 pb-safe">
+        <nav className="fixed bottom-0 left-0 right-0 z-[100] flex h-16 bg-background border-t border-border md:hidden px-2 pb-safe">
           <Link
             to="/"
             className="flex flex-1 flex-col items-center justify-center gap-1 text-muted-foreground hover:text-primary transition-colors"
