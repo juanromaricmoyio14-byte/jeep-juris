@@ -1,0 +1,4 @@
+## 2024-06-12 - Frontend bundled sensitive admin logic
+**Vulnerability:** Client-side environment variables `VITE_ADMIN_EMAILS` were bundled directly into the Vite frontend codebase. The application verified administrator access by checking `user.email` against this hardcoded list of emails on the frontend. This could allow an attacker to read the list of administrators, or spoof emails if there was an authentication gap.
+**Learning:** Anything prefixed with `VITE_` in Vite is exposed to the client in the built javascript. We must rely on secure backend systems like Firebase Custom Claims (`admin: true`) rather than relying on an array of string emails in the client codebase.
+**Prevention:** Rely on standard Firebase user ID tokens (`token.claims.admin`) which are signed securely by the backend logic, instead of environment variables hardcoded into the client side application bundle for sensitive routing and UI state.

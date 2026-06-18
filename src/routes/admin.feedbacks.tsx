@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useEffect, useMemo, useState } from "react";
 import { Header } from "@/components/Header";
 import { useAuth } from "@/components/AuthProvider";
-import { getDb, isAdminEmail } from "@/lib/firebase";
+import { getDb } from "@/lib/firebase";
 import { collection, onSnapshot, orderBy, query, type Timestamp } from "firebase/firestore";
 import { ShieldAlert } from "lucide-react";
 
@@ -31,10 +31,9 @@ const TYPE_STYLES: Record<FeedbackType, string> = {
 
 function AdminFeedbacks() {
   const { t, i18n } = useTranslation();
-  const { user, loading } = useAuth();
+  const { user, loading, isAdmin } = useAuth();
   const [items, setItems] = useState<FeedbackDoc[]>([]);
   const [filter, setFilter] = useState<"all" | FeedbackType>("all");
-  const isAdmin = isAdminEmail(user?.email);
 
   useEffect(() => {
     if (!isAdmin) return;
