@@ -140,8 +140,7 @@ function AgentPage() {
       return;
     }
     const q = query(
-      collection(db, "consultations"),
-      where("userId", "==", user.uid),
+      collection(db, "users", user.uid, "consultations"),
       orderBy("createdAt", "desc"),
       limit(10),
     );
@@ -172,9 +171,11 @@ function AgentPage() {
     const db = getDb();
     if (!db) return;
     try {
-      const q = query(collection(db, "consultations"), where("userId", "==", user.uid));
+      const q = query(collection(db, "users", user.uid, "consultations"));
       const snap = await getDocs(q);
-      await Promise.all(snap.docs.map((d) => deleteDoc(doc(db, "consultations", d.id))));
+      await Promise.all(
+        snap.docs.map((d) => deleteDoc(doc(db, "users", user.uid, "consultations", d.id))),
+      );
     } catch (e) {
       console.error("Clear history failed", e);
     }
@@ -224,8 +225,7 @@ function AgentPage() {
             const db = getDb();
             if (db) {
               try {
-                await addDoc(collection(db, "consultations"), {
-                  userId: user.uid,
+                await addDoc(collection(db, "users", user.uid, "consultations"), {
                   question: question,
                   domaine: domaine,
                   langue: langue,
@@ -488,7 +488,8 @@ function AgentPage() {
                           setInput(q);
                           submit(q);
                         }}
-                        className="p-3 text-sm rounded-xl border border-border bg-card hover:bg-muted transition-colors"
+                        className="p-3 text-sm rounded-xl border border-border bg-card hover:bg-muted transition-colors animate-in slide-in-from-bottom-4 duration-500 fill-mode-both"
+                        style={{ animationDelay: `${i * 100}ms` }}
                       >
                         {q}
                       </button>
@@ -656,43 +657,6 @@ function AgentBubble({ response, lang }: { response: AgentResponse; lang: "fr" |
         <p className="italic text-muted-foreground">{response.reformulation}</p>
       </Block>
 
-      {response.textes_applicables?.length > 0 && (
-        <Block title="Textes applicables">
-          {response.textes_applicables.map((item, i) => (
-            <div key={i} style={{
-              borderLeft: '4px solid #1a5c38',
-              backgroundColor: '#f0f7f4',
-              borderRadius: '8px',
-              padding: '16px',
-              marginBottom: '12px'
-            }}>
-              <div style={{display:'flex', alignItems:'center', gap:'8px', marginBottom:'8px'}}>
-                <span style={{color:'#1a5c38', fontWeight:'bold', fontSize:'12px', textTransform:'uppercase'}}>
-                  ⚖️ {item.loi}
-                </span>
-                <span style={{
-                  backgroundColor:'#c9a84c',
-                  color:'white',
-                  fontSize:'11px',
-                  borderRadius:'20px',
-                  padding:'2px 8px'
-                }}>
-                  {item.article}
-                </span>
-              </div>
-              <p style={{
-                fontSize:'14px',
-                fontStyle:'italic',
-                color:'#4a5568',
-                lineHeight:'1.6'
-              }}>
-                « {item.contenu} »
-              </p>
-            </div>
-          ))}
-        </Block>
-      )}
-
       {response.actions_recommandees?.length > 0 && (
         <Block title={t("agent.recommendedActions") || "Que faire ?"}>
           <ul className="list-disc space-y-1 pl-5">
@@ -706,6 +670,78 @@ function AgentBubble({ response, lang }: { response: AgentResponse; lang: "fr" |
       <Block title={t("agent.analysis")}>
         <p className="whitespace-pre-wrap leading-relaxed">{response.analyse}</p>
       </Block>
+
+      {response.textes_applicables?.length > 0 && (
+        <Accordion.Root type="single" collapsible className="w-full mt-4">
+          <Accordion.Item
+            value="sources"
+            className="border border-border rounded-lg overflow-hidden"
+          >
+            <Accordion.Header className="flex">
+              <Accordion.Trigger className="flex flex-1 items-center justify-between py-3 px-4 text-sm font-medium transition-all hover:bg-muted [&[data-state=open]>svg]:rotate-180">
+                Voir les sources
+                <ChevronDown className="h-4 w-4 shrink-0 transition-transform duration-200" />
+              </Accordion.Trigger>
+            </Accordion.Header>
+            <Accordion.Content className="overflow-hidden text-sm data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down">
+              <div className="p-4 pt-0 space-y-3">
+                {response.textes_applicables.map((item, i) => (
+                  <div
+                    key={i}
+                    style={{
+                      borderLeft: "4px solid #1a5c38",
+                      backgroundColor: "#f0f7f4",
+                      borderRadius: "8px",
+                      padding: "16px",
+                    }}
+                  >
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "8px",
+                        marginBottom: "8px",
+                      }}
+                    >
+                      <span
+                        style={{
+                          color: "#1a5c38",
+                          fontWeight: "bold",
+                          fontSize: "12px",
+                          textTransform: "uppercase",
+                        }}
+                      >
+                        ⚖️ {item.loi}
+                      </span>
+                      <span
+                        style={{
+                          backgroundColor: "#c9a84c",
+                          color: "white",
+                          fontSize: "11px",
+                          borderRadius: "20px",
+                          padding: "2px 8px",
+                        }}
+                      >
+                        {item.article}
+                      </span>
+                    </div>
+                    <p
+                      style={{
+                        fontSize: "14px",
+                        fontStyle: "italic",
+                        color: "#4a5568",
+                        lineHeight: "1.6",
+                      }}
+                    >
+                      « {item.contenu} »
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </Accordion.Content>
+          </Accordion.Item>
+        </Accordion.Root>
+      )}
 
       {response.institutions?.length > 0 && (
         <Block title={t("agent.institutions")}>

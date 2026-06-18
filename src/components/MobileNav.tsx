@@ -119,10 +119,10 @@ export function MobileNav() {
               </div>
               <button
                 onClick={toggleTheme}
-                className="flex w-full items-center justify-between rounded-lg border border-border bg-card px-3 py-2.5 text-sm font-medium hover:bg-muted"
+                className="flex w-full items-center justify-between rounded-lg border border-border bg-card px-3 py-2.5 text-sm font-medium hover:bg-muted min-h-[44px]"
               >
                 <span className="flex items-center gap-2">
-                  {theme === "light" ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
+                  <span className="text-base">{theme === "light" ? "🌙" : "☀️"}</span>
                   {theme === "light" ? "Mode sombre" : "Mode clair"}
                 </span>
               </button>
