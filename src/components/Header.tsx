@@ -15,7 +15,8 @@ export function Header() {
 
   useEffect(() => {
     const saved = localStorage.getItem("theme");
-    const darkMode = saved === "dark" || (!saved && window.matchMedia("(prefers-color-scheme: dark)").matches);
+    const darkMode =
+      saved === "dark" || (!saved && window.matchMedia("(prefers-color-scheme: dark)").matches);
     setTheme(darkMode ? "dark" : "light");
     setIsDark(darkMode);
     if (darkMode) {
@@ -82,11 +83,11 @@ export function Header() {
         <div className="hidden md:flex items-center gap-2">
           <button
             onClick={toggleTheme}
-            className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-border bg-card text-foreground shadow-sm hover:bg-muted hover:text-primary transition-colors"
+            className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-border bg-card text-foreground shadow-sm hover:bg-muted hover:text-primary transition-colors text-base"
             aria-label="Toggle theme"
             title="Toggle theme"
           >
-            {theme === "light" ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
+            {theme === "light" ? "🌙" : "☀️"}
           </button>
           <LanguageSwitcher />
           {configured &&
@@ -124,16 +125,16 @@ export function Header() {
           <div
             style={{
               backgroundColor: isDark ? "#1A2634" : "#ffffff",
-              position: 'fixed',
+              position: "fixed",
               top: 0,
               right: 0,
-              width: '100%',
-              maxWidth: '320px',
-              height: '100vh',
+              width: "100%",
+              maxWidth: "320px",
+              height: "100vh",
               zIndex: 50,
-              boxShadow: '-4px 0 20px rgba(0,0,0,0.3)',
-              overflowY: 'auto',
-              padding: '20px',
+              boxShadow: "-4px 0 20px rgba(0,0,0,0.3)",
+              overflowY: "auto",
+              padding: "20px",
               display: "flex",
               flexDirection: "column",
             }}
@@ -222,11 +223,11 @@ export function Header() {
                 </span>
                 <button
                   onClick={toggleTheme}
-                  className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-border bg-background text-foreground shadow-sm hover:bg-muted hover:text-primary transition-colors"
+                  className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-border bg-background text-foreground shadow-sm hover:bg-muted hover:text-primary transition-colors text-base"
                   aria-label="Toggle theme"
                   title="Toggle theme"
                 >
-                  {theme === "light" ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
+                  {theme === "light" ? "🌙" : "☀️"}
                 </button>
               </div>
             </div>
