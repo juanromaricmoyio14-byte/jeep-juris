@@ -5,6 +5,7 @@ import { BackButton } from "@/components/BackButton";
 import { Header } from "@/components/Header";
 import { PasswordInput } from "@/components/PasswordInput";
 import { getFirebaseAuth, firebaseConfigured } from "@/lib/firebase";
+import { LoaderCircle } from "lucide-react";
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 import { useAuth } from "@/components/AuthProvider";
 
@@ -127,8 +128,9 @@ function LoginPage() {
             <button
               type="submit"
               disabled={loading || !firebaseConfigured}
-              className="w-full rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground hover:opacity-90 disabled:opacity-40"
+              className="w-full inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground hover:opacity-90 disabled:opacity-40"
             >
+              {loading && <LoaderCircle className="h-4 w-4 animate-spin" />}
               {mode === "login" ? t("auth.submitLogin") : t("auth.submitSignup")}
             </button>
           </form>
