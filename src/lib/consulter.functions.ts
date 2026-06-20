@@ -1,9 +1,11 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 
+const DomainEnum = z.enum(["labour", "criminal", "civil", "family", "land", "procedures"]);
+
 const InputSchema = z.object({
   question: z.string().min(1).max(2000),
-  domaine: z.enum(["labour", "criminal", "civil", "family", "land", "procedures"]),
+  domaine: DomainEnum,
   langue: z.enum(["fr", "en"]),
   niveau: z.enum(["simple", "standard", "technical"]).optional().default("standard"),
   history: z
@@ -136,7 +138,7 @@ async function verifyFirebaseIdToken(idToken: string): Promise<boolean> {
 }
 
 export const getLibraryDoc = createServerFn({ method: "GET" })
-  .inputValidator(z.object({ domain: z.string() }))
+  .inputValidator(z.object({ domain: DomainEnum }))
   .handler(async ({ data }): Promise<{ ok: boolean; text?: string; error?: string }> => {
     const driveKeys = DOMAIN_DRIVE_KEYS[data.domain] ?? [];
     if (driveKeys.length === 0) {
