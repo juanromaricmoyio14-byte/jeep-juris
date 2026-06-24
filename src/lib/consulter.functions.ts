@@ -1,9 +1,11 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 
+const DOMAIN_KEYS = ["labour", "criminal", "civil", "family", "land", "procedures"] as const;
+
 const InputSchema = z.object({
   question: z.string().min(1).max(2000),
-  domaine: z.enum(["labour", "criminal", "civil", "family", "land", "procedures"]),
+  domaine: z.enum(DOMAIN_KEYS),
   langue: z.enum(["fr", "en"]),
   niveau: z.enum(["simple", "standard", "technical"]).optional().default("standard"),
   history: z
@@ -18,7 +20,7 @@ const InputSchema = z.object({
     .default([]),
 });
 
-const DOMAIN_DRIVE_KEYS: Record<string, string[]> = {
+const DOMAIN_DRIVE_KEYS: Record<(typeof DOMAIN_KEYS)[number], string[]> = {
   labour: ["DRIVE_ID_TITRE_III", "DRIVE_ID_TITRE_IV"],
   criminal: ["DRIVE_ID_TITRE_V", "DRIVE_ID_TITRE_VI"],
   civil: ["DRIVE_ID_TITRE_I", "DRIVE_ID_TITRE_II"],
@@ -136,7 +138,7 @@ async function verifyFirebaseIdToken(idToken: string): Promise<boolean> {
 }
 
 export const getLibraryDoc = createServerFn({ method: "GET" })
-  .inputValidator(z.object({ domain: z.string() }))
+  .inputValidator(z.object({ domain: z.enum(DOMAIN_KEYS) }))
   .handler(async ({ data }): Promise<{ ok: boolean; text?: string; error?: string }> => {
     const driveKeys = DOMAIN_DRIVE_KEYS[data.domain] ?? [];
     if (driveKeys.length === 0) {
