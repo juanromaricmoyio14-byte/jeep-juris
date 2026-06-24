@@ -6,7 +6,7 @@ import { Footer } from "@/components/Footer";
 import { useAuth } from "@/components/AuthProvider";
 import { getDb, firebaseConfigured } from "@/lib/firebase";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
-import { MessageSquare, Check } from "lucide-react";
+import { MessageSquare, Check, LoaderCircle } from "lucide-react";
 
 export const Route = createFileRoute("/feedback")({
   head: () => ({
@@ -164,9 +164,16 @@ function FeedbackPage() {
             <button
               type="submit"
               disabled={loading || !message.trim() || !firebaseConfigured}
-              className="w-full rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground hover:opacity-90 disabled:opacity-40"
+              className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground hover:opacity-90 disabled:opacity-40"
             >
-              {t("feedback.submit")}
+              {loading ? (
+                <>
+                  <LoaderCircle className="h-4 w-4 animate-spin" />
+                  {t("feedback.submit")}
+                </>
+              ) : (
+                t("feedback.submit")
+              )}
             </button>
           </form>
         </div>
