@@ -18,6 +18,7 @@ import {
   X,
   ChevronDown,
   ChevronUp,
+  LoaderCircle,
 } from "lucide-react";
 import * as Accordion from "@radix-ui/react-accordion";
 import { z } from "zod";
@@ -589,9 +590,14 @@ function AgentPage() {
                 <button
                   type="submit"
                   disabled={loading || !input.trim()}
-                  className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:opacity-90 disabled:opacity-40"
+                  className="inline-flex items-center justify-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:opacity-90 disabled:opacity-40"
                 >
-                  <Send className="h-4 w-4" /> {t("agent.send")}
+                  {loading ? (
+                    <LoaderCircle className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <Send className="h-4 w-4" />
+                  )}
+                  {t("agent.send")}
                 </button>
               </div>
             </form>
@@ -659,33 +665,49 @@ function AgentBubble({ response, lang }: { response: AgentResponse; lang: "fr" |
       {response.textes_applicables?.length > 0 && (
         <Block title="Textes applicables">
           {response.textes_applicables.map((item, i) => (
-            <div key={i} style={{
-              borderLeft: '4px solid #1a5c38',
-              backgroundColor: '#f0f7f4',
-              borderRadius: '8px',
-              padding: '16px',
-              marginBottom: '12px'
-            }}>
-              <div style={{display:'flex', alignItems:'center', gap:'8px', marginBottom:'8px'}}>
-                <span style={{color:'#1a5c38', fontWeight:'bold', fontSize:'12px', textTransform:'uppercase'}}>
+            <div
+              key={i}
+              style={{
+                borderLeft: "4px solid #1a5c38",
+                backgroundColor: "#f0f7f4",
+                borderRadius: "8px",
+                padding: "16px",
+                marginBottom: "12px",
+              }}
+            >
+              <div
+                style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "8px" }}
+              >
+                <span
+                  style={{
+                    color: "#1a5c38",
+                    fontWeight: "bold",
+                    fontSize: "12px",
+                    textTransform: "uppercase",
+                  }}
+                >
                   ⚖️ {item.loi}
                 </span>
-                <span style={{
-                  backgroundColor:'#c9a84c',
-                  color:'white',
-                  fontSize:'11px',
-                  borderRadius:'20px',
-                  padding:'2px 8px'
-                }}>
+                <span
+                  style={{
+                    backgroundColor: "#c9a84c",
+                    color: "white",
+                    fontSize: "11px",
+                    borderRadius: "20px",
+                    padding: "2px 8px",
+                  }}
+                >
                   {item.article}
                 </span>
               </div>
-              <p style={{
-                fontSize:'14px',
-                fontStyle:'italic',
-                color:'#4a5568',
-                lineHeight:'1.6'
-              }}>
+              <p
+                style={{
+                  fontSize: "14px",
+                  fontStyle: "italic",
+                  color: "#4a5568",
+                  lineHeight: "1.6",
+                }}
+              >
                 « {item.contenu} »
               </p>
             </div>
