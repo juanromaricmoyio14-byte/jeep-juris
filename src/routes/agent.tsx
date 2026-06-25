@@ -659,33 +659,49 @@ function AgentBubble({ response, lang }: { response: AgentResponse; lang: "fr" |
       {response.textes_applicables?.length > 0 && (
         <Block title="Textes applicables">
           {response.textes_applicables.map((item, i) => (
-            <div key={i} style={{
-              borderLeft: '4px solid #1a5c38',
-              backgroundColor: '#f0f7f4',
-              borderRadius: '8px',
-              padding: '16px',
-              marginBottom: '12px'
-            }}>
-              <div style={{display:'flex', alignItems:'center', gap:'8px', marginBottom:'8px'}}>
-                <span style={{color:'#1a5c38', fontWeight:'bold', fontSize:'12px', textTransform:'uppercase'}}>
+            <div
+              key={i}
+              style={{
+                borderLeft: "4px solid #1a5c38",
+                backgroundColor: "#f0f7f4",
+                borderRadius: "8px",
+                padding: "16px",
+                marginBottom: "12px",
+              }}
+            >
+              <div
+                style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "8px" }}
+              >
+                <span
+                  style={{
+                    color: "#1a5c38",
+                    fontWeight: "bold",
+                    fontSize: "12px",
+                    textTransform: "uppercase",
+                  }}
+                >
                   ⚖️ {item.loi}
                 </span>
-                <span style={{
-                  backgroundColor:'#c9a84c',
-                  color:'white',
-                  fontSize:'11px',
-                  borderRadius:'20px',
-                  padding:'2px 8px'
-                }}>
+                <span
+                  style={{
+                    backgroundColor: "#c9a84c",
+                    color: "white",
+                    fontSize: "11px",
+                    borderRadius: "20px",
+                    padding: "2px 8px",
+                  }}
+                >
                   {item.article}
                 </span>
               </div>
-              <p style={{
-                fontSize:'14px',
-                fontStyle:'italic',
-                color:'#4a5568',
-                lineHeight:'1.6'
-              }}>
+              <p
+                style={{
+                  fontSize: "14px",
+                  fontStyle: "italic",
+                  color: "#4a5568",
+                  lineHeight: "1.6",
+                }}
+              >
                 « {item.contenu} »
               </p>
             </div>
