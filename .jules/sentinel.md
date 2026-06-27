@@ -1,0 +1,4 @@
+## 2024-06-27 - Object Prototype Pollution in Server Functions
+**Vulnerability:** A `z.string()` validation was used for an input (`domain`) that subsequently indexed into a static mapping object (`DOMAIN_DRIVE_KEYS[data.domain]`). An attacker could supply `__proto__` as the domain, causing the object index to return the Object prototype. This would result in a DoS when subsequent methods like `.map()` were called on what was expected to be an Array.
+**Learning:** When using user input to access object properties in JavaScript/TypeScript, validating simply as a string is insufficient if the object does not have a `null` prototype (`Object.create(null)`). It allows prototype pollution which can lead to application crashes.
+**Prevention:** Strictly validate input using `z.enum()` with the exact allowed keys before using it to index into objects.
