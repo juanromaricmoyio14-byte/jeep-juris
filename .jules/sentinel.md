@@ -1,0 +1,4 @@
+## 2024-05-18 - Prevent Prototype Pollution via Input Validation
+**Vulnerability:** The `getLibraryDoc` server function in `src/lib/consulter.functions.ts` used a loose `z.string()` validation for the `domain` parameter, which was then used to index into the `DOMAIN_DRIVE_KEYS` object. This could allow an attacker to supply special keys like `__proto__` or `constructor`, leading to prototype pollution or lookup issues.
+**Learning:** When using user-supplied strings to index into objects or dictionaries, loose string validation can expose the application to prototype pollution vulnerabilities, which can lead to unexpected behavior or potential denial of service.
+**Prevention:** Always use strict input validation, such as an allowlist (e.g., `z.enum([...])`), when validating user input that will be used to access object properties.
