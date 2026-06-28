@@ -2,3 +2,7 @@
 
 **Learning:** Using `tabIndex={-1}` on interactive input adornment buttons (like password visibility toggles) acts as an accessibility anti-pattern by blocking keyboard navigation for these elements.
 **Action:** Avoid `tabIndex={-1}` on interactive elements and ensure proper keyboard focus states (e.g., `focus-visible:ring-2 focus-visible:ring-ring`) are applied instead to maintain accessibility.
+
+## 2026-06-28 - Custom Radio Group Accessibility
+**Learning:** For custom UI components acting as radio groups (e.g., a div containing selectable buttons), screen readers need context to understand their purpose and state.
+**Action:** Always add an `id` to the descriptive parent label, apply `role="radiogroup"` and `aria-labelledby` referencing the label's id on the container, and use `role="radio"` and `aria-checked` on the selectable button children.

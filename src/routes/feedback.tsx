@@ -102,10 +102,14 @@ function FeedbackPage() {
 
           <form onSubmit={submit} className="space-y-4">
             <div>
-              <label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+              <label
+                htmlFor="name"
+                className="text-xs font-semibold uppercase tracking-wide text-muted-foreground"
+              >
                 {t("feedback.name")}
               </label>
               <input
+                id="name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 maxLength={100}
@@ -113,10 +117,14 @@ function FeedbackPage() {
               />
             </div>
             <div>
-              <label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+              <label
+                htmlFor="email"
+                className="text-xs font-semibold uppercase tracking-wide text-muted-foreground"
+              >
                 {t("feedback.email")}
               </label>
               <input
+                id="email"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -125,14 +133,23 @@ function FeedbackPage() {
               />
             </div>
             <div>
-              <label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+              <label
+                id="type-label"
+                className="text-xs font-semibold uppercase tracking-wide text-muted-foreground"
+              >
                 {t("feedback.type")}
               </label>
-              <div className="mt-2 grid grid-cols-3 gap-1 rounded-lg border border-border bg-background p-1">
+              <div
+                role="radiogroup"
+                aria-labelledby="type-label"
+                className="mt-2 grid grid-cols-3 gap-1 rounded-lg border border-border bg-background p-1"
+              >
                 {(["bug", "suggestion", "compliment"] as FeedbackType[]).map((tp) => (
                   <button
                     key={tp}
                     type="button"
+                    role="radio"
+                    aria-checked={type === tp}
                     onClick={() => setType(tp)}
                     className={`rounded-md px-2 py-1.5 text-xs font-medium transition-colors ${
                       type === tp
@@ -146,10 +163,14 @@ function FeedbackPage() {
               </div>
             </div>
             <div>
-              <label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+              <label
+                htmlFor="message"
+                className="text-xs font-semibold uppercase tracking-wide text-muted-foreground"
+              >
                 {t("feedback.message")} *
               </label>
               <textarea
+                id="message"
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 required
