@@ -15,7 +15,8 @@ export function Header() {
 
   useEffect(() => {
     const saved = localStorage.getItem("theme");
-    const darkMode = saved === "dark" || (!saved && window.matchMedia("(prefers-color-scheme: dark)").matches);
+    const darkMode =
+      saved === "dark" || (!saved && window.matchMedia("(prefers-color-scheme: dark)").matches);
     setTheme(darkMode ? "dark" : "light");
     setIsDark(darkMode);
     if (darkMode) {
@@ -124,16 +125,16 @@ export function Header() {
           <div
             style={{
               backgroundColor: isDark ? "#1A2634" : "#ffffff",
-              position: 'fixed',
+              position: "fixed",
               top: 0,
               right: 0,
-              width: '100%',
-              maxWidth: '320px',
-              height: '100vh',
+              width: "100%",
+              maxWidth: "320px",
+              height: "100vh",
               zIndex: 50,
-              boxShadow: '-4px 0 20px rgba(0,0,0,0.3)',
-              overflowY: 'auto',
-              padding: '20px',
+              boxShadow: "-4px 0 20px rgba(0,0,0,0.3)",
+              overflowY: "auto",
+              padding: "20px",
               display: "flex",
               flexDirection: "column",
             }}
