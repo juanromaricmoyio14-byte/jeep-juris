@@ -1,0 +1,4 @@
+## 2024-07-04 - Object Prototype Pollution in Serverless Functions
+**Vulnerability:** The `getLibraryDoc` serverless function in `src/lib/consulter.functions.ts` accepted a generic `z.string()` as a dictionary key to look up items in `DOMAIN_DRIVE_KEYS`. Passing built-in prototype keys (e.g., `__proto__` or `constructor`) resulted in resolving to object prototype methods, which could lead to Denial of Service crashes when mapped or handled incorrectly.
+**Learning:** Always validate user input strings intended for object property lookups using strictly defined allowed keys (e.g., `z.enum()`) to prevent unintended access to the prototype chain.
+**Prevention:** For dictionary/object key lookups coming from user input, never use generic types like string. Validate with a strictly typed allowlist, or use `Object.create(null)` for plain dictionaries to avoid prototype inheritance.
