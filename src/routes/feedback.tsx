@@ -6,7 +6,7 @@ import { Footer } from "@/components/Footer";
 import { useAuth } from "@/components/AuthProvider";
 import { getDb, firebaseConfigured } from "@/lib/firebase";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
-import { MessageSquare, Check } from "lucide-react";
+import { MessageSquare, Check, LoaderCircle } from "lucide-react";
 
 export const Route = createFileRoute("/feedback")({
   head: () => ({
@@ -102,10 +102,14 @@ function FeedbackPage() {
 
           <form onSubmit={submit} className="space-y-4">
             <div>
-              <label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+              <label
+                htmlFor="feedback-name"
+                className="text-xs font-semibold uppercase tracking-wide text-muted-foreground"
+              >
                 {t("feedback.name")}
               </label>
               <input
+                id="feedback-name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 maxLength={100}
@@ -113,10 +117,14 @@ function FeedbackPage() {
               />
             </div>
             <div>
-              <label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+              <label
+                htmlFor="feedback-email"
+                className="text-xs font-semibold uppercase tracking-wide text-muted-foreground"
+              >
                 {t("feedback.email")}
               </label>
               <input
+                id="feedback-email"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -125,16 +133,25 @@ function FeedbackPage() {
               />
             </div>
             <div>
-              <label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+              <label
+                id="feedback-type-label"
+                className="text-xs font-semibold uppercase tracking-wide text-muted-foreground"
+              >
                 {t("feedback.type")}
               </label>
-              <div className="mt-2 grid grid-cols-3 gap-1 rounded-lg border border-border bg-background p-1">
+              <div
+                className="mt-2 grid grid-cols-3 gap-1 rounded-lg border border-border bg-background p-1"
+                role="radiogroup"
+                aria-labelledby="feedback-type-label"
+              >
                 {(["bug", "suggestion", "compliment"] as FeedbackType[]).map((tp) => (
                   <button
                     key={tp}
                     type="button"
+                    role="radio"
+                    aria-checked={type === tp}
                     onClick={() => setType(tp)}
-                    className={`rounded-md px-2 py-1.5 text-xs font-medium transition-colors ${
+                    className={`rounded-md px-2 py-1.5 text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${
                       type === tp
                         ? "bg-primary text-primary-foreground"
                         : "text-muted-foreground hover:bg-muted"
@@ -146,10 +163,14 @@ function FeedbackPage() {
               </div>
             </div>
             <div>
-              <label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+              <label
+                htmlFor="feedback-message"
+                className="text-xs font-semibold uppercase tracking-wide text-muted-foreground"
+              >
                 {t("feedback.message")} *
               </label>
               <textarea
+                id="feedback-message"
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 required
@@ -164,8 +185,9 @@ function FeedbackPage() {
             <button
               type="submit"
               disabled={loading || !message.trim() || !firebaseConfigured}
-              className="w-full rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground hover:opacity-90 disabled:opacity-40"
+              className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground hover:opacity-90 disabled:opacity-40"
             >
+              {loading && <LoaderCircle className="h-4 w-4 animate-spin" />}
               {t("feedback.submit")}
             </button>
           </form>
