@@ -19,7 +19,12 @@ import {
   ChevronDown,
   ChevronUp,
 } from "lucide-react";
-import * as Accordion from "@radix-ui/react-accordion";
+import {
+  Accordion,
+  AccordionItem,
+  AccordionTrigger,
+  AccordionContent,
+} from "@/components/ui/accordion";
 import { z } from "zod";
 import { useAuth } from "@/components/AuthProvider";
 import { getDb } from "@/lib/firebase";
@@ -656,43 +661,6 @@ function AgentBubble({ response, lang }: { response: AgentResponse; lang: "fr" |
         <p className="italic text-muted-foreground">{response.reformulation}</p>
       </Block>
 
-      {response.textes_applicables?.length > 0 && (
-        <Block title="Textes applicables">
-          {response.textes_applicables.map((item, i) => (
-            <div key={i} style={{
-              borderLeft: '4px solid #1a5c38',
-              backgroundColor: '#f0f7f4',
-              borderRadius: '8px',
-              padding: '16px',
-              marginBottom: '12px'
-            }}>
-              <div style={{display:'flex', alignItems:'center', gap:'8px', marginBottom:'8px'}}>
-                <span style={{color:'#1a5c38', fontWeight:'bold', fontSize:'12px', textTransform:'uppercase'}}>
-                  ⚖️ {item.loi}
-                </span>
-                <span style={{
-                  backgroundColor:'#c9a84c',
-                  color:'white',
-                  fontSize:'11px',
-                  borderRadius:'20px',
-                  padding:'2px 8px'
-                }}>
-                  {item.article}
-                </span>
-              </div>
-              <p style={{
-                fontSize:'14px',
-                fontStyle:'italic',
-                color:'#4a5568',
-                lineHeight:'1.6'
-              }}>
-                « {item.contenu} »
-              </p>
-            </div>
-          ))}
-        </Block>
-      )}
-
       {response.actions_recommandees?.length > 0 && (
         <Block title={t("agent.recommendedActions") || "Que faire ?"}>
           <ul className="list-disc space-y-1 pl-5">
@@ -703,23 +671,104 @@ function AgentBubble({ response, lang }: { response: AgentResponse; lang: "fr" |
         </Block>
       )}
 
-      <Block title={t("agent.analysis")}>
-        <p className="whitespace-pre-wrap leading-relaxed">{response.analyse}</p>
-      </Block>
-
-      {response.institutions?.length > 0 && (
-        <Block title={t("agent.institutions")}>
-          <div className="flex flex-wrap gap-2">
-            {response.institutions.map((inst, i) => (
-              <span
-                key={i}
-                className="rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary"
-              >
-                {inst}
-              </span>
-            ))}
-          </div>
-        </Block>
+      {(response.textes_applicables?.length > 0 ||
+        response.institutions?.length > 0 ||
+        response.analyse) && (
+        <Accordion type="single" collapsible className="w-full">
+          <AccordionItem value="sources" className="border-none">
+            <AccordionTrigger className="py-2 text-primary font-serif font-semibold hover:no-underline">
+              Voir les sources
+            </AccordionTrigger>
+            <AccordionContent>
+              <div className="pt-2 space-y-4">
+                {response.textes_applicables?.length > 0 && (
+                  <div>
+                    {response.textes_applicables.map((item, i) => (
+                      <div
+                        key={i}
+                        style={{
+                          borderLeft: "4px solid #1a5c38",
+                          backgroundColor: "#f0f7f4",
+                          borderRadius: "8px",
+                          padding: "16px",
+                          marginBottom: "12px",
+                        }}
+                      >
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "8px",
+                            marginBottom: "8px",
+                          }}
+                        >
+                          <span
+                            style={{
+                              color: "#1a5c38",
+                              fontWeight: "bold",
+                              fontSize: "12px",
+                              textTransform: "uppercase",
+                            }}
+                          >
+                            ⚖️ {item.loi}
+                          </span>
+                          <span
+                            style={{
+                              backgroundColor: "#c9a84c",
+                              color: "white",
+                              fontSize: "11px",
+                              borderRadius: "20px",
+                              padding: "2px 8px",
+                            }}
+                          >
+                            {item.article}
+                          </span>
+                        </div>
+                        <p
+                          style={{
+                            fontSize: "14px",
+                            fontStyle: "italic",
+                            color: "#4a5568",
+                            lineHeight: "1.6",
+                          }}
+                        >
+                          « {item.contenu} »
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                )}
+                {response.analyse && (
+                  <div>
+                    <h5 className="font-serif font-medium text-primary mb-1">
+                      {t("agent.analysis")}
+                    </h5>
+                    <p className="whitespace-pre-wrap leading-relaxed text-muted-foreground">
+                      {response.analyse}
+                    </p>
+                  </div>
+                )}
+                {response.institutions?.length > 0 && (
+                  <div>
+                    <h5 className="font-serif font-medium text-primary mb-1">
+                      {t("agent.institutions")}
+                    </h5>
+                    <div className="flex flex-wrap gap-2">
+                      {response.institutions.map((inst, i) => (
+                        <span
+                          key={i}
+                          className="rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary"
+                        >
+                          {inst}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
       )}
 
       <p className="mt-2 border-t border-border pt-3 text-xs italic text-muted-foreground">

@@ -32,13 +32,13 @@ export function LanguageSwitcher() {
   };
 
   return (
-    <div className="inline-flex items-center rounded-full border border-border bg-card p-0.5 text-xs font-semibold">
+    <div className="inline-flex items-center rounded-full border border-border bg-card p-0.5 text-xs font-semibold min-h-[44px]">
       {(["fr", "en"] as const).map((lng) => (
         <button
           key={lng}
           type="button"
           onClick={() => change(lng)}
-          className={`px-3 py-1 rounded-full transition-colors ${
+          className={`px-3 py-1 rounded-full transition-colors min-h-[40px] ${
             current === lng
               ? "bg-primary text-primary-foreground"
               : "text-muted-foreground hover:text-foreground"
