@@ -136,7 +136,7 @@ async function verifyFirebaseIdToken(idToken: string): Promise<boolean> {
 }
 
 export const getLibraryDoc = createServerFn({ method: "GET" })
-  .inputValidator(z.object({ domain: z.string() }))
+  .inputValidator(z.object({ domain: z.enum(["labour", "criminal", "civil", "family", "land", "procedures"]) }))
   .handler(async ({ data }): Promise<{ ok: boolean; text?: string; error?: string }> => {
     const driveKeys = DOMAIN_DRIVE_KEYS[data.domain] ?? [];
     if (driveKeys.length === 0) {
